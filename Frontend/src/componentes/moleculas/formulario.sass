@@ -1,0 +1,105 @@
+.container
+  display: flex
+  height: 100%
+  width: 100%
+  max-width: 100vw
+  justify-content: center
+  align-items: center
+  overflow: hidden
+
+.form-container 
+  display: flex
+  flex-direction: column
+  width: 100
+  max-width: 400px
+  margin: 0 auto
+
+.form-group
+  display: flex
+  flex-direction: column
+  margin-bottom: 8px
+
+.formulario
+  position: relative
+  height: auto
+  width: auto
+  display: flex
+  flex-direction: column
+  margin-top: 70px
+  margin-bottom: 70px
+  padding-block: 30px
+  padding-inline: 25px
+  background: var(--formulario)
+  box-shadow: 2px 2px 8px #00000080
+  align-items: center
+  border-radius: 5px
+  user-select: none
+  -webkit-user-select: none
+
+  label
+    font-weight: 600
+
+  input
+    width: 18rem
+    height: 2.5rem
+    background: var(--input)
+    color: var(--texto)
+    margin-block: 10px
+    border: 2px solid var(--light-blue)
+    border-radius: 5px
+    padding-inline: 10px
+    transition: 200ms ease
+    font-weight: 400
+
+    &:hover
+      background: #e9e9e9
+
+    &:focus-visible
+      background: #e9e9e9
+      outline: none
+
+  input[type=submit]
+    background: #a29036
+    width: 10rem
+    border-radius: 5px
+    color: white
+    transition: background 200ms ease
+    font-weight: 700
+
+    &:hover
+      background: #cfa81a
+
+  // Remover o spin
+  input[type="number"]
+    appearance: textfield
+
+    &::-webkit-inner-spin-button, &::-webkit-outer-spin-button
+      -webkit-appearance: none
+      margin: 0
+
+  input[type="date"]::-webkit-calendar-picker-indicator
+    user-select: none
+    -webkit-user-select: none
+    cursor: pointer
+
+  input[type="date"]::before
+    content: "📅"
+    position: absolute
+    right: 60px     // Gambiarra. Não é possível adicionar estilo no calendário (que não tem contraste com o fundo)
+    font-size: 18px
+    pointer-events: none
+
+  
+  select
+    width: 18rem
+    height: 2.5rem
+    margin: 10px 25px 25px 25px
+    border: 2px solid var(--light-blue)
+    border-radius: 5px
+    font-weight: 400
+    text-align: center
+    padding-left: 15px
+
+    &:focus-visible
+      background: #e9e9e9
+      outline: none
