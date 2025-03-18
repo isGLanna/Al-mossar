@@ -1,11 +1,13 @@
-import { Link } from '@tanstack/react-router'
-import { useState } from 'react'
-import '../../moleculas/formulario.sass'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { loginUser, getToken } from './api';
+import { useState, useEffect } from 'react'
 import logo from '../../../assets/favicon.jpg'
-import './styles.css';
+import '../../moleculas/formulario.sass'
 import '../../atomos/checkbox.sass'
+import './styles.css';
 
 export function Login() {
+  const navigate = useNavigate()
 
   type User = {
     email: string;
@@ -35,12 +37,38 @@ export function Login() {
     }
   };
 
+  // Lidar com verificação do estado do token
+  useEffect(() => {
+    const token = getToken();
+    
+    if (token) {
+      navigate({to: '/menu'});
+    };
+  }, [navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await loginUser(user);
+
+      if (response.token) {
+        navigate({to: '/menu'})
+      }
+    } catch (err) {
+      console.error('Falha no login:', err);
+      alert('Acesso negado. Verifique seu email e senha.');
+    }
+  };
+
   return (
+    
     <div className="container">
+
       <main className="formulario" style={{ color: 'var(--texto)'}}>
         <img src={logo} alt="Logo com comida" className="logotipo" />
         
-        <form className="form-container" style={{textAlign:'center', alignItems:'center'}}>
+        <form className="form-container" onSubmit={handleSubmit} style={{textAlign:'center', alignItems:'center'}}>
           <div className='form-group'>
             <label>Email</label>
             <input
@@ -79,12 +107,10 @@ export function Login() {
           </div>
 
           <div className='form-group'>
-            <Link to='/menu' >
-              <input
-                type="submit"
-                value="Entrar"
-              />
-            </Link>
+            <input
+              type="submit"
+              value="Entrar"
+            />
           </div>
 
           <div>

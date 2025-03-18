@@ -1,20 +1,17 @@
 import express from 'express'
 import cors from 'cors'
-import dotenv from 'dotenv'
+import authRoutes from './routes/authRoutes'
 
-import authRoutes from './routes/auth.routes'
-import userRoutes from './routes/user.routes'
+const app = express()
+const PORT = 3001
 
-dotenv.config();
-const app = express();
+app.use(express.json())
+app.use(cors())
 
-app.use(cors());
-app.use(express.json());
+app.use('/api', authRoutes)
 
-// Usando as rotas
-app.use('/auth', authRoutes);
-app.use('user', userRoutes);
+console.log('Passou aqui index')
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor operacional rodando porta ${PORT}`));
-
+app.listen(PORT, () => {
+  console.log(`Servidor rodando em http://localhost:${PORT}`)
+})
