@@ -1,6 +1,8 @@
+@use '../atomos/vibrar.animation'
+  
 .container
   display: flex
-  height: 100%
+  height: calc(100vh - 70px)
   width: 100%
   max-width: 100vw
   justify-content: center
@@ -10,13 +12,12 @@
 .form-container 
   display: flex
   flex-direction: column
-  width: 100
-  max-width: 400px
-  margin: 0 auto
+  align-items: center
 
 .form-group
   display: flex
   flex-direction: column
+  align-items: center
   margin-bottom: 8px
 
 .formulario
@@ -39,6 +40,9 @@
   label
     font-weight: 600
 
+  span
+    color: #df3920
+
   input
     width: 18rem
     height: 2.5rem
@@ -58,8 +62,12 @@
       background: #e9e9e9
       outline: none
 
+    &.empty-login
+      border: 2px solid #c03520
+      animation: vibrar 500ms ease
+
   input[type=submit]
-    background: #a29036
+    background: #b29036
     width: 10rem
     border-radius: 5px
     color: white
@@ -67,7 +75,7 @@
     font-weight: 700
 
     &:hover
-      background: #cfa81a
+      background: #dfa81a
 
   // Remover o spin
   input[type="number"]

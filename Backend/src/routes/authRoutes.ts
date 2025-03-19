@@ -5,4 +5,6 @@ const router = Router()
 
 router.post('/login', login)
 
+console.log('Passou em rotas')
+
 export default router

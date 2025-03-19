@@ -145,3 +145,6 @@ Agora, o frontend e o backend estarão rodando e prontos para desenvolvimento.
 Este é um texto gerado por IA a partir de ferramentas que foram úteis ao longo da produção. Entretanto, como desenvolvedor, recomendo seriamente se atentar e consultar opções frequentemente chamadas por "Getting Started ...".
 
 Intuito desta dissertação, claro, provem da robusta estrutura de projeto completo, onde é exigida uma profundidade de frameworks para apoiar o trabalho. ALém disso, a falta delas ocasiona retrabalho ou estagnação em uma etapa.
+
+add sequelize postgre
+add Docker via ferramenta do vscode mesmo

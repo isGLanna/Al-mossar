@@ -80,10 +80,12 @@ export function CreateAccount() {
             <input
               type="password"
               name="password"
+              minLength={6} required
               placeholder="Digite sua senha"
               style={{ fontWeight: '400' }}
               value={user.password}
               onChange={handleChange}
+
             />
           </div>
   

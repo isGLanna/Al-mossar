@@ -5,7 +5,7 @@ const API_URL = 'http://localhost:3001';
 export const loginUser = async (user: { email: string; password: string; remember: boolean}) => {
   try {
     
-    // Requisição POST para o endpoint /login
+    // Requisição POST para o endpoint /api/login
     const response = await axios.post(`${API_URL}/api/login`, user);
 
     // Armazena o token em localStorage caso "remember" for true

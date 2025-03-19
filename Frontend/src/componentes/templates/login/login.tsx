@@ -1,4 +1,4 @@
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link, parseSearchWith, useNavigate } from '@tanstack/react-router'
 import { loginUser, getToken } from './api';
 import { useState, useEffect } from 'react'
 import logo from '../../../assets/favicon.jpg'
@@ -20,6 +20,11 @@ export function Login() {
     password: '',
     remember: false,
   });
+
+  const [ emptyField, setEmptyField ] = useState<{ email: boolean; password: boolean}>({
+    email: false,
+    password: false,
+  })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -46,10 +51,21 @@ export function Login() {
     };
   }, [navigate]);
 
+  // Lidar com entrada do usuário, caso exista campo vazio, negar acesso
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const fields = {
+      email: !user.email.trim(),
+      password: !user.password.trim()
+    }
+
+    setEmptyField(fields)
+  
     try {
+      // Verifica condição campo *field.attribute* é vazio?
+      if(fields.email || fields.password) return
+
       const response = await loginUser(user);
 
       if (response.token) {
@@ -57,7 +73,7 @@ export function Login() {
       }
     } catch (err) {
       console.error('Falha no login:', err);
-      alert('Acesso negado. Verifique seu email e senha.');
+      alert('Email ou senha inválidos.');
     }
   };
 
@@ -68,14 +84,14 @@ export function Login() {
       <main className="formulario" style={{ color: 'var(--texto)'}}>
         <img src={logo} alt="Logo com comida" className="logotipo" />
         
-        <form className="form-container" onSubmit={handleSubmit} style={{textAlign:'center', alignItems:'center'}}>
+        <form className="form-container" onSubmit={handleSubmit}>
           <div className='form-group'>
             <label>Email</label>
             <input
+              className={emptyField.email ? 'empty-login' : ''}
               type="email"
               name="email"
               placeholder="Digite seu email"
-              style={{ fontWeight: '400' }}
               value={user.email}
               onChange={handleChange}
             />
@@ -84,10 +100,10 @@ export function Login() {
           <div className='form-group'>
             <label>Senha</label>
             <input
+              className={emptyField.password ? 'empty-login' : ''}
               type="password"
               name="password"
               placeholder="Digite sua senha"
-              style={{ fontWeight: '400' }}
               value={user.password}
               onChange={handleChange}
             />
@@ -111,6 +127,7 @@ export function Login() {
               type="submit"
               value="Entrar"
             />
+            {( emptyField.email || emptyField.password ) && <span>Preencha todos os campos</span>}
           </div>
 
           <div>

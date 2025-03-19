@@ -13,8 +13,6 @@ export const login = (req: Request, res: Response): void => {
 
   const token = authenticateUser(email, password)
 
-  console.log('Teste')
-
   if (!token) {
     res.status(401).json({ message: 'Credenciais inválidas' })
     return
