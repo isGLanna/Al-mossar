@@ -18,10 +18,11 @@
     justify-content: center;
     align-items: center;
     background: transparent;
+    outline: none;
     transition: 300ms ease;
 
     &:hover{
-      background: #ffffff40
+      background: #ffffff40;
     }
   }
 }

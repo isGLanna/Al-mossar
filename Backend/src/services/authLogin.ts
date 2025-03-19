@@ -9,7 +9,7 @@ export const authenticateUser = (email: string, password: string) => {
   if(!user) return null
 
   // Cria e define o tamanho do token
-  const token = crypto.randomBytes(4).toString('base64')
+  const token = crypto.randomBytes(8).toString('base64')
 
   console.log('Confirmação de login:', token)
 
