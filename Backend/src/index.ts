@@ -10,8 +10,6 @@ app.use(cors())
 
 app.use('/api', authRoutes)
 
-console.log('Passou aqui index')
-
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`)
 })

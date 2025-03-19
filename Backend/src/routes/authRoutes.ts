@@ -5,6 +5,4 @@ const router = Router()
 
 router.post('/login', login)
 
-console.log('Passou aqui routes')
-
 export default router
