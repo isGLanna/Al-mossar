@@ -1,17 +1,39 @@
-import { users } from '../models/userModels'
 import crypto from 'crypto'
+import bcrypt from "bcrypt"
+import Person from "../models/person"
+import {Enterprise} from "../models/enterprise"
 
-export const authenticateUser = (email: string, password: string) => {
-  
-  // Pesquisa do usuário na base de dados
-  const user = users.find(u => u.email === email && u.password === password)
+export const authenticateUser = async (email: string, password: string) => {
 
-  if(!user) return null
+  try {
+    console.log('\n\n\nO PROBLEMA COMEÇA AQUI\n\n\n')
 
-  // Cria e define o tamanho do token
-  const token = crypto.randomBytes(8).toString('base64')
+    await Enterprise.sync()
+    await Person.sync()
 
-  console.log('Confirmação de login:', token)
+    const user = await Person.findOne({
+      where: {email: email},
+      raw: true     // retorna o objeto da busca
+    })
 
-  return token
+    console.log('Resultado da busca:', user);
+
+    if (!user) {
+      throw('User not found.')
+    }
+
+    const passwordExists = await bcrypt.compare(password, user.password)
+
+    if (!passwordExists) {
+      throw('User not found.')
+    }
+
+    // Define um token para o usuário
+    const token = crypto.randomBytes(32).toString('base64')
+
+    return token
+  } catch (error) {
+    console.log(error)
+    return false
+  }
 }

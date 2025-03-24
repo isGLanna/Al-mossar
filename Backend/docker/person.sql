@@ -1,10 +1,11 @@
-CREATE TABLE IF NOT EXISTS people (
+
+CREATE TABLE IF NOT EXISTS person (
     email VARCHAR(30) PRIMARY KEY,
-    password VARCHAR(16) NOT NULL,
+    password TEXT NOT NULL,
     name VARCHAR(16) NOT NULL,
     surname VARCHAR(48) NOT NULL,
     startOfContract DATE,
+    id_enterprise INT,
     role VARCHAR(20),
-    enterprise_id INT,
-    FOREIGN KEY (enterprise_id) REFERENCES enterprise(id)
-    );
+    FOREIGN KEY (id_enterprise) REFERENCES enterprise(id)
+);

@@ -1,10 +1,10 @@
-import { Link, parseSearchWith, useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { loginUser, getToken } from './api';
 import { useState, useEffect } from 'react'
 import logo from '../../../assets/favicon.jpg'
 import '../../moleculas/formulario.sass'
 import '../../atomos/checkbox.sass'
-import './styles.css';
+import './styles.sass';
 
 export function Login() {
   const navigate = useNavigate()
@@ -79,10 +79,10 @@ export function Login() {
 
   return (
     
-    <div className="container">
+    <div className="container" style={{overflow:'hidden'}}>
 
       <main className="formulario" style={{ color: 'var(--texto)'}}>
-        <img src={logo} alt="Logo com comida" className="logotipo" />
+        <img src={logo} alt="Logo com comida" className="logoLogin" />
         
         <form className="form-container" onSubmit={handleSubmit}>
           <div className='form-group'>
@@ -92,6 +92,7 @@ export function Login() {
               type="email"
               name="email"
               placeholder="Digite seu email"
+              autoComplete='current-password'
               value={user.email}
               onChange={handleChange}
             />
