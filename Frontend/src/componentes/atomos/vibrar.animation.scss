@@ -1,10 +1,31 @@
 @keyframes vibrar {
-  0% { transform: translateX(0) translateY(0) rotate(0deg); }
-  14% { transform: translateX(-3px) translateY(0) rotate(-2deg); }
-  28% { transform: translateX(-3px) translateY(3px) rotate(2deg); }
-  43% { transform: translateX(3px) translateY(3px) rotate(-2deg); }
-  37% { transform: translateX(3px) translateY(-3px) rotate(2deg); }
-  71% { transform: translateX(-3px) translateY(-3px) rotate(-2deg); }
-  86% { transform: translateX(-3px) translateY(0) rotate(2deg); }
-  100% { transform: translateX(0) translateY(0) rotate(0deg); }
+  0% { 
+    transform: translateX(0) translateY(0) rotate(0deg);
+  }
+  14% { 
+    transform: translateX(-3px) translateY(0) rotate(-2deg);
+  }
+  28% { 
+    transform: translateX(-3px) translateY(3px) rotate(2deg);
+    padding-bottom: 5px;
+    padding-left: 8px;
+  }
+  43% { 
+    transform: translateX(3px) translateY(3px) rotate(-2deg);
+    
+  }
+  57% { 
+    transform: translateX(3px) translateY(-3px) rotate(2deg);
+    padding-top: 5px;
+    padding-left: 13px;
+  }
+  71% { 
+    transform: translateX(-3px) translateY(-3px) rotate(-2deg);
+  }
+  86% { 
+    transform: translateX(-3px) translateY(0) rotate(2deg);
+  }
+  100% { 
+    transform: translateX(0) translateY(0) rotate(0deg);
+  }
 }
