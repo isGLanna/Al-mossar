@@ -1,11 +1,13 @@
 import { TopBar } from '../../organismos/topbar'
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
+import '../../atomos/scrollbar.sass'
 
 interface Props {
   children: ReactNode
 }
 
 export function RootLayout({ children }: Props) {
+
   return (
     <>
       <TopBar/>

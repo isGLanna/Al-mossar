@@ -14,10 +14,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return
     }
 
-
     const token = await authenticateUser(email, password)
-
-    console.log('PORÉM AQUI DÁ PAU E NÃO PASSA:', token)
 
     if (!token) {
       res.status(401).json({ message: 'Credenciais inválidas' })

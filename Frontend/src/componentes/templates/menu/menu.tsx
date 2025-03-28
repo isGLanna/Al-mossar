@@ -1,5 +1,6 @@
 import { logoutUser } from '../../templates/login/api';
 import { useNavigate } from '@tanstack/react-router';
+import { FaCircleUser } from "react-icons/fa6";
 import '../../moleculas/cardapio.module.scss';
 import '../../moleculas/pseudo-topbar.scss';
 
@@ -15,6 +16,7 @@ export function Menu() {
   return (
     <div>
       <div className="button-container">
+        <FaCircleUser size={35} color='white'/>
         <button className="btn" onClick={handleLogout}>Sair</button>
       </div>
 
