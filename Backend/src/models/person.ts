@@ -2,26 +2,15 @@ import { DataTypes, Model, Optional } from 'sequelize'
 import { Enterprise } from './enterprise'
 import sequelize from "."
 
-interface PersonAttributes {
-    email: string;
-    password: string;
-    name: string;
-    surname: string;
-    id_enterprise?: number;
-    startOfContract?: Date;
-    role?: string
-}
 
-interface PersonCreationAttributes extends Optional<PersonAttributes, 'id_enterprise' | 'startOfContract' | 'role'> {}
-
-class Person extends Model<PersonAttributes, PersonCreationAttributes> implements PersonAttributes {
+class Person extends Model {
     public email!: string;
     public password!: string;
     public name!: string;
     public surname!: string;
     public id_enterprise?: number;
-    public startOfContract?: Date;
-    public role?: string;
+    public start_of_contract?: Date;
+    public role?: string
 }
 
 Person.init(
@@ -52,7 +41,7 @@ Person.init(
                 key: 'id',
             },
         },
-        startOfContract: {
+        start_of_contract: {
             type: DataTypes.DATE,
             allowNull: true,
         },
