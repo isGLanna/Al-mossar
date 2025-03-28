@@ -79,9 +79,9 @@ export function Login() {
 
   return (
     
-    <div className="container" style={{overflow:'hidden'}}>
+    <div className="container" style={{position:'fixed'}}>
 
-      <main className="formulario" style={{ color: 'var(--texto)'}}>
+      <main className="formulario" style={{ marginTop:'0px' }}> {/* Formulário sendo centralizado na marra*/}
         <img src={logo} alt="Logo com comida" className="logoLogin" />
         
         <form className="form-container" onSubmit={handleSubmit}>

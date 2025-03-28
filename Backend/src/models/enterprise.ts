@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../db';
+import sequelize from '.';
 
 class Enterprise extends Model {
     public id!: number;
@@ -21,7 +21,7 @@ Enterprise.init(
   {
     sequelize,
     modelName: 'Enterprise',
-    tableName: 'enterprises',
+    tableName: 'enterprise',
     timestamps: false
   },
 )

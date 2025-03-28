@@ -1,15 +1,27 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, Optional } from 'sequelize'
 import { Enterprise } from './enterprise'
-import sequelize from "../db"
+import sequelize from "."
 
-class Person extends Model {
+interface PersonAttributes {
+    email: string;
+    password: string;
+    name: string;
+    surname: string;
+    id_enterprise?: number;
+    startOfContract?: Date;
+    role?: string
+}
+
+interface PersonCreationAttributes extends Optional<PersonAttributes, 'id_enterprise' | 'startOfContract' | 'role'> {}
+
+class Person extends Model<PersonAttributes, PersonCreationAttributes> implements PersonAttributes {
     public email!: string;
     public password!: string;
     public name!: string;
     public surname!: string;
     public id_enterprise?: number;
-    public startOfContact?: Date;
-    public role?: string
+    public startOfContract?: Date;
+    public role?: string;
 }
 
 Person.init(
@@ -18,6 +30,7 @@ Person.init(
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
+            primaryKey: true
         },
         password: {
             type: DataTypes.TEXT,
@@ -34,6 +47,10 @@ Person.init(
         id_enterprise: {
             type: DataTypes.INTEGER,
             allowNull: true,
+            references: {
+                model: Enterprise,
+                key: 'id',
+            },
         },
         startOfContract: {
             type: DataTypes.DATE,
@@ -53,5 +70,6 @@ Person.init(
 )
 
 Person.belongsTo(Enterprise, {foreignKey: 'id_enterprise', as: 'enterprise'})
+Enterprise.hasMany(Person, { foreignKey: 'id_enterprise', as: 'employees' });
 
 export default Person

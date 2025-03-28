@@ -2,30 +2,37 @@ import crypto from 'crypto'
 import bcrypt from "bcrypt"
 import Person from "../models/person"
 import {Enterprise} from "../models/enterprise"
+import { Sequelize } from 'sequelize'
+
+const sequelize = new Sequelize('almossar', 'postgres', '!+@_#)', {
+    dialect: 'postgres',
+    host: 'localhost',
+    port: 5432
+})
+
+
 
 export const authenticateUser = async (email: string, password: string) => {
-
   try {
-    console.log('\n\n\nO PROBLEMA COMEÇA AQUI\n\n\n')
 
     await Enterprise.sync()
     await Person.sync()
 
     const user = await Person.findOne({
       where: {email: email},
-      raw: true     // retorna o objeto da busca
+      raw: true
     })
 
     console.log('Resultado da busca:', user);
 
     if (!user) {
-      throw('User not found.')
+      throw new Error('User not found.')
     }
 
     const passwordExists = await bcrypt.compare(password, user.password)
 
     if (!passwordExists) {
-      throw('User not found.')
+      throw new Error('Wrong password.')
     }
 
     // Define um token para o usuário
