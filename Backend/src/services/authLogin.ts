@@ -2,25 +2,31 @@ import crypto from 'crypto'
 import bcrypt from "bcrypt"
 import Person from "../models/person"
 import {Enterprise} from "../models/enterprise"
-import { Sequelize } from 'sequelize'
-
-const sequelize = new Sequelize('almossar', 'postgres', '!+@_#)', {
-    dialect: 'postgres',
-    host: 'localhost',
-    port: 5432
-})
-
+import {sequelize} from '../models/db'
 
 
 export const authenticateUser = async (email: string, password: string) => {
   try {
+    /* INSERINDO USUÁRIO FICTÍCIO
+    const hashedPassword = await bcrypt.hash('1234', 10);
+
+    // Cria o usuário admin
+    await Person.create({
+      email: 'admin@gmail.com',
+      password: hashedPassword,
+      name: 'Admin',
+      surname: 'Sistema',
+      start_of_contract: '2023-01-01',
+      id_enterprise: 1,
+      role: 'admin'
+    })
+    */
 
     await Enterprise.sync()
     await Person.sync()
 
     const user = await Person.findOne({
-      where: {email: email},
-      raw: true
+      where: {email: email}
     })
 
     console.log('Resultado da busca:', user);
@@ -36,7 +42,9 @@ export const authenticateUser = async (email: string, password: string) => {
     }
 
     // Define um token para o usuário
-    const token = crypto.randomBytes(32).toString('base64')
+    const token = crypto.randomBytes(256).toString('base64')
+
+    console.log(token)
 
     return token
   } catch (error) {

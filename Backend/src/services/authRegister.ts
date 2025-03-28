@@ -1,10 +1,11 @@
 import bcrypt from 'bcrypt'
 import Person from '../models/person'
 import { Enterprise } from '../models/enterprise';
+import {sequelize} from '../models/db'
 
 /* Verificações:
   - empresa existe
-  - usuário já existe em uma mesma empresa (email and idEnterprise)
+  - usuário já existe em uma mesma empresa (email and id_enterprise)
   - dominio válido
   - tamanho do nome e sobrenome ([16], [48])
   - tamanho da senha ([6 - 16)]
@@ -15,12 +16,12 @@ export const authenticateRegister = async(
   surname: string, 
   email: string, 
   password: string, 
-  idEnterprise: number,
-  startOfContract: string,
+  id_enterprise: number,
+  start_of_contract: Date,
   role: string) => {
 
     // Verificação se a empresa existe
-    const enterprise = await Enterprise.findOne({ where: {id: idEnterprise}})
+    const enterprise = await Enterprise.findOne({ where: {id: id_enterprise}})
 
     if (!enterprise) {
       console.log('Empresa não encontrada')
@@ -28,7 +29,7 @@ export const authenticateRegister = async(
     }
 
     // Verifica se o email já existe
-    const existingUser = await Person.findOne({ where: {email: email, id_enterprise: idEnterprise}})
+    const existingUser = await Person.findOne({ where: {email: email, id_enterprise: id_enterprise}})
 
     if (existingUser){
       console.log('Usuário já existe')
@@ -57,8 +58,8 @@ export const authenticateRegister = async(
       surname, 
       email, 
       password, 
-      idEnterprise,
-      startOfContract, // Convertendo Date para "YYYY-MM-DD"
+      id_enterprise,
+      start_of_contract, // Convertendo Date para "YYYY-MM-DD"
       role 
     };
 
@@ -68,8 +69,8 @@ export const authenticateRegister = async(
         surname,
         email,
         password,
-        idEnterprise,
-        startOfContract,
+        id_enterprise,
+        start_of_contract,
         role
       })
 
