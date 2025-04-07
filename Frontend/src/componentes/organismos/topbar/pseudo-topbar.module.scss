@@ -1,0 +1,88 @@
+.buttonContainer{
+  position: fixed;
+  top: 15px;
+  height: 40px;
+  width: 20%;
+  right: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  user-select: none;
+  -webkit-user-select: none;
+  z-index: 10;
+
+  .btn{
+    height: 40px;
+    padding: 0 15px;
+    font-weight: 600;
+    font-size: 24px;
+    color: white;
+    border-left: 3px solid #e9e9e9;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    outline: none;
+    transition: 300ms ease;
+
+    &:hover{
+      background-color: #25252520;
+    }
+  }
+}
+
+.menu{
+  position: fixed;
+  width: 90px;
+  top: 70px;
+  right: 5px;
+  background-color: var(--menu);
+  box-shadow: 3px 3px 6px var(--shadow);
+  border-end-start-radius: 5px;
+  border-end-end-radius: 5px;
+  border-inline: 2px solid #0f5904;
+  transition: width 200ms ease-out, max-height 300ms ease-out, opacity 1s ease;
+  max-height: 0;
+  overflow-y: scroll;
+  opacity: 0;
+  backdrop-filter: blur(3px);
+
+  &.open {
+    transition: max-height 300ms ease-out, opacity 500ms ease;
+    max-height: 105px;
+    opacity: 1;
+  }
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    margin-bottom: 2px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    animation-delay: 600ms;
+    border-radius: 5px;
+    background: #30523070;
+  }
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 500;
+  height: 40px;
+  color: #eee;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 200ms ease;
+
+  &:hover{
+    background: #20742940;
+  }
+}

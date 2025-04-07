@@ -1,9 +1,9 @@
-import { DataTypes, Model, Optional } from 'sequelize'
+import { DataTypes, Model } from 'sequelize'
 import { Enterprise } from './enterprise'
-import sequelize from "."
+import sequelize from '.'
 
 
-class Person extends Model {
+class User extends Model {
     public email!: string;
     public password!: string;
     public name!: string;
@@ -13,7 +13,7 @@ class Person extends Model {
     public role?: string
 }
 
-Person.init(
+User.init(
     {
         email: {
             type: DataTypes.STRING,
@@ -41,24 +41,24 @@ Person.init(
                 key: 'id',
             },
         },
-        start_of_contract: {
-            type: DataTypes.DATE,
-            allowNull: true,
-        },
         role: {
             type: DataTypes.STRING,
             allowNull: true,
         },
+        token: {
+          type: DataTypes.STRING,
+          allowNull: true,
+        }
     },
     {
         sequelize,
-        modelName: 'Person',
-        tableName: 'person',
+        modelName: 'user',
+        tableName: 'user',
         timestamps: false,
     }
 )
 
-Person.belongsTo(Enterprise, {foreignKey: 'id_enterprise', as: 'enterprise'})
-Enterprise.hasMany(Person, { foreignKey: 'id_enterprise', as: 'employees' });
+User.belongsTo(Enterprise, {foreignKey: 'id_enterprise', as: 'enterprise'})
+Enterprise.hasMany(User, { foreignKey: 'id_enterprise', as: 'employees' });
 
-export default Person
+export default User

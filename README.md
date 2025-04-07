@@ -2,6 +2,8 @@
 
 Este guia detalha a instalação de todas as dependências necessárias para rodar o projeto corretamente. As dependências estão separadas em **Frontend**, **Backend** e **Outras Ferramentas**.
 
+## 
+
 ---
 
 ## 🛠️ **1. Instalação Global**
@@ -140,7 +142,11 @@ cd frontend  # Acesse a pasta do frontend
 yarn dev  # Inicia o Vite
 ```
 
-Agora, o frontend e o backend estarão rodando e prontos para desenvolvimento.
+### 📌 **Sequelize e PostgreSQL**
+Utilizamos o **Sequelize** como ORM para interagir com o banco de dados **PostgreSQL**.
 
-add sequelize postgre
-add Docker via ferramenta do vscode mesmo
+```sh
+  yarn add sequelize pg pg-hstore  # Instala o Sequelize e o driver do PostgreSQL
+
+
+Agora, o frontend e o backend estarão rodando e prontos para desenvolvimento.

@@ -13,8 +13,9 @@ export function CreateAccount() {
     surname: string;
     email: string;
     password: string;
-    startOfContract: string;
-    idEnterprise: number;
+    confirmed_password: string;
+    start_of_contract: string;
+    id_enterprise: number;
     role: string;
   };
 
@@ -23,8 +24,9 @@ export function CreateAccount() {
     surname: '',
     email: '',
     password: '',
-    startOfContract: '',
-    idEnterprise: 0,
+    confirmed_password: '',
+    start_of_contract: '',
+    id_enterprise: 0,
     role: '',
   })
 
@@ -43,34 +45,43 @@ export function CreateAccount() {
     })
   }
 
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
-  
-      // atribui true para *field.atribute* vazio
-      const fields = {
-        name: !user.name.trim(),
-        surname: !user.surname.trim(),
-        email: !user.email.trim(),
-        password: !user.password.trim(),
-        idEnterprise: user.idEnterprise === 0 ? true : false
-      }
-  
-      setEmptyField(fields)
-    
-      try {
-        // Verifica condição campo *field.attribute* é vazio?
-        if(Object.values(fields).some(value => value === true)) return
-  
-        const isValid = await registerUser(user)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-        if (true) {
-          navigate({to: '/'})
-        }
-      } catch (err) {
-        console.error('Falha no cadastro:', err);
-        alert('Credenciais inválidas.');
+    if (user.password !== user.confirmed_password){
+      alert('As senhas estão diferentes')
+      return
+    }
+
+    // atribui true para *field.atribute* vazio
+    const fields = {
+      name: !user.name.trim(),
+      surname: !user.surname.trim(),
+      email: !user.email.trim(),
+      password: !user.password.trim(),
+      confirmed_password: !user.confirmed_password.trim(),
+      id_enterprise: user.id_enterprise === 0
+    }
+  
+    setEmptyField(fields)
+  
+    try {
+      // Verifica condição campo *field.attribute* é vazio?
+      if(Object.values(fields).some(value => value)) {
+        return
+      } 
+        
+      const response = await registerUser(user)
+
+      if (response.success) {
+        navigate({to: '/'})
+      } else {
+        alert(response.message || 'Falha inexperada')
       }
-    };
+    } catch (error) {
+      alert(error);
+    }
+  };
 
   return (
     <div className="container" style={{display:'flex', alignItems:'center', justifyContent:'center'}}>
@@ -126,7 +137,7 @@ export function CreateAccount() {
               className={emptyField.password ? 'empty-login' : ''}
               type="password"
               name="password"
-              minLength={6}
+              minLength={4}
               maxLength={16}
               placeholder="Digite sua senha"
               style={{}}
@@ -134,13 +145,28 @@ export function CreateAccount() {
               onChange={handleChange}
             />
           </div>
+
+          <div className="form-group">
+            <label className='requiredField'>Repita sua senha</label>
+            <input
+              className={emptyField.confirmed_password ? 'empty-login' : ''}
+              type="password"
+              name="confirmed_password"
+              minLength={4}
+              maxLength={16}
+              placeholder="Digite sua senha"
+              style={{}}
+              value={user.confirmed_password}
+              onChange={handleChange}
+            />
+          </div>
   
           <div className="form-group">
             <label className='requiredField'>Identificador da empresa</label>
             <input
-              className={emptyField.idEnterprise ? 'empty-login' : ''}
+              className={emptyField.id_enterprise ? 'empty-login' : ''}
               type="number"
-              name="idEnterprise"
+              name="id_enterprise"
               placeholder="Digite o código da empresa"
               onChange={handleChange}
             />
@@ -150,8 +176,8 @@ export function CreateAccount() {
             <label>Início do contrato</label>
             <input
               type="date"
-              name="startOfContract"
-              value={user.startOfContract}
+              name="start_of_contract"
+              value={user.start_of_contract}
               style={{}}
               onChange={handleChange}
             />

@@ -1,0 +1,53 @@
+.menuContainer
+  display: flex
+  flex-wrap: wrap
+  margin-block: 8rem
+  justify-content: space-around
+  user-select: none
+  gap: 2rem
+
+.calendar, 
+.menu
+  border-radius: 20px
+  font-family: sans-serif
+  box-shadow: 2px 2px 5px var(--shadow)
+  background: var(--menuContainers)
+  overflow: hidden 
+
+.header
+  background: var(--menu-description)
+  color: #f7f7f7
+  display: flex
+  justify-content: space-between
+  align-items: center
+
+  button
+    background: none
+    cursor: pointer
+
+  span
+    font-weight: 600
+    font-size: 18px
+
+.days
+  position: relative
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem
+  background-color: none
+  cursor: pointer
+  user-select: none
+  -webkit-user-select: none
+  text-align: center
+  transition: background-color 200ms
+
+.week
+  display: grid
+  grid-template-columns: repeat(7, 1fr)
+  text-align: center
+  font-weight: bold
+  padding: 0.5rem 0
+
+.selected 
+  background-color: #c5d3e3
+  transition: 200ms

@@ -1,24 +1,17 @@
-import { logoutUser } from '../../templates/login/api';
-import { useNavigate } from '@tanstack/react-router';
-import { FaCircleUser } from "react-icons/fa6";
+import { UserProfile } from '../../organismos/topbar/user-profile'
+import styles from '../../organismos/topbar/pseudo-topbar.module.scss'
 import '../../moleculas/cardapio.module.scss';
-import '../../moleculas/pseudo-topbar.scss';
+import { MenuCalendar } from './calendar'
+import { menuQuery } from './api'
 
-export function Menu() { 
-  const navigate = useNavigate();
-
-  // Finalizar validade do token
-  const handleLogout = () => {
-    logoutUser();
-    navigate({ to: '/' });
-  };
-
+export function Menu() {
   return (
     <div>
-      <div className="button-container">
-        <FaCircleUser size={35} color='white'/>
-        <button className="btn" onClick={handleLogout}>Sair</button>
+      <div className={styles.buttonContainer}>
+        <UserProfile />
       </div>
+
+      <MenuCalendar />
 
       <p>Se chegou até aqui, o login foi realizado com sucesso!</p>
     </div>
