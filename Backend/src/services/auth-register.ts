@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt'
-import Person from '../models/person'
+import User from '../models/user'
 import { Enterprise } from '../models/enterprise';
-import {sequelize} from '../models/db'
+import sequelize from '../models/'
 
 /* Verificações:
   - empresa existe
@@ -22,36 +22,30 @@ export const authenticateRegister = async(
 
     // Verificação se a empresa existe
     const enterprise = await Enterprise.findOne({ where: {id: id_enterprise}})
-
     if (!enterprise) {
-      console.log('Empresa não encontrada')
-      return false
+      return { success: false, message: 'Empresa não encontrada' };
     }
 
     // Verifica se o email já existe
-    const existingUser = await Person.findOne({ where: {email: email, id_enterprise: id_enterprise}})
-
+    const existingUser = await User.findOne({ where: {email: email, id_enterprise: id_enterprise}})
     if (existingUser){
-      console.log('Usuário já existe')
-      return false
+      return { success: false, message: 'Usuário já existe' };
     }
 
     // Verifica se o dominio é válido
     const domains = ['gmail.com', 'outlook.com', 'icloud.com', 'yahoo.com']
     const domainUser = email.split('@')[1]
-
     if (!domains.includes(domainUser)){
-      console.log('Domínio inválido')
-      return false
+      return { success: false, message: 'Dominio inválido' };
     }
 
   // Verifica se o nome/sobrenome está fora do tamanho proposto ou vazio
-    if (name.length > 16 || !name || surname.length > 48 || surname)
-      return false
+    if (name.length > 16 || !name || surname.length > 48 || !surname)
+      return { success: false, message: 'Nome ou sobrenome forado padrão' };
 
     // Verifica se a senha está fora do tamanho proposto
-    if (password.length > 16 || password.length < 6)
-      return false
+    if (password.length > 16 || password.length < 4)
+      return { success: false, message: 'Senha fora do padrão' };
 
     const user = { 
       name, 
@@ -64,19 +58,23 @@ export const authenticateRegister = async(
     };
 
     try {
-      const newUser = await Person.create({
+      const hashedPassword = await bcrypt.hash(password, 10)
+
+      await User.create({
         name,
         surname,
         email,
-        password,
+        password: hashedPassword,
         id_enterprise,
         start_of_contract,
         role
       })
 
-      return true
+      console.log('usuário criado com sucesso')
+
+      return { success: true }
     } catch (err) {
       console.log(err)
-      return false
+      return { success: false, message: err}
     }
   }

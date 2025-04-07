@@ -12,8 +12,10 @@ export const loginUser = async (user: { email: string; password: string; remembe
     if (user.remember) {
       localStorage.setItem('authToken', response.data.token);
     }
-
+    
+    // Resposta do backend
     return response.data;
+
   } catch (error) {
     console.error('Falha no login:', error);
     throw error;

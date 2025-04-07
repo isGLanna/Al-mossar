@@ -1,8 +1,8 @@
 import crypto from 'crypto'
 import bcrypt from "bcrypt"
-import Person from "../models/person"
-import {Enterprise} from "../models/enterprise"
-import {sequelize} from '../models/db'
+import User from "../models/user"
+import {Enterprise} from '../models/enterprise'
+import sequelize from '../models/index'
 
 
 export const authenticateUser = async (email: string, password: string) => {
@@ -23,9 +23,9 @@ export const authenticateUser = async (email: string, password: string) => {
     */
 
     await Enterprise.sync()
-    await Person.sync()
+    await User.sync()
 
-    const user = await Person.findOne({
+    const user = await User.findOne({
       where: {email: email}
     })
 
@@ -42,13 +42,13 @@ export const authenticateUser = async (email: string, password: string) => {
     }
 
     // Define um token para o usuário
-    const token = crypto.randomBytes(256).toString('base64')
+    const token = crypto.randomBytes(64).toString('base64')
 
     console.log(token)
 
     return token
   } catch (error) {
     console.log(error)
-    return false
+    return null
   }
 }

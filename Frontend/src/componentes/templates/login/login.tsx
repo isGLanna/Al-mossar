@@ -73,8 +73,12 @@ export function Login() {
       }
     } catch (err) {
       console.error('Falha no login:', err);
+      setUser(user => ({
+        ...user, email: '', password: ''}));
+
       alert('Email ou senha inválidos.');
     }
+      
   };
 
   return (
