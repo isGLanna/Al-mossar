@@ -71,3 +71,4 @@ dist-ssr
 *.sln
 *.sw?
 src/models/index
+node_modules/
