@@ -70,4 +70,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-src/models/index.ts
+src/models/index
