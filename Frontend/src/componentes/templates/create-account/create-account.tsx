@@ -76,7 +76,7 @@ export function CreateAccount() {
       if (response.success) {
         navigate({to: '/'})
       } else {
-        alert(response.message || 'Falha inexperada')
+        alert(response.message || 'Falha inesperada')
       }
     } catch (error) {
       alert(error);
@@ -85,7 +85,7 @@ export function CreateAccount() {
 
   return (
     <div className="container" style={{display:'flex', alignItems:'center', justifyContent:'center'}}>
-      <main className="formulario" style={{ color: 'var(--texto)'}}>
+      <main className="formulario">
 
         <form className="form-container" onSubmit={handleSubmit}>
           <h2 className='mb-[15px]'>Criar Conta</h2>
@@ -94,7 +94,7 @@ export function CreateAccount() {
             <label className='requiredField'>Nome</label>
             
             <input
-              className={emptyField.name ? 'empty-login' : ''}
+              className={emptyField.name ? 'empty-input' : ''}
               type="text"
               name="name"
               maxLength={16}
@@ -107,7 +107,7 @@ export function CreateAccount() {
           <div className="form-group">
             <label className='requiredField'>Sobrenome</label>
             <input
-              className={emptyField.surname ? 'empty-login' : ''}
+              className={emptyField.surname ? 'empty-input' : ''}
               type="text"
               name="surname"
               maxLength={48}
@@ -121,7 +121,7 @@ export function CreateAccount() {
           <div className="form-group">
             <label className='requiredField'>Email</label>
             <input
-              className={emptyField.email ? 'empty-login' : ''}
+              className={emptyField.email ? 'empty-input' : ''}
               type="email"
               name="email"
               placeholder="Digite seu email"
@@ -134,7 +134,7 @@ export function CreateAccount() {
           <div className="form-group">
             <label className='requiredField'>Senha</label>
             <input
-              className={emptyField.password ? 'empty-login' : ''}
+              className={emptyField.password ? 'empty-input' : ''}
               type="password"
               name="password"
               minLength={4}
@@ -149,7 +149,7 @@ export function CreateAccount() {
           <div className="form-group">
             <label className='requiredField'>Repita sua senha</label>
             <input
-              className={emptyField.confirmed_password ? 'empty-login' : ''}
+              className={emptyField.confirmed_password ? 'empty-input' : ''}
               type="password"
               name="confirmed_password"
               minLength={4}
@@ -164,7 +164,7 @@ export function CreateAccount() {
           <div className="form-group">
             <label className='requiredField'>Identificador da empresa</label>
             <input
-              className={emptyField.id_enterprise ? 'empty-login' : ''}
+              className={emptyField.id_enterprise ? 'empty-input' : ''}
               type="number"
               name="id_enterprise"
               placeholder="Digite o código da empresa"

@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import menuRouter from './menu-routes'
-import authRouter from './login-routes'
+import authRouter from './login-register-routes'
 
 const router = Router()
 

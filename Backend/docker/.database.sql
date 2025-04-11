@@ -3,7 +3,10 @@
 
 CREATE TABLE IF NOT EXISTS enterprise (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(32) NOT NULL
+    name VARCHAR(32) NOT NULL,
+    email VARCHAR(32) NOT NULL,
+    password TEXT NOT NULL,
+    token TEXT
 );
 
 
@@ -49,15 +52,13 @@ CREATE TABLE IF NOT EXISTS dish (
 CREATE TABLE IF NOT EXISTS menu (
     id SERIAL PRIMARY KEY,
     day DATE NOT NULL,
-    description TEXT,
     id_enterprise INT NOT NULL,
-    UNIQUE (day, id_enterprise), -- 1 menu por dia por empresa
+    UNIQUE (day, id_enterprise),
     FOREIGN KEY (id_enterprise) REFERENCES enterprise(id) ON DELETE CASCADE
 );
 
 
 -- 6. Ligação entre cardápios e pratos
--- Cada menu pode ter vários pratos
 
 CREATE TABLE IF NOT EXISTS menu_dish (
     id SERIAL PRIMARY KEY,
@@ -65,5 +66,5 @@ CREATE TABLE IF NOT EXISTS menu_dish (
     id_dish INT NOT NULL,
     FOREIGN KEY (id_menu) REFERENCES menu(id) ON DELETE CASCADE,
     FOREIGN KEY (id_dish) REFERENCES dish(id) ON DELETE CASCADE,
-    UNIQUE (id_menu, id_dish) -- prato não se repete no mesmo cardápio
+    UNIQUE (id_menu, id_dish)
 );

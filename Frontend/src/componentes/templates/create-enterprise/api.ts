@@ -1,14 +1,11 @@
 import axios from 'axios'
 
 // Formato de entrada
-type UserRegisterData = {
-  name: string;
-  surname: string;
-  email: string;
-  password: string;
-  id_enterprise: number;
-  start_of_contract: string;
-  role: string;
+type EnterpriseRegisterData = {
+  name: string,
+  email: string,
+  password: string,
+  employees: string[]
 }
 
 // Formato de retorno
@@ -20,12 +17,12 @@ type RegisterResponse = {
 
 const API_URL = "http://localhost:3001"
 
-export const registerUser = async (
-  user: UserRegisterData
+export const registerEnterprise = async (
+  user: EnterpriseRegisterData
   ): Promise<RegisterResponse> => {
   try{
     // Requisição POST para endpoint /api/register
-    const response = await axios.post<RegisterResponse>(`${API_URL}/api/register`, user)
+    const response = await axios.post<RegisterResponse>(`${API_URL}/api/registerEnterprise`, user)
     
     return response.data
   } catch (error) {

@@ -1,8 +1,0 @@
-.requiredField::before{
-  content: "*";
-  position: absolute;
-  color: #e52a00;
-  font-size: 20px;
-  top: 41px;                  // Configurações para positionar no interior do input
-  left: calc(100% - 25px)
-}

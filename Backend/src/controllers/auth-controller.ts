@@ -3,6 +3,9 @@ import { authenticateUser } from '../services/auth-login'
 import { authenticateRegister } from '../services/auth-register'
 
 
+// Adormecer 
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 // Logar usuários
 export const login = async (req: Request, res: Response): Promise<void> => {
 
@@ -14,14 +17,18 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return
     }
 
-    const token = await authenticateUser(email, password)
+    const authResult  = await authenticateUser(email, password)
 
-    if (!token) {
+    await sleep(2000)
+    
+    if (!authResult ) {
       res.status(401).json({ message: 'Credenciais inválidas' })
       return
     }
 
-    res.json({ token })
+    const { token, type, name, surname, role, employees } = authResult
+
+    res.json({ token, type, name, surname, role, employees })
 
   } catch (error) {
     console.log('Erro:', error)
@@ -55,21 +62,3 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     return 
   }
 };
-
-
-// Registrar novas empresas
-export const registerEnterprise = (req: Request, res: Response): void => {
-
-  try {
-    const { name, password} = req.body
-
-    console.log('Controlador de criação de empresa')
-
-    if (!name || !password) {
-      res.status(400).json({message: 'Credenciais inválidas.'})
-      return
-    }
-  } catch(error) {
-      res.status(500).json({ message: 'Falha no servidor.'})
-  }
-}

@@ -20,10 +20,6 @@ Menu.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
     id_enterprise: {
       type: DataTypes.INTEGER,
       allowNull: false,
