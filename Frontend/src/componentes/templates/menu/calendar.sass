@@ -1,44 +1,50 @@
 .menuContainer
   display: flex
+  flex-direction: row
   flex-wrap: wrap
-  margin-block: 8rem
+  min-height: 32rem
   justify-content: space-around
   user-select: none
   gap: 2rem
 
+.h3
+  margin-inline: 30px
+
 .calendar, 
 .menu
+  margin-top: 50px
   border-radius: 20px
   font-family: sans-serif
-  box-shadow: 2px 2px 5px var(--shadow)
   background: var(--menuContainers)
-  overflow: hidden 
+  overflow: hidden
 
-.header
-  background: var(--menu-description)
-  color: #f7f7f7
-  display: flex
-  justify-content: space-between
-  align-items: center
+  .header
+    color: #f7f7f7
+    display: flex
+    justify-content: space-between
+    align-items: center
 
-  button
-    background: none
-    cursor: pointer
+    span
+      font-weight: 600
+      font-size: 18px
 
-  span
-    font-weight: 600
-    font-size: 18px
+.calendar
+  position: relative
+  max-height: 32rem
+  height: 100%
+  box-shadow: 2px 2px 5px var(--shadow)
+  .header
+    background: var(--menu-description)
 
 .days
   position: relative
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.5rem
+  gap: 0.3rem
   background-color: none
   cursor: pointer
   user-select: none
   -webkit-user-select: none
-  text-align: center
   transition: background-color 200ms
 
 .week
@@ -51,3 +57,56 @@
 .selected 
   background-color: #c5d3e3
   transition: 200ms
+
+
+.menu
+  min-height: 5rem
+  height: 100%
+  width: 25rem
+  box-shadow: 2px 2px 5px #507ba8
+  padding-bottom: 15px
+
+  .header
+    height: 2rem
+    background: #507ba8
+    justify-content: center
+    margin-bottom: 10px
+    font-size: 20px
+    font-weight: 600
+    
+
+  .dish
+    height: auto
+    width: auto
+    padding: 5px
+    transition: 200ms
+    text-align: center
+
+    &:hover
+      background: #c5d3e3
+
+
+
+@media (max-width: 720px)
+  .calendar, .menu
+    button
+      width: clamp(2rem, 7dvw, 55px)
+      height: clamp(2rem, 6dvw, 45px)
+      padding: 0
+
+  .h3
+    margin-inline: clamp(10px, 6dvw, 40px)
+    font-size: 1.4em;
+
+  .calendar
+    .header 
+      button
+        display: flex
+        justify-content: center
+        margin-inline: 10px
+        align-items: center
+        width: 35px
+        height: 35px
+
+      span
+        font-size: 16px

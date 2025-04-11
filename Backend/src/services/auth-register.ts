@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import User from '../models/user'
+import User from '../models/employee'
 import { Enterprise } from '../models/enterprise';
 import sequelize from '../models/'
 

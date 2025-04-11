@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as MenuImport } from './routes/menu'
+import { Route as CreateEnterpriseImport } from './routes/create-enterprise'
 import { Route as CreateAccountImport } from './routes/create-account'
 import { Route as IndexImport } from './routes/index'
 
@@ -20,6 +21,12 @@ import { Route as IndexImport } from './routes/index'
 const MenuRoute = MenuImport.update({
   id: '/menu',
   path: '/menu',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CreateEnterpriseRoute = CreateEnterpriseImport.update({
+  id: '/create-enterprise',
+  path: '/create-enterprise',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -53,6 +60,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CreateAccountImport
       parentRoute: typeof rootRoute
     }
+    '/create-enterprise': {
+      id: '/create-enterprise'
+      path: '/create-enterprise'
+      fullPath: '/create-enterprise'
+      preLoaderRoute: typeof CreateEnterpriseImport
+      parentRoute: typeof rootRoute
+    }
     '/menu': {
       id: '/menu'
       path: '/menu'
@@ -68,12 +82,14 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/create-account': typeof CreateAccountRoute
+  '/create-enterprise': typeof CreateEnterpriseRoute
   '/menu': typeof MenuRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/create-account': typeof CreateAccountRoute
+  '/create-enterprise': typeof CreateEnterpriseRoute
   '/menu': typeof MenuRoute
 }
 
@@ -81,27 +97,30 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/create-account': typeof CreateAccountRoute
+  '/create-enterprise': typeof CreateEnterpriseRoute
   '/menu': typeof MenuRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/create-account' | '/menu'
+  fullPaths: '/' | '/create-account' | '/create-enterprise' | '/menu'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/create-account' | '/menu'
-  id: '__root__' | '/' | '/create-account' | '/menu'
+  to: '/' | '/create-account' | '/create-enterprise' | '/menu'
+  id: '__root__' | '/' | '/create-account' | '/create-enterprise' | '/menu'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CreateAccountRoute: typeof CreateAccountRoute
+  CreateEnterpriseRoute: typeof CreateEnterpriseRoute
   MenuRoute: typeof MenuRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CreateAccountRoute: CreateAccountRoute,
+  CreateEnterpriseRoute: CreateEnterpriseRoute,
   MenuRoute: MenuRoute,
 }
 
@@ -117,6 +136,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/create-account",
+        "/create-enterprise",
         "/menu"
       ]
     },
@@ -125,6 +145,9 @@ export const routeTree = rootRoute
     },
     "/create-account": {
       "filePath": "create-account.tsx"
+    },
+    "/create-enterprise": {
+      "filePath": "create-enterprise.tsx"
     },
     "/menu": {
       "filePath": "menu.tsx"

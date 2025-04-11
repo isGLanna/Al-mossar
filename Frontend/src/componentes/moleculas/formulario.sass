@@ -1,5 +1,4 @@
 @use '../atomos/vibrar.animation'
-@use '../atomos/requiredField'
   
 .container
   display: flex
@@ -50,7 +49,7 @@
     background: var(--input)
     color: var(--texto)
     margin-block: 10px
-    border: 2px solid var(--light-blue)
+    border: 2px solid var(--orange)
     border-radius: 5px
     padding-inline: 10px
     transition: 200ms ease
@@ -63,7 +62,7 @@
       background: #e9e9e9
       outline: none
 
-    &.empty-login
+    &.empty-input
       border: 2px solid #c03520
       animation: vibrar 800ms ease
 
@@ -71,7 +70,7 @@
         color: #c03520
 
   input[type=submit]
-    background: #b29036
+    background: var(--orange)
     width: 10rem
     border-radius: 5px
     color: white
@@ -79,7 +78,7 @@
     font-weight: 700
 
     &:hover
-      background: #dfa81a
+      background: var(--light-orange)
 
   // Remover o spin
   input[type="number"]
@@ -97,16 +96,28 @@
   input[type="date"]::before
     content: "📅"
     position: absolute
-    right: 10px     // Gambiarra. Não é possível adicionar estilo no calendário (que não tem contraste com o fundo)
+    right: 9px     // Gambiarra. Não é possível adicionar estilo no calendário (que não tem contraste com o fundo)
     font-size: 18px
     pointer-events: none
+
+  .input-with-remove
+    position: relative
+    display: flex
+    align-items: center
+
+    .remove-icon
+      position: absolute
+      right: 5px
+      color: #c00
+      cursor: pointer
+      font-size: 1.2rem
 
   
   select
     width: 18rem
     height: 2.5rem
     margin: 10px 25px 25px 25px
-    border: 2px solid var(--light-blue)
+    border: 2px solid var(--orange)
     border-radius: 5px
     font-weight: 400
     text-align: center
@@ -115,3 +126,25 @@
     &:focus-visible
       background: #e9e9e9
       outline: none
+
+.requiredField::before
+  content: "*"
+  position: absolute
+  color: #cf4526
+  font-size: 20px
+  top: 41px                  // Configurações para positionar no interior do input
+  left: calc(100% - 20px)
+
+
+.btn-add-employee
+  width: 1.5rem
+  height: 1.5rem
+  color: #349024
+  margin-bottom: 10px
+  border-radius: 25px
+  transition: 200ms
+  transition: opacity 0.2s ease
+
+
+  &:hover
+    color: #276d1a

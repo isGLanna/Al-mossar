@@ -4,10 +4,14 @@ import { useState, useEffect } from 'react'
 import logo from '../../../assets/favicon.jpg'
 import '../../moleculas/formulario.sass'
 import '../../atomos/checkbox.sass'
+import '../../atomos/spinner.sass'
 import './styles.sass';
 
 export function Login() {
   const navigate = useNavigate()
+
+  // Efeito de delay de carregamento para login
+  const [isLoading, setIsLoading] = useState(false);
 
   type User = {
     email: string;
@@ -61,6 +65,8 @@ export function Login() {
     }
 
     setEmptyField(fields)
+
+    setIsLoading(true)
   
     try {
       // Verifica condição campo *field.attribute* é vazio?
@@ -68,15 +74,15 @@ export function Login() {
 
       const response = await loginUser(user);
 
-      if (response.token) {
+      if (response && response.token) {
         navigate({to: '/menu'})
       }
     } catch (err) {
-      console.error('Falha no login:', err);
       setUser(user => ({
         ...user, email: '', password: ''}));
-
       alert('Email ou senha inválidos.');
+    } finally {
+      setIsLoading(false)
     }
       
   };
@@ -92,7 +98,7 @@ export function Login() {
           <div className='form-group'>
             <label>Email</label>
             <input
-              className={emptyField.email ? 'empty-login' : ''}
+              className={emptyField.email ? 'empty-input' : ''}
               type="email"
               name="email"
               placeholder="Digite seu email"
@@ -105,7 +111,7 @@ export function Login() {
           <div className='form-group'>
             <label>Senha</label>
             <input
-              className={emptyField.password ? 'empty-login' : ''}
+              className={emptyField.password ? 'empty-input' : ''}
               type="password"
               name="password"
               placeholder="Digite sua senha"
@@ -130,8 +136,9 @@ export function Login() {
           <div className='form-group'>
             <input
               type="submit"
-              value="Entrar"
-            />
+              value={isLoading ? 'Carregando...' : 'Entrar'}
+              disabled={isLoading}
+              />
             {( emptyField.email || emptyField.password ) && <span>Preencha todos os campos</span>}
           </div>
 
@@ -141,7 +148,7 @@ export function Login() {
 
           {/* FUNCIONALIDADE SERÁ CRIADA FUTURAMENTE */}
           <div>
-            <Link to="/create-account">Cadastrar corporação</Link>
+            <Link to="/create-enterprise">Cadastrar corporação</Link>
           </div>
         </form>
       </main>

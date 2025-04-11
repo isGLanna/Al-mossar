@@ -3,7 +3,7 @@ import { Enterprise } from './enterprise'
 import sequelize from '.'
 
 
-class User extends Model {
+class Employee extends Model {
     public email!: string;
     public password!: string;
     public name!: string;
@@ -13,7 +13,7 @@ class User extends Model {
     public role?: string
 }
 
-User.init(
+Employee.init(
     {
         email: {
             type: DataTypes.STRING,
@@ -52,13 +52,13 @@ User.init(
     },
     {
         sequelize,
-        modelName: 'user',
-        tableName: 'user',
+        modelName: 'employee',
+        tableName: 'employee',
         timestamps: false,
     }
 )
 
-User.belongsTo(Enterprise, {foreignKey: 'id_enterprise', as: 'enterprise'})
-Enterprise.hasMany(User, { foreignKey: 'id_enterprise', as: 'employees' });
+Employee.belongsTo(Enterprise, {foreignKey: 'id_enterprise', as: 'enterprise'})
+Enterprise.hasMany(Employee, { foreignKey: 'id_enterprise', as: 'employees' });
 
-export default User
+export default Employee
