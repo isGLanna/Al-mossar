@@ -1,0 +1,103 @@
+.panelOverlay {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 70px);
+  backdrop-filter: blur(3px);
+  background: #002a0070;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  
+  &.fadeIn {
+    animation: fadeIn 200ms ease-in forwards;
+    pointer-events: all;
+  }
+
+  &.fadeOut {
+    animation: fadeOut 200ms ease-in forwards;
+    pointer-events: none;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.panel {
+  width: auto;
+  min-width: 40rem;
+  text-align: center;
+  color: white;
+  height: auto;
+  background: rgb(255, 255, 255);
+  border-radius: 15px;
+  border: 2px solid rgb(86, 114, 128);
+  box-shadow: 5px 8px 8px rgb(133, 162, 167);
+  overflow: hidden;
+
+  .header{
+    font-size: 14px;
+    margin-bottom: 15px;
+    background: rgb(86, 114, 128);
+    overflow: hidden;
+  }
+
+  .table {
+    margin-inline: 15px;
+  }
+
+  th, 
+  td {
+    color: var(--texto);
+    padding-inline: 5px;
+    margin-inline: 25px;
+    font-size: 17px;
+    justify-items: center;
+    border: 1px solid #aaa;
+  }
+
+}
+
+.remove-button,
+.add-button {
+  width: 6rem;
+  display: flex;
+  justify-self: center;
+  justify-content: center;
+  margin: 1rem;
+  padding: 0.3rem 0.5rem;
+  background: rgb(87, 167, 111);
+  transition: 200ms ease;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+  
+  &:hover {
+    background: rgb(63, 131, 85);
+  }
+}
+
+.add-form {
+  display: flex;
+  justify-content: space-evenly;
+  color: #333
+}

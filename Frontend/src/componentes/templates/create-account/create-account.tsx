@@ -6,8 +6,6 @@ import {registerUser} from './api'
 export function CreateAccount() {
   const navigate = useNavigate()
 
-  const roles = ['Administrador', 'Chefe', 'Cozinheiro', 'Auxiliar de cozinha', 'Limpeza', 'Outros']
-
   type User = {
     name: string;
     surname: string;
@@ -16,8 +14,7 @@ export function CreateAccount() {
     confirmed_password: string;
     start_of_contract: string;
     id_enterprise: number;
-    role: string;
-  };
+  }
 
   const [user, setUser] = useState<User>({
     name: '',
@@ -26,8 +23,7 @@ export function CreateAccount() {
     password: '',
     confirmed_password: '',
     start_of_contract: '',
-    id_enterprise: 0,
-    role: '',
+    id_enterprise: 0
   })
 
   // Entradas obrigatórias para barrar cadastro
@@ -181,18 +177,6 @@ export function CreateAccount() {
               style={{}}
               onChange={handleChange}
             />
-          </div>
-          
-          <div className="form-group">
-            <label>Cargo</label>
-            <select name="role" value={user.role} onChange={handleChange}>
-              <option value='' disabled hidden>Selecione um cargo</option>
-              {roles.map((role, index) => (
-                <option key={index} value={role}>
-                  {role}
-                </option>
-              ))}
-            </select>
           </div>
   
           <div className="form-group">

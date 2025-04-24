@@ -15,9 +15,17 @@ Dish.init(
       autoIncrement: true,
       primaryKey: true
     },
-    name: DataTypes.STRING,
-    description: DataTypes.STRING,
-    id_enterprise: DataTypes.INTEGER
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    id_enterprise: {
+      type: DataTypes.INTEGER,
+      allowNull: false}
   },
   {
     sequelize,

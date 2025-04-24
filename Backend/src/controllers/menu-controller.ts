@@ -1,39 +1,56 @@
 import { Request, Response } from 'express'
-import { Menu } from '../models/menu/menu'
-import { Dish } from '../models/menu/dish'
-import { Enterprise} from "../models/enterprise";
+import { getMenuByDate, createMenu, updateMenu, deleteMenu } from '../services/menu-service'
 
-export const getMenu = async (req: Request, res: Response): Promise<void> => {
-  const { day } = req.query
+// Selecionar o menu
+export async function get ( req: Request, res: Response ): Promise<void> {
+  const { day, id_enterprise } = req.query
 
   try {
-    if(!day) {
-      res.status(400).json({ success: false, message: 'Dia não encontrado'})
-    }
+    const dishes = await getMenuByDate(String(day), Number(id_enterprise))
 
-    const menu = await Menu.findOne({
-      where: { day },
-      include: [{
-        model: Dish,
-        as: 'dishes',
-        attributes: ['id', 'description'],
-        through: { attributes: [] },
-      },
-        {
-          model: Enterprise,
-          as: 'enterprise',
-          attributes: ['name']
-        },
-      ],
-    })
-
-    if(!menu) {
-      res.status(404).json({ message: 'Menu não foi encontrado'})
-      throw 'Menu não foi encontrado'
-    }
-    res.status(200).json(menu)
+    // Retorna operação efetuada com sucesso ou nenhum valor encontrado
+    !dishes ?
+      res.status(404).json({ message: 'Não há refeições para o dia.', success: true }):
+      res.status(200).json({dishes, success: true})
 
   } catch (error) {
-    res.status(401).json({ success: false, message: error || 'Erro no servidor' })
+    res.status(500).json({ message: error, success: false })
+  }
+}
+
+// Cria o menu
+export async function create ( req: Request, res: Response ): Promise<void> {
+  const { date, id_enterprise, dishes } = req.body
+
+  try {
+    const newMenu = await createMenu(date, id_enterprise, dishes)
+
+    res.status(201).json(newMenu)
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao criar cardápio', success: false})
+  }
+}
+
+export async function update ( req: Request, res: Response ): Promise<void> {
+  const { date, id_enterprise, dishes } = req.body
+
+  try {
+    const updated = await updateMenu(id_enterprise, date, dishes)
+
+    res.json(updated)
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao atualizar cardápio' })
+  }
+}
+
+export async function deleted(req: Request, res: Response ): Promise<void> {
+  const { id_enterprise, date } = req.body
+
+  try {
+    const result = await deleteMenu(date, id_enterprise)
+
+    res.status(200).json(result)
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao deletar cardápio'})
   }
 }

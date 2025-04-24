@@ -1,16 +1,13 @@
 import { UserProfile } from '../../organismos/topbar/user-profile'
-import styles from '../../organismos/topbar/pseudo-topbar.module.scss'
 import '../../moleculas/cardapio.module.scss';
 import { MenuCalendar } from './menuCalendar'
-import { getAuthData } from '../login/api'
-import { menuQuery } from './api'
+import { Employee } from '../../../models/Employee'
 
-export function Menu() {
+type Props = {
+  employee: Employee
+}
 
-  // Puxa dados do usuário
-  const authData = getAuthData()
-  
-  const { name, surname, role, type, employees } = authData || {}
+export function Menu({ employee }: Props) {
 
   return (
     <div className='mt-[70px]'>
@@ -19,7 +16,7 @@ export function Menu() {
       </h3>
 
       <header>
-        <UserProfile name={name} role={role} type={type}/>
+        <UserProfile employee={employee}/>
       </header>
 
       <main>
