@@ -1,13 +1,17 @@
 import { UserProfile } from '../../organismos/topbar/user-profile'
 import '../../moleculas/cardapio.module.scss';
 import { MenuCalendar } from './menuCalendar'
-import { Employee } from '../../../models/Employee'
+import { Employee } from '../../../routes/menu'
+import { createEmployee } from '../../../models/EmployeeFactory'
 
-type Props = {
-  employee: Employee
+interface MenuProps {
+  employee: Employee;
 }
 
-export function Menu({ employee }: Props) {
+export function Menu({ employee }: MenuProps) {
+  const { id, idEnterprise, email, name, surname, role, employees, token } = employee;
+
+  const user = createEmployee(id, idEnterprise, email, name, surname, role, employees, token)
 
   return (
     <div className='mt-[70px]'>
@@ -16,7 +20,7 @@ export function Menu({ employee }: Props) {
       </h3>
 
       <header>
-        <UserProfile employee={employee}/>
+        <UserProfile employee={user}/>
       </header>
 
       <main>

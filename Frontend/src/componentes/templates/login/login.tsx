@@ -47,13 +47,13 @@ export function Login() {
   };
 
   // Lidar com verificação do estado do token
-  useEffect(() => {
+/*  useEffect(() => {
     const token = getToken();
     
     if (token) {
-      navigate({to: '/menu'});
+      navigate({ to: '/menu' });
     };
-  }, [navigate]);
+  }, [navigate]); */
 
   // Lidar com entrada do usuário, caso exista campo vazio, negar acesso
   const handleSubmit = async (e: React.FormEvent) => {
@@ -76,11 +76,9 @@ export function Login() {
 
       if (response.success && response.employee) {
 
-        const userId = response.employee.getId()
-
         navigate({
-          to: `/menu/${userId}`,
-          params: { employeeId: userId },
+          to: '/menu',
+          search: { employee: response.employee },
         })
       }
     } catch (err) {
