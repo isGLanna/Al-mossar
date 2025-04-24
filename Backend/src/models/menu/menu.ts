@@ -1,12 +1,18 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, Association } from 'sequelize'
 import { Enterprise } from '../enterprise'
+import { Dish } from './dish'
 import sequelize from '../index'
 
 class Menu extends Model {
   public id!: number;
   public day!: Date;
   public description?: string;
-  public id_enterprise!: number
+  public id_enterprise!: number;
+
+  public setDishes!: (dishes: Dish[] | number[], options?: any) => Promise<void>;
+  public static associations: {
+    dishes: Association<Menu, Dish>;
+  };
 }
 
 Menu.init(
@@ -17,7 +23,7 @@ Menu.init(
       primaryKey: true,
     },
     day: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DATE,
       allowNull: false,
     },
     id_enterprise: {

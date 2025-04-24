@@ -7,7 +7,7 @@ export async function registerEnterprise(req: Request, res: Response): Promise<v
     const result = await createEnterprise(req.body)
 
     if (result.success) {
-      res.status(201).json({ success: true})
+      res.status(201).json({ success: true, id: result.id})
     } else{
       res.status(400).json({ success: false, message: result.message})
     }

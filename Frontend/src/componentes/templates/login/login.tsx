@@ -66,26 +66,31 @@ export function Login() {
 
     setEmptyField(fields)
 
+    // Verifica condição campo *field.attribute* é vazio?
+    if(fields.email || fields.password) return
+
     setIsLoading(true)
   
     try {
-      // Verifica condição campo *field.attribute* é vazio?
-      if(fields.email || fields.password) return
-
       const response = await loginUser(user);
 
-      if (response && response.token) {
-        navigate({to: '/menu'})
+      if (response.success && response.employee) {
+
+        const userId = response.employee.getId()
+
+        navigate({
+          to: `/menu/${userId}`,
+          params: { employeeId: userId },
+        })
       }
     } catch (err) {
       setUser(user => ({
         ...user, email: '', password: ''}));
-      alert('Email ou senha inválidos.');
+      alert(Response.error || 'Email ou senha inválidos.');
     } finally {
       setIsLoading(false)
-    }
-      
-  };
+    } 
+  }
 
   return (
     

@@ -19,34 +19,34 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     const authResult  = await authenticateUser(email, password)
 
-    await sleep(2000)
+    await sleep(1500)
     
     if (!authResult ) {
       res.status(401).json({ message: 'Credenciais inválidas' })
       return
     }
 
-    const { token, type, name, surname, role, employees } = authResult
+    const { id, name, surname, idEnterprise, role, token, employees } = authResult
 
-    res.json({ token, type, name, surname, role, employees })
+    res.json({ success: true, id, email, name, surname, idEnterprise, role, token, employees})
 
   } catch (error) {
     console.log('Erro:', error)
-    res.status(500).json({ message: 'Falha no servidor.'})
+    res.status(500).json({ success: false, message: error || 'Falha no servidor.'})
   }
 }
 
 // Registrar novos usuários
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, surname, email, password, id_enterprise, start_of_contract, role } = req.body;
+    const { name, surname, email, password, id_enterprise, start_of_contract } = req.body;
 
     if (!name || !surname || !email || !password || !id_enterprise) {
       res.status(400).json({ message: 'Preencha todos os campos!' });
       return
     }
 
-    const response = await authenticateRegister(name, surname, email, password, id_enterprise, start_of_contract, role);
+    const response = await authenticateRegister(name, surname, email, password, id_enterprise, start_of_contract);
 
     console.log(response.message)
     // Acesso negado (há credenciais inválidas ou falha na conexão com db)

@@ -1,5 +1,5 @@
 import { Enterprise } from '../models/enterprise'
-import { AuthorizedEmail } from '../models/authorized-emails'
+import { Employee } from '../models/employee'
 import bcrypt from 'bcrypt'
 
 // Formato de input/output
@@ -7,11 +7,15 @@ interface EnterpriseData {
   name: string
   email: string
   password: string
-  employees?: string[]
+  employees: {
+    email: string,
+    role: string
+  }[]
 }
 
 interface RegisterResult {
   success: boolean
+  id?: number
   message?: string
 }
 
@@ -39,7 +43,7 @@ export async function createEnterprise(data: EnterpriseData): Promise<RegisterRe
     return { success: false, message: 'E-mail da empresa inválido.' }
   }
 
-  if (employees && employees.some((e) => !emailRegex.test(e))) {
+  if (employees && employees.some((e) => !emailRegex.test(e.email))) {
     return { success: false, message: 'Um ou mais e-mails de funcionários são inválidos.' }
   }
 
@@ -56,16 +60,17 @@ export async function createEnterprise(data: EnterpriseData): Promise<RegisterRe
 
     // Mapeia emails dos empregados, caso tenha
     if (employees && employees.length > 0) {
-      const authorizedEmails = employees.map((email) => ({
+      const authorizedEmails = employees.map(({ email, role }) => ({
         email,
-        id_enterprise: enterprise.id 
+        role,
+        id_enterprise: enterprise.id
       }))
 
-      await AuthorizedEmail.bulkCreate(authorizedEmails)
+      await Employee.bulkCreate(authorizedEmails)
 
     }
 
-    return { success: true }
+    return { success: true, id: enterprise.id}
   } catch (error) {
     console.error(error)
     return { success: false, message: 'Erro ao criar empresa.' }

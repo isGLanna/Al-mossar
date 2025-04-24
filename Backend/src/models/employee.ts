@@ -3,7 +3,8 @@ import { Enterprise } from './enterprise'
 import sequelize from '.'
 
 
-class Employee extends Model {
+export class Employee extends Model {
+    public id !: number;
     public email!: string;
     public password!: string;
     public name!: string;
@@ -15,19 +16,23 @@ class Employee extends Model {
 
 Employee.init(
     {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+          },
         email: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
-            primaryKey: true
+            unique: true
         },
         password: {
             type: DataTypes.TEXT,
-            allowNull: false,
+            allowNull: true,
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         surname: {
             type: DataTypes.STRING,
@@ -43,7 +48,7 @@ Employee.init(
         },
         role: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: false,
         },
         token: {
           type: DataTypes.STRING,
@@ -52,7 +57,7 @@ Employee.init(
     },
     {
         sequelize,
-        modelName: 'employee',
+        modelName: 'Employee',
         tableName: 'employee',
         timestamps: false,
     }
@@ -60,5 +65,3 @@ Employee.init(
 
 Employee.belongsTo(Enterprise, {foreignKey: 'id_enterprise', as: 'enterprise'})
 Enterprise.hasMany(Employee, { foreignKey: 'id_enterprise', as: 'employees' });
-
-export default Employee

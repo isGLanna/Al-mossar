@@ -8,7 +8,6 @@ type UserRegisterData = {
   password: string;
   id_enterprise: number;
   start_of_contract: string;
-  role: string;
 }
 
 // Formato de retorno

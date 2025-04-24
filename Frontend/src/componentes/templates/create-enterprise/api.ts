@@ -5,7 +5,10 @@ type EnterpriseRegisterData = {
   name: string,
   email: string,
   password: string,
-  employees: string[]
+  employees: {
+    email: string
+    role: string
+  }[]
 }
 
 // Formato de retorno
