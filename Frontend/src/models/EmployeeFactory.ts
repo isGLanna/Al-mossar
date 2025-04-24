@@ -8,11 +8,11 @@ import { Employee } from './Employee';
 
 export function createEmployee(id: number, idEnterprise: number, email: string, name: string, surname: string, role: string, employees: { name: string; surname: string; role: string }[], token: string ): Employee {
   switch (role) {
-    case 'Administrador':
+    case 'administrador':
       return new Administrator(id, idEnterprise, name, surname, email, employees, token)
-    case 'Gerente':
+    case 'gerente':
       return new Manager(id, idEnterprise, name, surname, email, employees , token)
-    case 'Cozinheiro':
+    case 'cozinheiro':
       return new Cook(id, idEnterprise, name, surname, email, employees, token)
     default:
       return new GenericEmployee(id, idEnterprise, name, surname, email, role, employees, token)
