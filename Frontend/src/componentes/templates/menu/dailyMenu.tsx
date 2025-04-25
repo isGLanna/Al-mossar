@@ -1,31 +1,14 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { GrFormNext, GrFormPrevious } from './icons'
+import { MenuDish, Dish } from '../../../models/Menu'
 import './calendar.sass'
 
-export function MenuCalendar({ user }: { user: string }){
+
+export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
   const today = new Date()
   const week = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
 
-  const [dishes] = useState([
-    {
-      id: 1,
-      name: 'Feijoada',
-      descricao: 'Feijão preto com carnes e arroz',
-      dia: 10
-    },
-    {
-      id: 2,
-      name: 'Estrogonofe',
-      descricao: 'Frango ao creme com batata palha',
-      dia: 11
-    },
-    {
-      id: 3,
-      name: 'Lasanha',
-      descricao: 'Carne, queijo e molho de tomate',
-      dia: 11
-    }
-  ])
+  const [dishes, setDishes] = useState<Dish[]>([])
 
   // Seleciona dia da semana
   const getDaysInMonth = (year: number, month: number) => {
@@ -75,7 +58,19 @@ export function MenuCalendar({ user }: { user: string }){
   // Alterar dia selecionado
   const handleDayClick = (day: number) => {
     setSelectedDay(day)
+    fetchMenuForDay(day)
   }
+
+  // Criar uma função para buscar cardápio do dia no backend
+  const fetchMenuForDay = async (day: number) => {
+    const menuDish = new MenuDish(idEnterprise, `${currentYear}-${currentMonth + 1}-${day}`)
+    await menuDish.fetchMenu()
+    setDishes(menuDish.getDishes() || [])
+  }
+
+  useEffect(() => {
+    fetchMenuForDay(today.getDate()) // Ao montar o componente, busca o cardápio do dia
+  }, [currentMonth, currentYear])
 
   return (
     <section className='menuContainer'>
@@ -115,11 +110,14 @@ export function MenuCalendar({ user }: { user: string }){
       <article className='menu'>
         <header className='header'>Cardápio</header>
 
-        {dishes.map((dish) => (
+        { dishes.length > 0 ? 
+        (dishes.map((dish) => (
           <div className='dish' key={dish.id}>
             {dish.name}
           </div>
-        ))}
+        ))) :
+        (<div className='dish'>Nenhuma refeição foi encontrada</div>)}
+
       </article>
     </section>
   )

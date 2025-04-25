@@ -1,6 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
 import { logoutUser } from '../../templates/login/api'
-import { GrLogout, FaCircleUser, IoIosPeople, FaFileInvoiceDollar } from "./icons"
+import { GrLogout, FaCircleUser, IoIosPeople, FaMoneyBillTransfer } from "./icons"
 import { EmployeePanel } from '../../templates/menu/panel'
 import styles from './pseudo-topbar.module.scss'
 import { useState } from 'react'
@@ -36,13 +36,11 @@ export function UserProfile({ employee }: Props){
       <div className={styles.iconGroup}>
           {employee.canAccessEmployeePanel() && (
           <>
-            <FaFileInvoiceDollar className='icon' size={25} />
+            <FaMoneyBillTransfer className='icon' size={25} />
             <IoIosPeople className='icon' size={35} color='white' onClick={handlePanel} />
-            <EmployeePanel isOpen={panelIsOpen} onClose={() => setPanelIsOpen(false)} />
+            <EmployeePanel isOpen={panelIsOpen} employee={employee} onClose={() => setPanelIsOpen(false)} />
           </>
         )}
-
-      
         
         <div className={styles.userIconWrapper}>
           <FaCircleUser className='icon' size={35} onClick={handleSettings} />

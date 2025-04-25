@@ -1,11 +1,10 @@
 import { DataTypes, Model, Association } from 'sequelize'
-import { Enterprise } from '../enterprise'
 import { Dish } from './dish'
 import sequelize from '../index'
 
 class Menu extends Model {
   public id!: number;
-  public day!: Date;
+  public day!: string;
   public description?: string;
   public id_enterprise!: number;
 
@@ -23,7 +22,7 @@ Menu.init(
       primaryKey: true,
     },
     day: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     id_enterprise: {
@@ -38,6 +37,7 @@ Menu.init(
   {
     sequelize,
     modelName: 'Menu',
+    tableName: 'menu',
     timestamps: false,
   }
 )

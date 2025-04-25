@@ -3,6 +3,6 @@ import { GrFormPrevious } from "react-icons/gr"
 
 export {
   GrFormNext,
-  GrFormPrevious 
+  GrFormPrevious,
 }
 

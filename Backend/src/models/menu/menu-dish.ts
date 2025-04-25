@@ -19,7 +19,7 @@ MenuDish.init(
   {
     sequelize,
     modelName: 'MenuDish',
-    tableName: 'menuDish',
+    tableName: 'menu_dish',
     timestamps: false,
   }
 )

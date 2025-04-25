@@ -1,24 +1,18 @@
 import { useState, useEffect } from 'react'
 import { HiOutlineTrash } from "react-icons/hi"
 import { IoMdPersonAdd } from "react-icons/io"
+import { Employee } from '../../../../models/Employee'
 import { addEmployeeAPI, deleteEmployeeAPI, getEmployeesAPI, editEmployeeAPI } from './api'
 import '../../../moleculas/formulario.sass'
 import './employee-panel.scss'
 
-type Employee = {
-  id: number
-  name: string
-  surname: string
-  role: string
-  email: string
-}
-
 type EmployeePanelProps = {
   isOpen: boolean
+  employee: Employee
   onClose: () => void
 }
 
-export function EmployeePanel({ isOpen, onClose }: EmployeePanelProps) {
+export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps) {
   const [visible, setVisible] = useState(isOpen)
   const [addEmployee, setAddEmployee] = useState(false)
   const [email, setEmail] = useState('')
@@ -121,8 +115,9 @@ export function EmployeePanel({ isOpen, onClose }: EmployeePanelProps) {
             <tr>
               <th style={{ width: '8rem' }}>Nome</th>
               <th style={{ width: '20rem' }}>Sobrenome</th>
-              <th style={{ width: '8rem' }}>Cargo</th>
-              <th style={{ width: '5rem' }}></th>
+              <th style={{ width: '18rem' }}>Email</th>
+              <th style={{ width: '11rem' }}>Cargo</th>
+              {employee.canEditEmployeePanel() && (<th style={{ width: '5rem' }}></th>)}
             </tr>
           </thead>
           <tbody>
@@ -131,68 +126,93 @@ export function EmployeePanel({ isOpen, onClose }: EmployeePanelProps) {
                 <td>
                   <input
                     value={editedEmployees[emp.id]?.name ?? emp.name}
-                    onChange={(e) => handleEditChange(emp.id, 'name', e.target.value)}
+                    readOnly
                   />
                 </td>
                 <td>
                   <input
                     value={editedEmployees[emp.id]?.surname ?? emp.surname}
-                    onChange={(e) => handleEditChange(emp.id, 'surname', e.target.value)}
+                    readOnly
                   />
                 </td>
                 <td>
-                  <select
-                    value={editedEmployees[emp.id]?.role ?? emp.role}
-                    onChange={(e) => handleEditChange(emp.id, 'role', e.target.value)}
-                  >
-                    {roles.map((r, i) => (
-                      <option key={i} value={r}>{r}</option>
-                    ))}
-                  </select>
+                  <input
+                    value={editedEmployees[emp.id]?.email ?? emp.email}
+                    readOnly
+                  />
                 </td>
                 <td>
-                  <HiOutlineTrash onClick={() => handleDelete(emp.email)} color={'#a33'} size={20} />
+                  {employee.canEditEmployeePanel() ? (<select
+                    value={
+                      roles.includes(editedEmployees[emp.id]?.role ?? emp.role)
+                        ? (editedEmployees[emp.id]?.role ?? emp.role)
+                        : ''}
+                    onChange={(e) => handleEditChange(emp.id, 'role', e.target.value)}
+                  >
+
+                      {!roles.includes(editedEmployees[emp.id]?.role ?? emp.role) && (
+                        <option disabled value="">
+                          {editedEmployees[emp.id]?.role ?? emp.role}
+                        </option>
+                      )}
+
+                      {roles.map((r, i) => (
+                        <option key={i} value={r}>
+                          {r}
+                        </option>
+                      ))}
+                    </select>
+                  ) :
+                  (
+                    <span>{emp.role}</span>
+                  )
+                  }
                 </td>
+                
+                {employee.canEditEmployeePanel() && (<td>
+                  <HiOutlineTrash onClick={() => handleDelete(emp.email)} color={'#a33'} size={20} />
+                </td>)}
               </tr>
             ))}
           </tbody>
         </table>
 
-        <form className='add-form' onSubmit={(e) => { e.preventDefault(); handleSubmit() }}>
-          {addEmployee && (
-            <>
-              <div className="form-group">
-                <input
-                  type="email"
-                  placeholder="Email do funcionário"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  style={{ margin: '25px 0px 0px 0px', border: '2px solid #aaa' }}
-                  required
-                />
-              </div>
+        {employee.canEditEmployeePanel() && (<form className='add-form' onSubmit={(e) => { e.preventDefault(); handleSubmit() }}>
+            {addEmployee && (
+              <>
+                <div className="form-group">
+                  <input
+                    type="email"
+                    placeholder="Email do funcionário"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    style={{ margin: '25px 0px 0px 0px', border: '2px solid #aaa' }}
+                    required
+                  />
+                </div>
 
-              <div className="form-group">
-                <select
-                  name="role"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  style={{ margin: '25px 0px 0px 0px', border: '2px solid #aaa' }}
-                  required
-                >
-                  <option value='' disabled hidden>Selecione um cargo</option>
-                  {roles.map((role, index) => (
-                    <option key={index} value={role}>
-                      {role}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </>
-          )}
-        </form>
+                <div className="form-group">
+                  <select
+                    name="role"
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
+                    style={{ margin: '25px 0px 0px 0px', border: '2px solid #aaa' }}
+                    required
+                  >
+                    <option value='' disabled hidden>Selecione um cargo</option>
+                    {roles.map((role, index) => (
+                      <option key={index} value={role}>
+                        {role}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </>
+            )}
+          </form>
+        )}
 
-        <button
+        {employee.canEditEmployeePanel() && (<button
           className="add-button"
           onClick={(e) => {
             e.preventDefault()
@@ -204,7 +224,8 @@ export function EmployeePanel({ isOpen, onClose }: EmployeePanelProps) {
           }}
         >
           {addEmployee ? 'Confirmar' : <IoMdPersonAdd size={20}/>}
-        </button>
+        </button>)}
+        
       </div>
     </section>
   )
