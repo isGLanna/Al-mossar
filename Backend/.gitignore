@@ -72,3 +72,5 @@ dist-ssr
 *.sw?
 src/models/index
 node_modules/
+docker-compose.yml
+docker/
