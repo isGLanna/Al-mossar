@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-interface Dish {
+export interface Dish {
+  id: number
   name: string
   description: string
 }
@@ -11,7 +12,15 @@ interface MenuResponse {
   dishes?: Dish[]
 }
 
-export class Menu {
+const API_URL = 'http://localhost:3001'
+
+export interface Dish {
+  id: number
+  name: string
+  description: string
+}
+
+export class MenuDish {
   private day: string = ''
   private idEnterprise: number = 0
   private dishes: Dish[] = []
@@ -24,35 +33,36 @@ export class Menu {
   // GET - query do cardápio do dia
   async fetchMenu(): Promise<void> {
     try {
-      const result = await axios.get('/menu', {
+      const result = await axios.get(`${API_URL}/api/menu`, {
         params: { id_enterprise: this.idEnterprise, day: this.day }
       })
-      // Armazena cardápio para evitar novas consultas
+
       this.dishes = result.data.dishes
 
     } catch (error) {
-      
       this.dishes = []
     }
   }
 
   // POST - criar cardápio
-  async createMenu(): Promise<void> {
+  async createMenu(): Promise<MenuResponse> {
     try {
-      await axios.post('/menu', {
+      await axios.post(`${API_URL}/api/menu`, {
         id_enterprise: this.idEnterprise,
         date: this.day,
         dishes: this.dishes
       })
-    } catch (error) {
 
+      return { success: true, message: 'Cardápio criado'}
+    } catch (error: any) {
+      return { success: false, message: error?.response?.data?.message || 'Erro ao atualizar'}
     }
   }
 
   // Atualizar cardápio
   async updateMenu(): Promise<MenuResponse> {
     try {
-      await axios.put('/menu', {
+      await axios.put(`${API_URL}/api/menu`, {
         id_enterprise: this.idEnterprise,
         day: this.day,
         dishes: this.dishes
@@ -66,7 +76,7 @@ export class Menu {
   // Deletar cardápio
   async deleteMenu(): Promise<MenuResponse> {
     try {
-      await axios.delete('/menu', {
+      await axios.delete(`${API_URL}/api/menu`, {
         params: 
         { id_enterprise: this.idEnterprise,
           day: this.day
@@ -94,8 +104,9 @@ export class Menu {
     this.dishes = dishes
   }
 
-  addDishByName(name: string): void {
-    this.dishes = this.dishes.filter(d => d.name !== name)
+  addDishByName(id: number, name: string, description: string): void {
+    const newDish: Dish = { id, name, description };
+    this.dishes.push(newDish);
   }
 
   setDay(day: string): void {

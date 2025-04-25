@@ -1,6 +1,6 @@
 import { UserProfile } from '../../organismos/topbar/user-profile'
 import '../../moleculas/cardapio.module.scss';
-import { MenuCalendar } from './menuCalendar'
+import { DailyMenu } from './dailyMenu'
 import { Employee } from '../../../routes/menu'
 import { createEmployee } from '../../../models/EmployeeFactory'
 
@@ -19,12 +19,13 @@ export function Menu({ employee }: MenuProps) {
         "Esse aí vai ser cozinheiro igual um dia eu vou ser o papa" — Jacquin
       </h3>
 
+      {/* Desloca para pseudo-topbar, onde simula interação com a barra superior (classe pai)*/}
       <header>
         <UserProfile employee={user}/>
       </header>
 
       <main>
-        <MenuCalendar user='' work-team=''/>
+        <DailyMenu idEnterprise={user.idEnterprise}/>
       </main>
 
       <p>Se chegou até aqui, o login foi realizado com sucesso!</p>

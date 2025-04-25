@@ -5,5 +5,6 @@ export class Cook extends Employee {
     super (id, idEnterprise, name, surname, email, 'Cozinheiro', employees, token)
   }
 
+  canAccessEmployeePanel(): boolean { return true }
   canEditMenu() { return true }
 }

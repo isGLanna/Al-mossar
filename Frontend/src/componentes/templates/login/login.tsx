@@ -1,5 +1,5 @@
 import { Link, useNavigate } from '@tanstack/react-router'
-import { loginUser, getToken } from './api';
+import { loginUser, getToken, getUserByToken } from './api';
 import { useState, useEffect } from 'react'
 import logo from '../../../assets/favicon.jpg'
 import '../../moleculas/formulario.sass'
@@ -47,13 +47,19 @@ export function Login() {
   };
 
   // Lidar com verificação do estado do token
-/*  useEffect(() => {
-    const token = getToken();
-    
-    if (token) {
-      navigate({ to: '/menu' });
-    };
-  }, [navigate]); */
+  useEffect(() => {
+    const autoLogin = async () => {
+      const response = await getUserByToken()
+
+      if (response.success && response.employee){
+        navigate({
+          to: '/menu',
+          search: { employee: response.employee}
+        })
+      }
+    }
+    autoLogin()
+  }, [navigate])
 
   // Lidar com entrada do usuário, caso exista campo vazio, negar acesso
   const handleSubmit = async (e: React.FormEvent) => {

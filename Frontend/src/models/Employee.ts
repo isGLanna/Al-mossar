@@ -30,6 +30,10 @@ export abstract class Employee {
     return false
   }
 
+  canEditEmployeePanel(): boolean {
+     return false 
+  }
+
   canViewPayroll(): boolean {
     return false;
   }

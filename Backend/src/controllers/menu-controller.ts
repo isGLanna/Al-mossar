@@ -6,12 +6,23 @@ export async function get ( req: Request, res: Response ): Promise<void> {
   const { day, id_enterprise } = req.query
 
   try {
-    const dishes = await getMenuByDate(String(day), Number(id_enterprise))
+    const menu = await getMenuByDate(String(day), Number(id_enterprise))
 
     // Retorna operação efetuada com sucesso ou nenhum valor encontrado
-    !dishes ?
-      res.status(404).json({ message: 'Não há refeições para o dia.', success: true }):
-      res.status(200).json({dishes, success: true})
+    if (!menu) {
+      res.status(404).json({ message: 'Não há refeições para o dia.', success: true })
+      return
+    }
+
+    const formattedDishes = menu.dishes.map((dish: any) => ({
+      id: dish.id,
+      name: dish.name,
+      description: dish.description
+    }))
+
+    console.log(formattedDishes)
+
+    res.status(200).json({ dishes: formattedDishes, success: true })
 
   } catch (error) {
     res.status(500).json({ message: error, success: false })

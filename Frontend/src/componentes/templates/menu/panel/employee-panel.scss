@@ -61,6 +61,8 @@
 
   .table {
     margin-inline: 15px;
+    margin-bottom: 15px;
+
   }
 
   th, 
@@ -71,8 +73,17 @@
     font-size: 17px;
     justify-items: center;
     border: 1px solid #aaa;
-  }
 
+    input:focus,
+    select:focus,
+    button:focus {
+      outline: none;
+    }
+
+    input{
+      width: 100%;
+    }
+  }
 }
 
 .remove-button,

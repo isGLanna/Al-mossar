@@ -14,7 +14,7 @@ type Employee = {
 }
 
 export function getEnterpriseId(){
-  return 1
+  return 31
 }
 
 // Realiza requisição, retorna atributos e um objeto usuário
@@ -44,7 +44,7 @@ export const loginUser = async (user: { email: string; password: string; remembe
       token,
     };
 
-    return { success: true, message, employee: employee};
+    return { success: true, message: message, employee: employee}
   } catch (error: any) {
     const message = error?.response?.data?.message || 'Erro ao fazer login'
     return { success: false, message, employee: null}
@@ -54,6 +54,42 @@ export const loginUser = async (user: { email: string; password: string; remembe
 // Pega o token do localStorage ou sessionStorage
 export const getToken = () => {
   return localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || null
+}
+
+// Pegar informações do usuário com base no token armazenado
+export const getUserByToken = async (): Promise<{ success: boolean; message: string; employee: Employee | null }> => {
+  
+  const token = getToken()
+
+  if (!token) {
+    return { success: false, message: 'Token não encontrado.', employee: null };
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}/api/token-login`, {
+      headers: { Authorization: `Bearer ${token}`}
+    })
+    
+    const { success, message, id, email, name, surname, idEnterprise, role, employees } = response.data
+
+    if (!success) throw new Error(message)
+
+    const employee: Employee = {
+      id,
+      idEnterprise,
+      email,
+      name,
+      surname,
+      role,
+      employees,
+      token,
+    }
+
+    return { success: true, message: message, employee: employee}
+  } catch (error: any) {
+    const message = error?.response?.data?.message || 'Erro inexperado'
+    return { success: false, message, employee: null }
+  }
 }
 
 // Remove todos os dados de autenticação
