@@ -9,6 +9,7 @@ export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
   const week = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
 
   const [dishes, setDishes] = useState<Dish[]>([])
+  const [openDescription, setOpenDescription] = useState<number | null>(null)
 
   // Seleciona dia da semana
   const getDaysInMonth = (year: number, month: number) => {
@@ -68,6 +69,14 @@ export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
     setDishes(menuDish.getDishes() || [])
   }
 
+  // Lidar com expansão de descrição de pratos
+  const handleDescription = (id: number) => {
+    if (openDescription === id)
+      setOpenDescription(null)
+    else
+      setOpenDescription(id)
+  }
+
   useEffect(() => {
     fetchMenuForDay(today.getDate()) // Ao montar o componente, busca o cardápio do dia
   }, [currentMonth, currentYear])
@@ -109,11 +118,13 @@ export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
 
       <article className='menu'>
         <header className='header'>Cardápio</header>
-
+      
+      {/* Verifica tamanho do array, caso esteja vazio, informa não ter */}
         { dishes.length > 0 ? 
         (dishes.map((dish) => (
-          <div className='dish' key={dish.id}>
+          <div className={`dish ${openDescription === dish.id ? 'expanded' : ''}`} key={dish.id} onClick={() => handleDescription(dish.id)}>
             {dish.name}
+            <p>{dish.description}</p>
           </div>
         ))) :
         (<div className='dish'>Nenhuma refeição foi encontrada</div>)}

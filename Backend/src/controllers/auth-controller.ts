@@ -27,9 +27,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return
     }
 
-    const { id, name, surname, idEnterprise, role, token, employees } = authResult
+    const { id, name, surname, idEnterprise, role, token } = authResult
 
-    res.json({ success: true, id, email, name, surname, idEnterprise, role, token, employees})
+    res.json({ success: true, id, email, name, surname, idEnterprise, role, token})
 
   } catch (error) {
     console.log('Erro:', error)

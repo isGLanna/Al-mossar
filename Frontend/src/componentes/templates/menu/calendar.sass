@@ -76,11 +76,24 @@
     
 
   .dish
-    height: auto
     width: auto
     padding: 5px
-    transition: 200ms
+    max-height: 40px
+    overflow: hidden
+    transition: max-height 0.4s ease, padding 0.4s ease
     text-align: center
+    cursor: pointer
+
+    &.expanded
+      max-height: 10rem     // Altura suficiente para caber a descrição
+      overflow-y: auto
+      padding: 10px
+
+    p
+      margin-top: 9px
+      border-block: 1px solid #507ba8
+      background: linear-gradient(to right, transparent 0%, #d9e6f5 5%, #d9e6f5 95%, transparent 100%)
+      transition: font-size 0.3s ease
 
     &:hover
       background: #c5d3e3

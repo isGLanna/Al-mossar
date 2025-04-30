@@ -19,12 +19,6 @@ export const authenticateUser = async (email: string, password: string) => {
     const token = crypto.randomBytes(64).toString('base64')
     await employee.update({ token })
 
-    // Retornar colegas de trabalho
-    const employees = await Employee.findAll({
-      where: { id_enterprise: employee.id_enterprise },
-      attributes: ['name', 'surname', 'role']
-    })
-
     return {
       id: employee.id,
       name: employee.name,
@@ -32,7 +26,6 @@ export const authenticateUser = async (email: string, password: string) => {
       idEnterprise: employee.id_enterprise,
       role: employee.role,
       token,
-      employees
     }
     
   } catch (error) {

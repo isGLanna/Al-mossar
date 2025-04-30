@@ -6,15 +6,15 @@ import { Cook } from './roles/Cook';
 import { GenericEmployee } from './roles/GenericEmployee.ts'
 import { Employee } from './Employee';
 
-export function createEmployee(id: number, idEnterprise: number, email: string, name: string, surname: string, role: string, employees: { name: string; surname: string; role: string }[], token: string ): Employee {
+export function createEmployee(id: number, idEnterprise: number, email: string, name: string, surname: string, role: string, token: string ): Employee {
   switch (role) {
     case 'administrador':
-      return new Administrator(id, idEnterprise, name, surname, email, employees, token)
+      return new Administrator(id, idEnterprise, name, surname, email, token)
     case 'gerente':
-      return new Manager(id, idEnterprise, name, surname, email, employees , token)
+      return new Manager(id, idEnterprise, name, surname, email, token)
     case 'cozinheiro':
-      return new Cook(id, idEnterprise, name, surname, email, employees, token)
+      return new Cook(id, idEnterprise, name, surname, email, token)
     default:
-      return new GenericEmployee(id, idEnterprise, name, surname, email, role, employees, token)
+      return new GenericEmployee(id, idEnterprise, name, surname, email, role, token)
   }
 }

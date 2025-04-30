@@ -1,4 +1,4 @@
-import { UserProfile } from '../../organismos/topbar/user-profile'
+import { EnterpriseProfile } from '../../organismos/topbar/enterprise-profile'
 import '../../moleculas/cardapio.module.scss';
 import { DailyMenu } from './dailyMenu'
 import { Employee } from '../../../routes/menu'
@@ -9,9 +9,9 @@ interface MenuProps {
 }
 
 export function Menu({ employee }: MenuProps) {
-  const { id, idEnterprise, email, name, surname, role, employees, token } = employee;
+  const { id, idEnterprise, email, name, surname, role, token } = employee;
 
-  const user = createEmployee(id, idEnterprise, email, name, surname, role, employees, token)
+  const user = createEmployee(id, idEnterprise, email, name, surname, role, token)
 
   return (
     <div className='mt-[70px]'>
@@ -21,14 +21,14 @@ export function Menu({ employee }: MenuProps) {
 
       {/* Desloca para pseudo-topbar, onde simula interação com a barra superior (classe pai)*/}
       <header>
-        <UserProfile employee={user}/>
+        <EnterpriseProfile employee={user}/>
       </header>
 
       <main>
-        <DailyMenu idEnterprise={user.idEnterprise}/>
+        <DailyMenu idEnterprise={user.getIdEnterprise()}/>
       </main>
 
-      <p>Se chegou até aqui, o login foi realizado com sucesso!</p>
+
     </div>
   );
 }
