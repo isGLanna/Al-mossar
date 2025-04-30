@@ -9,7 +9,6 @@ type Employee = {
   name: string;
   surname: string; 
   role: string;
-  employees: { name: string; surname: string; role: string} [];
   token: string
 }
 
@@ -23,7 +22,7 @@ export const loginUser = async (user: { email: string; password: string; remembe
 
   try {
     const response = await axios.post(`${API_URL}/api/login`, user);
-    const { success, message, id, email, name, surname, idEnterprise, role, token, employees } = response.data;
+    const { success, message, id, email, name, surname, idEnterprise, role, token } = response.data;
    
     if (!success) throw new Error(message)
 
@@ -40,7 +39,6 @@ export const loginUser = async (user: { email: string; password: string; remembe
       name,
       surname,
       role,
-      employees,
       token,
     };
 
@@ -70,7 +68,7 @@ export const getUserByToken = async (): Promise<{ success: boolean; message: str
       headers: { Authorization: `Bearer ${token}`}
     })
     
-    const { success, message, id, email, name, surname, idEnterprise, role, employees } = response.data
+    const { success, message, id, email, name, surname, idEnterprise, role } = response.data
 
     if (!success) throw new Error(message)
 
@@ -81,7 +79,6 @@ export const getUserByToken = async (): Promise<{ success: boolean; message: str
       name,
       surname,
       role,
-      employees,
       token,
     }
 

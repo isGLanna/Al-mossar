@@ -18,12 +18,13 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
   const [email, setEmail] = useState('')
   const [role, setRole] = useState('')
   const [employees, setEmployees] = useState<Employee[]>([])
-  const [editedEmployees, setEditedEmployees] = useState<{ [id: number]: Partial<Employee> }>({})
+  const [editedEmployees, setEditedEmployees] = useState<{ [email: string]: Partial<Employee> }>({})
 
-  const roles = ['Gerente', 'Cozinheiro', 'Auxiliar de cozinha', 'Limpeza', 'Outros']
+  const roles = ['Gerente', 'Cozinheiro', 'Auxiliar de cozinha', 'Garçom', 'Limpeza', 'Outros']
 
   // Delay para transição de saída
   useEffect(() => {
+
     if (isOpen) {
       setVisible(true)
       fetchEmployees()
@@ -37,17 +38,19 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
 
   const fetchEmployees = async () => {
     try {
-      const data = await getEmployeesAPI()
+      const data = await getEmployeesAPI(employee.idEnterprise)
       setEmployees(data)
     } catch (error) {
-      console.error('Erro ao buscar funcionários:', error)
+      alert('Erro ao buscar funcionários')
     }
   }
 
   const handleSubmit = async () => {
     if (!email || !role) return
+    
+    const idEnterprise = employee.getIdEnterprise()
     try {
-      await addEmployeeAPI({ email, role })
+      await addEmployeeAPI({ email, role, idEnterprise })
       setEmail('')
       setRole('')
       setAddEmployee(false)
@@ -57,11 +60,11 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
     }
   }
 
-  const handleEditChange = (id: number, field: keyof Employee, value: string) => {
-    setEditedEmployees((prev) => ({
+  const handleEditChange = (email: string, field: keyof Employee, value: string) => {
+    setEditedEmployees(prev => ({
       ...prev,
-      [id]: {
-        ...prev[id],
+      [email]: {
+        ...prev[email],
         [field]: value,
       },
     }))
@@ -69,25 +72,35 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
 
   const handleDelete = async (email: string) => {
     try {
-      await deleteEmployeeAPI(email)
+      const result = await deleteEmployeeAPI(email, employee.idEnterprise)
+
+      if (!result.success) {
+        return
+      }
+      
       fetchEmployees()
-    } catch (error) {
-      alert('Erro ao excluir funcionário')
+    } catch (error: any) {
+      const message = error?.response?.data?.message || 'Erro desconhecido ao excluir funcionário.'
+      alert(message)
+    } finally {
+      fetchEmployees()      // Para qualquer caso, atualizar o conteúdo da tabela para prevenção de erros
     }
   }
 
   const saveAllChanges = async () => {
     const updates = Object.entries(editedEmployees)
-    for (const [idStr, data] of updates) {
-      const original = employees.find(e => e.id === parseInt(idStr))
-      if (!original) continue
+    for (const [email, data] of updates) {
 
+      // Procura email que sofreu evento
+      const original = employees.find(e => e.email === email)
+      if (!original) continue
+  
       const hasChanges = Object.keys(data).some(key => data[key as keyof Employee] !== (original[key as keyof Employee] ?? ''))
       if (hasChanges) {
         try {
-          await editEmployeeAPI(original.email, data)
+          await editEmployeeAPI(employee.idEnterprise, email, data.name, data.surname, data.role) // Edita baseado no e-mail
         } catch (error) {
-          console.error(`Erro ao salvar alterações para ${original.email}`, error)
+          console.error(`Erro ao salvar alterações para ${email}`, error)
         }
       }
     }
@@ -107,9 +120,8 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
     <section className={`panelOverlay ${isOpen ? 'fadeIn' : 'fadeOut'}`} onClick={handlePanelClose}>
       <div className='panel' onClick={(e) => e.stopPropagation()}>
         <header className='header'>
-          <h2>Gerenciamento de Funcionários</h2>
+          <h2>Gerenciamento de Funcionários {isOpen}</h2>
         </header>
-
         <table className='table'>
           <thead>
             <tr>
@@ -125,36 +137,37 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
               <tr key={emp.id}>
                 <td>
                   <input
-                    value={editedEmployees[emp.id]?.name ?? emp.name}
+                    value={editedEmployees[emp.email]?.name ?? emp.name}
                     readOnly
                   />
                 </td>
                 <td>
                   <input
-                    value={editedEmployees[emp.id]?.surname ?? emp.surname}
+                    value={editedEmployees[emp.email]?.surname ?? emp.surname}
                     readOnly
                   />
                 </td>
                 <td>
                   <input
-                    value={editedEmployees[emp.id]?.email ?? emp.email}
+                    value={editedEmployees[emp.email]?.email ?? emp.email}
                     readOnly
                   />
                 </td>
                 <td>
-                  {employee.canEditEmployeePanel() ? (<select
-                    value={
-                      roles.includes(editedEmployees[emp.id]?.role ?? emp.role)
-                        ? (editedEmployees[emp.id]?.role ?? emp.role)
-                        : ''}
-                    onChange={(e) => handleEditChange(emp.id, 'role', e.target.value)}
+                  {employee.canEditEmployeePanel() ? (
+                    emp.email === employee.email ?
+                    (<span>{emp.role}</span>
+                    ) : (
+                  <select
+                    value={editedEmployees[emp.email]?.role ?? emp.role}
+                    onChange={(e) => handleEditChange(emp.email, 'role', e.target.value)}
                   >
 
-                      {!roles.includes(editedEmployees[emp.id]?.role ?? emp.role) && (
-                        <option disabled value="">
-                          {editedEmployees[emp.id]?.role ?? emp.role}
-                        </option>
-                      )}
+                  {!roles.includes(editedEmployees[emp.email]?.role ?? emp.role) && (
+                    <option disabled value="">
+                      {editedEmployees[emp.email]?.role ?? emp.role}
+                    </option>
+                  )}
 
                       {roles.map((r, i) => (
                         <option key={i} value={r}>
@@ -162,6 +175,7 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
                         </option>
                       ))}
                     </select>
+                    )
                   ) :
                   (
                     <span>{emp.role}</span>
@@ -170,7 +184,7 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
                 </td>
                 
                 {employee.canEditEmployeePanel() && (<td>
-                  <HiOutlineTrash onClick={() => handleDelete(emp.email)} color={'#a33'} size={20} />
+                  { emp.email !== employee.email && <HiOutlineTrash onClick={() => handleDelete(emp.email)} color={'#a33'} size={20} />}
                 </td>)}
               </tr>
             ))}

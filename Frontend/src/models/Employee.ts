@@ -1,11 +1,5 @@
 // src/models/Employee.ts
 
-export type employees = {
-  name: string,
-  surname: string,
-  role: string
-} []
-
 export abstract class Employee {
   constructor(
     public id: number,
@@ -14,7 +8,6 @@ export abstract class Employee {
     public surname: string,
     public email: string,
     public role: string,
-    public employees: { name: string; surname: string; role: string }[],
     public token: string
   ) {}
 
@@ -54,15 +47,15 @@ export abstract class Employee {
     return false;
   }
 
-  getEmployees(): employees {
-    return this.employees
-  }
-
   getToken(): string {
     return this.token
   }
 
   getId(): number {
     return this.id
+  }
+
+  getIdEnterprise(): number {
+    return this.idEnterprise
   }
 }

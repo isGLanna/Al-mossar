@@ -10,7 +10,7 @@ type Props = {
   employee: Employee
 }
 
-export function UserProfile({ employee }: Props){
+export function EnterpriseProfile({ employee }: Props){
   const navigate = useNavigate()
   const [ menuIsOpen, setMenuIsOpen ] = useState<boolean>(false)
   const [ panelIsOpen, setPanelIsOpen ] = useState<boolean>(false)
