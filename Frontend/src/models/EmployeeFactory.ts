@@ -8,7 +8,7 @@ import { Employee } from './Employee';
 
 export function createEmployee(id: number, idEnterprise: number, email: string, name: string, surname: string, role: string, token: string ): Employee {
   switch (role) {
-    case 'administrador':
+    case 'Administrador':
       return new Administrator(id, idEnterprise, name, surname, email, token)
     case 'gerente':
       return new Manager(id, idEnterprise, name, surname, email, token)

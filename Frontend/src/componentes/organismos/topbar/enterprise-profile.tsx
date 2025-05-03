@@ -29,14 +29,18 @@ export function EnterpriseProfile({ employee }: Props){
   const handleLogout = () => {
     logoutUser();
     navigate({ to: '/' });
-  };
+  }
+
+  const handleDashBoard = () => {
+    navigate({ to: '/financial-control' }); // Agora passando um objeto com 'to'
+  }
 
   return(
     <div className={styles.pseudoTopbarContainer}>
       <div className={styles.iconGroup}>
           {employee.canAccessEmployeePanel() && (
           <>
-            <FaMoneyBillTransfer className='icon' size={25} />
+            <FaMoneyBillTransfer className='icon' size={25} onClick={handleDashBoard} />
             <IoIosPeople className='icon' size={35} color='white' onClick={handlePanel} />
             <EmployeePanel isOpen={panelIsOpen} employee={employee} onClose={() => setPanelIsOpen(false)} />
           </>
