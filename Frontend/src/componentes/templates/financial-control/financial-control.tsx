@@ -1,60 +1,184 @@
-import React from "react"
+import {useState} from "react"
+import * as Icons from './icons.ts'
 import "./Dashboard.scss"
+import { BiBold } from "react-icons/bi";
 
 export function Dashboard () {
-  // Dados fictícios para exemplo
-  const receitaTotal = 120000;
-  const despesasTotais = 80000;
-  const saldo = receitaTotal - despesasTotais;
-  const receitaMeses = Array(12).fill(0).map((_, index) => receitaTotal * (index + 1) / 12);
-  const despesasMeses = Array(12).fill(0).map((_, index) => despesasTotais * (index + 1) / 12);
+
+  const receiveTotal = 1376000
+
+  const salary = 710000
+  const rent = 69000
+  const tax = parseFloat((receiveTotal * 0.07).toFixed(2))
+  const food = 293000
+
+  const expenseTotal = salary + rent + tax + food
+  const balance = receiveTotal - expenseTotal
+
+  const receives = Array.from({ length: 12 }, (_, i) => receiveTotal * (i + 1) / 12)
+  const expenses = Array.from({ length: 12 }, (_, i) => expenseTotal * (i + 1) / 12)
+
+  const maxValue = Math.max(receiveTotal, expenseTotal)
+
+  // Periodo que a empresa possui para ser observado
+  const months = [ 'março', 'abril', 'maio' ]
+  const years = [ '2025' ]
+  
+  const month = [
+    'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+    'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
+  ]
+
+  const [year, setYear] = useState<number> (new Date().getFullYear())
+  
+  const toggleYear = (year: number) => {
+    setYear(prevYear => year)
+  }
 
   return (
     <div className="dashboard">
-      <div className="dashboard__header">
-        <div className="dashboard__box">
-          <h3>Receita Total</h3>
-          <p>{`R$ ${receitaTotal.toFixed(2)}`}</p>
-        </div>
-        <div className="dashboard__box">
-          <h3>Despesas Totais</h3>
-          <p>{`R$ ${despesasTotais.toFixed(2)}`}</p>
-        </div>
-        <div className="dashboard__box">
-          <h3>Saldo</h3>
-          <p>{`R$ ${saldo.toFixed(2)}`}</p>
-        </div>
-      </div>
 
-      <div className="dashboard__charts">
+      <aside>
+        <article>
+          <h3>Dashboard Financeiro </h3>
+        </article>
+
+        <header>
+          Valores recebidos:
+        </header>
+
+        <button className="card">
+          <div className="title">
+            <Icons.AiOutlineRise size={25} /> Receita
+          </div>
+          <label className="value" style={{color: 'green'}}>R${receiveTotal}</label>
+        </button>
+
+        <header>
+          Categoria de gastos:
+        </header>
+
+        <button className="card">
+          <div className="title">
+            <Icons.FaUsers size={25} /> Salário
+          </div>
+          <label className="value" style={{color: '#da0000'}}>R${salary}</label>
+        </button>
+
+        <button className="card">
+          <div className="title">
+            <Icons.LuSalad size={23} /> Alimento
+          </div>
+          <label className="value" style={{color: '#da0000'}}>R${food}</label>
+        </button>
+
+        <button className="card">
+          <div className="title">
+            <Icons.FaHouseUser size={20} /> Aluguel
+          </div>
+          <label className="value" style={{color: '#da0000'}}>R${rent}</label>
+        </button>
+
+        <button className="card">
+          <div className="title">
+            <Icons.FaFileInvoiceDollar size={20} /> Imposto
+          </div>
+          <label className="value" style={{color: '#da0000'}}>R${tax}</label>
+        </button>
+
+        <button className="card row-grid-8">
+          <div className="title">
+            <Icons.FaFilePdf  size={20} /> Gerar PDF
+          </div>
+        </button>
+      </aside>
+
+      <main>
+        
+        <header>
+          <div className="box" style={{boxShadow: '3px 3px 4px #004a00a0'}}>
+            <h3>Receita Total</h3>
+            <p>{`R$ ${receiveTotal.toFixed(2)}`}</p>
+          </div>
+          <div className="box" style={{boxShadow: '3px 3px 4px #680000a0'}}>
+            <h3>Despesas Totais</h3>
+            <p>{`R$ ${expenseTotal.toFixed(2)}`}</p>
+          </div>
+          <div className="box">
+            <h3>Saldo</h3>
+            <p>{`R$ ${balance.toFixed(2)}`}</p>
+          </div>
+          <div className="box" style={{background: 'transparent', boxShadow: 'none'}}>
+            <select>
+              {months.map((month, index) => (
+              <option key={index} value={month}>{month}</option>
+              ))}
+            </select>
+            <select>
+              {years.map((year, index) => (
+              <option key={index} value={year}>{year}</option>
+              ))}
+            </select>
+          </div>
+        </header>
+
         <div className="dashboard__histogram">
-          <h4>Histograma de Receita</h4>
-          <div className="chart">
-            {receitaMeses.map((valor, index) => (
-              <div key={index} className="chart__bar" style={{ height: `${(valor / receitaTotal) * 100}%` }}></div>
+          <label className="title"> Receita / Despesa </label>
+
+          <label className="title"> Renda Líquida</label>
+
+          <div className="chart_container">
+
+            <div className="eixoy" style={{height: '50px'}}>
+              <div>0</div>
+              <div>{maxValue * 0.5}</div>
+              <div>{maxValue}</div>
+            </div>
+
+            {month.map((name, i) => (
+              <div className="chart_column" key={i}>
+                <div className="month">
+                  <div
+                    className="chart receive"
+                    style={{ height: `${(receives[i] / maxValue) * 100}%` }}
+                  />
+                  <div
+                    className="chart expense"
+                    style={{ height: `${(expenses[i] / maxValue) * 100}%` }}
+                  />
+                </div>
+                <span className="label">{name}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="chart_container" style={{gap: '0.4rem'}}>
+
+            <div className="eixoy" style={{height: '50px'}}>
+              <div>0</div>
+              <div>{maxValue * 0.5}</div>
+              <div>{maxValue}</div>
+            </div>
+
+            {month.map((name, i) => (
+              <div className="chart_column" key={i}>
+                <div className="month">
+                  <div
+                    className="chart netIncome"
+                    style={{ 
+                      height: `${(Math.abs(receives[i] - expenses[i]) / maxValue) * 100}%`,
+                      backgroundColor: receives[i] > expenses[i] ? '' : '#e02020'}}
+                  />
+                </div>
+                <span className="label">{name}</span>
+              </div>
             ))}
           </div>
         </div>
 
-        <div className="dashboard__histogram">
-          <h4>Histograma de Despesas</h4>
-          <div className="chart">
-            {despesasMeses.map((valor, index) => (
-              <div key={index} className="chart__bar" style={{ height: `${(valor / despesasTotais) * 100}%` }}></div>
-            ))}
-          </div>
-        </div>
-
-        <div className="dashboard__pie">
-          <h4>Distribuição das Despesas</h4>
-          <div className="pie">
-            {/* Circulo representando a distribuição das despesas */}
-            <div className="pie__circle"></div>
-          </div>
-        </div>
-      </div>
+      </main>
     </div>
-  );
-};
+  )
+}
 
 export default Dashboard;
