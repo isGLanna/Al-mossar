@@ -8,7 +8,6 @@ export type Employee = {
   name: string;
   surname: string; 
   role: string;
-  employees: { name: string; surname: string; role: string} [];
   token: string
 }
 

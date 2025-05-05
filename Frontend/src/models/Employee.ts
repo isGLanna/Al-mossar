@@ -12,7 +12,7 @@ export abstract class Employee {
   ) {}
 
   canViewMenuDescription(): boolean {
-    return true;
+    return false;
   }
 
   canEditMenu(): boolean {
@@ -45,6 +45,10 @@ export abstract class Employee {
 
   canViewUtilityExpenses(): boolean {
     return false;
+  }
+
+  haveProfile(): boolean {
+    return true
   }
 
   getToken(): string {

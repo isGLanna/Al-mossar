@@ -1,5 +1,4 @@
-import { EnterpriseProfile } from '../../organismos/topbar/enterprise-profile'
-import '../../moleculas/cardapio.module.scss';
+import '../../moleculas/cardapio.module.scss'
 import { DailyMenu } from './dailyMenu'
 import { Employee } from '../../../routes/menu'
 import { createEmployee } from '../../../models/EmployeeFactory'
@@ -18,11 +17,6 @@ export function Menu({ employee }: MenuProps) {
       <h3 className='h3' style={{textAlign:'center', paddingTop:'20px'}}>
         "Esse aí vai ser cozinheiro igual um dia eu vou ser o papa" — Jacquin
       </h3>
-
-      {/* Desloca para pseudo-topbar, onde simula interação com a barra superior (classe pai)*/}
-      <header>
-        <EnterpriseProfile employee={user}/>
-      </header>
 
       <main>
         <DailyMenu idEnterprise={user.getIdEnterprise()}/>

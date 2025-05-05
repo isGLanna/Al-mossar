@@ -12,10 +12,6 @@ type Employee = {
   token: string
 }
 
-export function getEnterpriseId(){
-  return 31
-}
-
 // Realiza requisição, retorna atributos e um objeto usuário
 export const loginUser = async (user: { email: string; password: string; remember: boolean }): 
   Promise<{ success: boolean; message: string; employee: Employee | null }> => {
@@ -40,7 +36,7 @@ export const loginUser = async (user: { email: string; password: string; remembe
       surname,
       role,
       token,
-    };
+    }
 
     return { success: true, message: message, employee: employee}
   } catch (error: any) {
