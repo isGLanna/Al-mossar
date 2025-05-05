@@ -3,8 +3,9 @@ import { logoutUser } from '../../templates/login/api'
 import { GrLogout, FaCircleUser, IoIosPeople, FaMoneyBillTransfer } from "./icons"
 import { EmployeePanel } from '../../templates/menu/panel'
 import styles from './pseudo-topbar.module.scss'
-import { useState } from 'react'
 import { Employee } from '../../../models/Employee'
+import { useState } from 'react'
+
 
 type Props = {
   employee: Employee
@@ -36,33 +37,34 @@ export function EnterpriseProfile({ employee }: Props){
   }
 
   return(
-    <div className={styles.pseudoTopbarContainer}>
+    
+    <div className='right'>
+
       <div className={styles.iconGroup}>
           {employee.canAccessEmployeePanel() && (
           <>
-            <FaMoneyBillTransfer className='icon' size={25} onClick={handleDashBoard} />
-            <IoIosPeople className='icon' size={35} color='white' onClick={handlePanel} />
+            <FaMoneyBillTransfer className='icon' size={30} onClick={handleDashBoard} />
             <EmployeePanel isOpen={panelIsOpen} employee={employee} onClose={() => setPanelIsOpen(false)} />
+            <IoIosPeople className='icon' size={35} color='white' onClick={handlePanel} />
           </>
         )}
         
         <div className={styles.userIconWrapper}>
-          <FaCircleUser className='icon' size={35} onClick={handleSettings} />
-
-          <div className={`${styles.menu} ${menuIsOpen ? styles.open : ''}`}>
-            <div className={styles.item}>Perfil</div>
-            <div className={styles.item} onClick={handleLogout}>
-              <GrLogout style={{marginRight: '5px'}}/>
-              <label>Sair</label>
-            </div>
-          </div>
+          {employee.haveProfile() && (
+          <>
+            <FaCircleUser className='icon' size={35} onClick={handleSettings} />
+              <div className={`${styles.menu} ${menuIsOpen ? styles.open : ''}`}>
+              <div className={styles.item}>Perfil</div>
+              <div className={styles.item} onClick={handleLogout}>
+                <GrLogout style={{marginRight: '5px'}}/>
+                <label>Sair</label>
+              </div>
+            </div> 
+          </>
+          )}
         </div>
-
+        
       </div>
-
-
-      
     </div>
   )
-
 }

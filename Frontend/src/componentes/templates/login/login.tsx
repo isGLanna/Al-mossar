@@ -1,5 +1,5 @@
 import { Link, useNavigate } from '@tanstack/react-router'
-import { loginUser, getToken, getUserByToken } from './api';
+import { loginUser, getUserByToken } from './api';
 import { useState, useEffect } from 'react'
 import logo from '../../../assets/favicon.jpg'
 import '../../moleculas/formulario.sass'
@@ -52,6 +52,7 @@ export function Login() {
       const response = await getUserByToken()
 
       if (response.success && response.employee){
+
         navigate({
           to: '/menu',
           search: { employee: response.employee}
@@ -81,7 +82,7 @@ export function Login() {
       const response = await loginUser(user);
 
       if (response.success && response.employee) {
-
+        
         navigate({
           to: '/menu',
           search: { employee: response.employee },

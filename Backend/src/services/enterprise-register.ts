@@ -48,7 +48,7 @@ export async function createEnterprise(data: EnterpriseData): Promise<RegisterRe
   }
 
   // Verifica se e-mail já existe como empresa
-  const existing = await Enterprise.findOne({ where: { email } })
+  const existing = await Employee.findOne({ where: { email } })
   if (existing) {
     return { success: false, message: 'E-mail já cadastrado como empresa.' }
   }
@@ -56,7 +56,13 @@ export async function createEnterprise(data: EnterpriseData): Promise<RegisterRe
   try {
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    const enterprise  = await Enterprise.create({ name, email, password: hashedPassword })
+    // Cria empresa
+    const enterprise  = await Enterprise.create({ name })
+
+    // Cria usuário que comportará a empresa
+    await Employee.create({
+      email, name, surname: '', password: hashedPassword , role: 'Administrador', id_enterprise: enterprise.id
+    })
 
     // Mapeia emails dos empregados, caso tenha
     if (employees && employees.length > 0) {
