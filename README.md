@@ -48,7 +48,7 @@ yarn create vite frontend --template react-ts  # Cria o projeto com Vite
 ```
 
 ### 📌 **SASS/SCSS**
-O SASS/SCSS foi escolhido para estilização, permitindo um CSS mais limpo e organizado.
+O SASS/SCSS foi escolhido para estilização, permitindo um CSS mais limpo e organizado, além de permitir algumas possibilidades de heranças.
 ```sh
 yarn add sass  # Instala a biblioteca de estilos
 ```
@@ -78,7 +78,7 @@ yarn add express
 ```
 
 ### 📌 **CORS**
-O CORS é uma configuração de segurança para permitir requisições entre domínios diferentes.
+O CORS é uma configuração de segurança para permitir requisições entre domínios diferentes de maneira segura.
 ```sh
 yarn add cors  # Middleware para lidar com CORS no Express
 ```
@@ -91,10 +91,6 @@ yarn add sequelize
 Além disso, precisamos instalar o driver do banco de dados que será utilizado. Exemplo para PostgreSQL:
 ```sh
 yarn add pg pg-hstore
-```
-Para MySQL:
-```sh
-yarn add mysql2
 ```
 
 ### 📌 **Axios (Para requisições HTTP no backend)**
