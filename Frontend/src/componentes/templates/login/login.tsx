@@ -1,4 +1,5 @@
 import { Link, useNavigate } from '@tanstack/react-router'
+import { useAuthStore } from '../../../store/auth-store.ts'
 import { loginUser, getUserByToken } from './api';
 import { useState, useEffect } from 'react'
 import logo from '../../../assets/favicon.jpg'
@@ -9,6 +10,7 @@ import './styles.sass';
 
 export function Login() {
   const navigate = useNavigate()
+  const setEmployee = useAuthStore(state => state.setEmployee)
 
   // Efeito de delay de carregamento para login
   const [isLoading, setIsLoading] = useState(false);
@@ -52,11 +54,8 @@ export function Login() {
       const response = await getUserByToken()
 
       if (response.success && response.employee){
-
-        navigate({
-          to: '/menu',
-          search: { employee: response.employee}
-        })
+        setEmployee(response.employee)
+        navigate({ to: '/menu'})
       }
     }
     autoLogin()
@@ -82,11 +81,8 @@ export function Login() {
       const response = await loginUser(user);
 
       if (response.success && response.employee) {
-        
-        navigate({
-          to: '/menu',
-          search: { employee: response.employee },
-        })
+        setEmployee(response.employee)
+        navigate({ to: '/menu'})
       }
     } catch (err) {
       setUser(user => ({

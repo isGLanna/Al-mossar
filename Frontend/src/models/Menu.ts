@@ -33,7 +33,7 @@ export class MenuDish {
   // GET - query do cardápio do dia
   async fetchMenu(): Promise<void> {
     try {
-      const result = await axios.get(`${API_URL}/api/menu`, {
+      const result = await axios.get(`${API_URL}/api/menu/`, {
         params: { id_enterprise: this.idEnterprise, day: this.day }
       })
 
@@ -47,14 +47,15 @@ export class MenuDish {
   // POST - criar cardápio
   async createMenu(): Promise<MenuResponse> {
     try {
-      await axios.post(`${API_URL}/api/menu`, {
-        id_enterprise: this.idEnterprise,
+      await axios.post(`${API_URL}/api/menu/`, {
         date: this.day,
-        dishes: this.dishes
+        id_enterprise: this.idEnterprise,
+        dishes: this.dishes,
       })
 
       return { success: true, message: 'Cardápio criado'}
     } catch (error: any) {
+      alert('TENTOU ENTRAR')
       return { success: false, message: error?.response?.data?.message || 'Erro ao atualizar'}
     }
   }
@@ -62,9 +63,9 @@ export class MenuDish {
   // Atualizar cardápio
   async updateMenu(): Promise<MenuResponse> {
     try {
-      await axios.put(`${API_URL}/api/menu`, {
-        id_enterprise: this.idEnterprise,
+      await axios.put(`${API_URL}/api/menu/`, {
         day: this.day,
+        id_enterprise: this.idEnterprise,
         dishes: this.dishes
       })
       return { success: true, message: 'Cardápio atualizado'}

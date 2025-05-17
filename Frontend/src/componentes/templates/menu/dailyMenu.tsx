@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { GrFormNext, GrFormPrevious } from './icons'
+import { GrFormNext, GrFormPrevious, TfiWrite, FaTrashArrowUp, IoMdAddCircleOutline } from './icons'
 import { MenuDish, Dish } from '../../../models/Menu'
 import './calendar.sass'
 
@@ -10,6 +10,7 @@ export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
 
   const [dishes, setDishes] = useState<Dish[]>([])
   const [openDescription, setOpenDescription] = useState<number | null>(null)
+  const [newDish, setNewDish] = useState<Dish | null>(null)
 
   // Seleciona dia da semana
   const getDaysInMonth = (year: number, month: number) => {
@@ -81,6 +82,37 @@ export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
     fetchMenuForDay(today.getDate()) // Ao montar o componente, busca o cardápio do dia
   }, [currentMonth, currentYear])
 
+  // Adicionar novo prato
+  const handleNewDishChange  = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (newDish) setNewDish( {
+      ...newDish, [e.target.name]: e.target.value
+    })}
+
+  // Salvar novo prato e atualizar backend
+  const handleSaveNewDish = async () => {
+    if (!newDish || !newDish.name.trim()) return;
+
+    const menuDish = new MenuDish(idEnterprise, `${currentYear}-${currentMonth + 1}-${selectedDay}`);
+    await menuDish.fetchMenu();
+
+    menuDish.addDishByName(newDish.id, newDish.name.trim(), newDish.description.trim());
+
+    const response = dishes.length === 0 ?
+      await menuDish.createMenu() :
+      await menuDish.updateMenu()
+
+    if (response.success) {
+      setNewDish(null);
+      setDishes(menuDish.getDishes());
+    } else {
+      alert(response.message);
+    }
+  }
+
+  const handleCancelNewDish = () => {
+    setNewDish(null);
+  }
+
   return (
     <section className='menuContainer'>
       
@@ -117,7 +149,7 @@ export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
       </article>
 
       <article className='menu'>
-        <header className='header'>Cardápio</header>
+        <header className='menu-header'>Cardápio</header>
       
       {/* Verifica tamanho do array, caso esteja vazio, informa não ter */}
         { dishes.length > 0 ? 
@@ -129,7 +161,38 @@ export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
         ))) :
         (<div className='dish'>Nenhuma refeição foi encontrada</div>)}
 
+        {newDish && (
+          <div className="dish expanded">
+            <div className='flex flex-col gap-2'>
+              <input
+                name='name'
+                placeholder="Nome do prato"
+                value={newDish.name}
+                onChange={handleNewDishChange}
+              />
+              <textarea
+                name="description"
+                placeholder="Modo de preparo"
+                value={newDish.description}
+                onChange={handleNewDishChange}
+                rows={2}
+              />
+            </div>
+            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', justifyContent: 'center' }}>
+              <button onClick={handleSaveNewDish}>Salvar</button>
+              <button onClick={handleCancelNewDish}>Cancelar</button>
+            </div>
+          </div>
+        )}
+
+        <footer className='menu-footer'>
+          <TfiWrite cursor={'pointer'}/>
+          <IoMdAddCircleOutline cursor={'pointer'} size={25} onClick={() => setNewDish({ id: Date.now(), name: '', description: '' })}/>
+          <FaTrashArrowUp cursor={'pointer'} />
+        </footer>
+
       </article>
+
     </section>
   )
 

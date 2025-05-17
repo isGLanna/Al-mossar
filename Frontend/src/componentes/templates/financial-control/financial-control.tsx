@@ -1,9 +1,41 @@
-import {useState} from "react"
+import { useState, useEffect} from "react"
+import { NavActions } from '../../organismos/topbar/nav-actions'
+import { createEmployee } from '../../../models/EmployeeFactory'
+import { useAuthStore } from '../../../store/auth-store.ts'
 import * as Icons from './icons.ts'
 import "./Dashboard.scss"
-import { BiBold } from "react-icons/bi";
 
 export function Dashboard () {
+    const employee = useAuthStore((state) => state.employee)
+  
+    if (!employee) return <p>Usuário não encontrado</p>
+  
+    const user = createEmployee(
+      employee.id,
+      employee.idEnterprise,
+      employee.email,
+      employee.name,
+      employee.surname,
+      employee.role,
+      employee.token
+    )
+
+  // Se a largura da tela reduzir, o mês será abreviado
+  const [ nameMonths, setNameMonths ] = useState<string[]> ([])
+
+  useEffect(() => {
+    const updateMonthNames = () => {
+      setNameMonths(window.innerWidth > 820 ? 
+        ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'] :
+        ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'] 
+    )
+    }
+    updateMonthNames()
+
+    window.addEventListener('resize', updateMonthNames)
+
+    return () => window.removeEventListener('resize', updateMonthNames)
+  }, [])
 
   const receiveTotal = 1376000
 
@@ -23,11 +55,6 @@ export function Dashboard () {
   // Periodo que a empresa possui para ser observado
   const months = [ 'março', 'abril', 'maio' ]
   const years = [ '2025' ]
-  
-  const month = [
-    'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
-    'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
-  ]
 
   const [year, setYear] = useState<number> (new Date().getFullYear())
   
@@ -37,6 +64,8 @@ export function Dashboard () {
 
   return (
     <div className="dashboard">
+
+      <NavActions employee={user} />
 
       <aside>
         <article>
@@ -96,15 +125,15 @@ export function Dashboard () {
       <main>
         
         <header>
-          <div className="box" style={{boxShadow: '3px 3px 4px #004a00a0'}}>
+          <div className="box receive">
             <h3>Receita Total</h3>
             <p>{`R$ ${receiveTotal.toFixed(2)}`}</p>
           </div>
-          <div className="box" style={{boxShadow: '3px 3px 4px #680000a0'}}>
+          <div className="box expense">
             <h3>Despesas Totais</h3>
             <p>{`R$ ${expenseTotal.toFixed(2)}`}</p>
           </div>
-          <div className="box">
+          <div className="box netIncome">
             <h3>Saldo</h3>
             <p>{`R$ ${balance.toFixed(2)}`}</p>
           </div>
@@ -123,56 +152,61 @@ export function Dashboard () {
         </header>
 
         <div className="dashboard__histogram">
-          <label className="title"> Receita / Despesa </label>
 
-          <label className="title"> Renda Líquida</label>
+          <div className="histogram-block">
+            <label className="title"> Receita / Despesa </label>
 
-          <div className="chart_container">
+            <div className="chart_container">
 
-            <div className="eixoy" style={{height: '50px'}}>
-              <div>0</div>
-              <div>{maxValue * 0.5}</div>
-              <div>{maxValue}</div>
-            </div>
-
-            {month.map((name, i) => (
-              <div className="chart_column" key={i}>
-                <div className="month">
-                  <div
-                    className="chart receive"
-                    style={{ height: `${(receives[i] / maxValue) * 100}%` }}
-                  />
-                  <div
-                    className="chart expense"
-                    style={{ height: `${(expenses[i] / maxValue) * 100}%` }}
-                  />
-                </div>
-                <span className="label">{name}</span>
+              <div className="eixoy" style={{height: '50px'}}>
+                <div>0</div>
+                <div>{maxValue * 0.5}</div>
+                <div>{maxValue}</div>
               </div>
-            ))}
+
+              {nameMonths.map((name, i) => (
+                <div className="chart_column" key={i}>
+                  <div className="month">
+                    <div
+                      className="chart receive"
+                      style={{ height: `${(receives[i] / maxValue) * 100}%` }}
+                    />
+                    <div
+                      className="chart expense"
+                      style={{ height: `${(expenses[i] / maxValue) * 100}%` }}
+                    />
+                  </div>
+                  <span>{name}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="chart_container" style={{gap: '0.4rem'}}>
+          <div className="histogram-block">
+            <label className="title"> Renda Líquida</label>
 
-            <div className="eixoy" style={{height: '50px'}}>
-              <div>0</div>
-              <div>{maxValue * 0.5}</div>
-              <div>{maxValue}</div>
-            </div>
+            <div className="chart_container" style={{gap: '0.4rem'}}>
 
-            {month.map((name, i) => (
-              <div className="chart_column" key={i}>
-                <div className="month">
-                  <div
-                    className="chart netIncome"
-                    style={{ 
-                      height: `${(Math.abs(receives[i] - expenses[i]) / maxValue) * 100}%`,
-                      backgroundColor: receives[i] > expenses[i] ? '' : '#e02020'}}
-                  />
-                </div>
-                <span className="label">{name}</span>
+              <div className="eixoy" style={{height: '50px'}}>
+                <div>0</div>
+                <div>{maxValue * 0.5}</div>
+                <div>{maxValue}</div>
               </div>
-            ))}
+
+              {nameMonths.map((name, i) => (
+                <div className="chart_column" key={i}>
+                  <div className="month">
+                    <div
+                      className="chart netIncome"
+                      style={{ 
+                        height: `${(Math.abs(receives[i] - expenses[i]) / maxValue) * 100}%`,
+                        backgroundColor: receives[i] > expenses[i] ? '' : '#e02020'}}
+                    />
+                  </div>
+                  <span className="label">{name}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 

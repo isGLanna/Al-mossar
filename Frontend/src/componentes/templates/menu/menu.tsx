@@ -1,28 +1,37 @@
 import '../../moleculas/cardapio.module.scss'
-import { DailyMenu } from './dailyMenu'
-import { Employee } from '../../../routes/menu'
+import { NavActions } from '../../organismos/topbar/nav-actions'
 import { createEmployee } from '../../../models/EmployeeFactory'
+import { useAuthStore } from '../../../store/auth-store.ts'
+import { DailyMenu } from './dailyMenu'
 
-interface MenuProps {
-  employee: Employee;
-}
+export function Menu() {
+  const employee = useAuthStore((state) => state.employee)
 
-export function Menu({ employee }: MenuProps) {
-  const { id, idEnterprise, email, name, surname, role, token } = employee;
+  if (!employee) return <p>Usuário não encontrado</p>
 
-  const user = createEmployee(id, idEnterprise, email, name, surname, role, token)
-
+  const user = createEmployee(
+    employee.id,
+    employee.idEnterprise,
+    employee.email,
+    employee.name,
+    employee.surname,
+    employee.role,
+    employee.token
+  )
+  
   return (
-    <div className='mt-[70px]'>
-      <h3 className='h3' style={{textAlign:'center', paddingTop:'20px'}}>
-        "Esse aí vai ser cozinheiro igual um dia eu vou ser o papa" — Jacquin
-      </h3>
+    <div>
+      <NavActions employee={user} />
+      <div className='mt-[70px]'>
+        <h3 className='h3' style={{textAlign:'center', paddingTop:'20px'}}>
+          "Esse aí vai ser cozinheiro igual um dia eu vou ser o papa" — Jacquin
+        </h3>
 
-      <main>
-        <DailyMenu idEnterprise={user.getIdEnterprise()}/>
-      </main>
+        <main>
+          <DailyMenu idEnterprise={user.idEnterprise}/>
+        </main>
 
-
+      </div>
     </div>
   );
 }
