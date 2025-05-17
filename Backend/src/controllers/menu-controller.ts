@@ -46,7 +46,7 @@ export async function update ( req: Request, res: Response ): Promise<void> {
   const { date, id_enterprise, dishes } = req.body
 
   try {
-    const updated = await updateMenu(id_enterprise, date, dishes)
+    const updated = await updateMenu(date, id_enterprise, dishes)
 
     res.json(updated)
   } catch (error) {

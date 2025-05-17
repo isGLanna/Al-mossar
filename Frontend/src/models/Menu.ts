@@ -55,7 +55,6 @@ export class MenuDish {
 
       return { success: true, message: 'Cardápio criado'}
     } catch (error: any) {
-      alert('TENTOU ENTRAR')
       return { success: false, message: error?.response?.data?.message || 'Erro ao atualizar'}
     }
   }
@@ -64,7 +63,7 @@ export class MenuDish {
   async updateMenu(): Promise<MenuResponse> {
     try {
       await axios.put(`${API_URL}/api/menu/`, {
-        day: this.day,
+        date: this.day,
         id_enterprise: this.idEnterprise,
         dishes: this.dishes
       })
