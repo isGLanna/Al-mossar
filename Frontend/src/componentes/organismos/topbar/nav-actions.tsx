@@ -11,7 +11,7 @@ type Props = {
   employee: Employee
 }
 
-export function EnterpriseProfile({ employee }: Props){
+export function NavActions({ employee }: Props){
   const navigate = useNavigate()
   const [ menuIsOpen, setMenuIsOpen ] = useState<boolean>(false)
   const [ panelIsOpen, setPanelIsOpen ] = useState<boolean>(false)
@@ -38,14 +38,14 @@ export function EnterpriseProfile({ employee }: Props){
 
   return(
     
-    <div className='right'>
+    <div className='navbar'>
 
       <div className={styles.iconGroup}>
           {employee.canAccessEmployeePanel() && (
           <>
             <FaMoneyBillTransfer className='icon' size={30} onClick={handleDashBoard} />
             <EmployeePanel isOpen={panelIsOpen} employee={employee} onClose={() => setPanelIsOpen(false)} />
-            <IoIosPeople className='icon' size={35} color='white' onClick={handlePanel} />
+            <IoIosPeople className='icon' size={35} onClick={handlePanel} />
           </>
         )}
         

@@ -1,8 +1,6 @@
 package main
 
-import (
-	"github.com/gin-gonic/gin"
-)
+import ("github.com/gin-gonic/gin")
 
 func main() {
 	r := gin.Default()
@@ -17,5 +15,5 @@ func main() {
 		api.DELETE("/dishes/:id", deleteDish)
 	}
 
-	r.Run(":3001") // mesmo número da sua versão Node.js
+	r.Run(":4001")
 }

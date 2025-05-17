@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_URL = 'http://localhost:3001';
 
-type Employee = {
+export type Employee = {
   id: number; 
   idEnterprise: number;
   email: string;

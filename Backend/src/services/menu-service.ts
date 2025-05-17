@@ -1,10 +1,8 @@
 import { Menu, Dish } from '../models/menu'
-import moment from 'moment'
 
 // Query ao menu
 export async function getMenuByDate (day:string, id_enterprise: number): Promise<(Menu & { dishes: Dish[] })> {
   try {
-
     const menu = await Menu.findOne({
       where: { id_enterprise, day},
       include: {
@@ -48,6 +46,7 @@ export async function createMenu (
 
     return { success: true}
   } catch (error) {
+    console.error('Erro ao criar menu:', error)
     return { error, success: false}
   }
 }
