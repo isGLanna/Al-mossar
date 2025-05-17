@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { GrFormNext, GrFormPrevious, TfiWrite, FaTrashArrowUp, IoMdAddCircleOutline } from './icons'
+import { useState, useEffect, useRef  } from 'react'
+import { GrFormNext, GrFormPrevious, TfiWrite, FaTrashArrowUp, IoMdAddCircleOutline, MdClose } from './icons'
 import { MenuDish, Dish } from '../../../models/Menu'
 import './calendar.sass'
 
@@ -9,6 +9,7 @@ export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
   const week = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
 
   const [dishes, setDishes] = useState<Dish[]>([])
+  const menuDishRef = useRef<MenuDish | null>(null)
   const [openDescription, setOpenDescription] = useState<number | null>(null)
   const [newDish, setNewDish] = useState<Dish | null>(null)
 
@@ -26,6 +27,7 @@ export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
   const [ currentMonth, setCurrentMonth ] = useState(today.getMonth())
   const [ currentYear, setCurrentYear ] = useState(today.getFullYear())
   const [ selectedDay, setSelectedDay ] = useState(today.getDate());
+  const [ deleted, setDeleted ] = useState(false)
 
   const daysInMonth = getDaysInMonth(currentYear, currentMonth)
 
@@ -68,6 +70,7 @@ export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
     const menuDish = new MenuDish(idEnterprise, `${currentYear}-${currentMonth + 1}-${day}`)
     await menuDish.fetchMenu()
     setDishes(menuDish.getDishes() || [])
+    menuDishRef.current = menuDish
   }
 
   // Lidar com expansão de descrição de pratos
@@ -92,9 +95,10 @@ export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
   const handleSaveNewDish = async () => {
     if (!newDish || !newDish.name.trim()) return;
 
-    const menuDish = new MenuDish(idEnterprise, `${currentYear}-${currentMonth + 1}-${selectedDay}`);
-    await menuDish.fetchMenu();
+    menuDishRef.current = new MenuDish(idEnterprise, `${currentYear}-${currentMonth + 1}-${selectedDay}`);
+    await menuDishRef.current.fetchMenu();
 
+    const menuDish = menuDishRef.current;
     menuDish.addDishByName(newDish.id, newDish.name.trim(), newDish.description.trim());
 
     const response = dishes.length === 0 ?
@@ -154,7 +158,7 @@ export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
       {/* Verifica tamanho do array, caso esteja vazio, informa não ter */}
         { dishes.length > 0 ? 
         (dishes.map((dish) => (
-          <div className={`dish ${openDescription === dish.id ? 'expanded' : ''}`} key={dish.id} onClick={() => handleDescription(dish.id)}>
+          <div className={`dish ${openDescription === dish.id ? 'expanded' : ''} ${deleted ? 'active' : ''}`} key={dish.id} onClick={() => handleDescription(dish.id)}>
             {dish.name}
             <p>{dish.description}</p>
           </div>
@@ -188,7 +192,7 @@ export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
         <footer className='menu-footer'>
           <TfiWrite cursor={'pointer'}/>
           <IoMdAddCircleOutline cursor={'pointer'} size={25} onClick={() => setNewDish({ id: Date.now(), name: '', description: '' })}/>
-          <FaTrashArrowUp cursor={'pointer'} />
+          <FaTrashArrowUp cursor={'pointer'} onClick={() => setDeleted(!deleted)}/>
         </footer>
 
       </article>

@@ -35,14 +35,15 @@ export async function createMenu (
     const menu = await Menu.create({ id_enterprise, day })
 
     const createdDishes = await Dish.bulkCreate(
-      dishes.map(dish => ({
-        ...dish, id_enterprise
+      dishes.map(({ name, description }) => ({
+        name,
+        description,
+        id_enterprise
       })),
       { returning: true }
     )
 
-    // Criar associação entre ids
-    await menu.setDishes(createdDishes.map(d => d.id))
+    await menu.setDishes(createdDishes)
 
     return { success: true}
   } catch (error) {
@@ -52,8 +53,8 @@ export async function createMenu (
 }
 
 export async function updateMenu (
-  id_enterprise: number, 
-  day: string, 
+  day: string,
+  id_enterprise: number,  
   dishes: { name: string, description: string}[]) {
 
   try {
@@ -67,16 +68,19 @@ export async function updateMenu (
     await menu.setDishes([])
 
     const newDishes = await Dish.bulkCreate(
-      dishes.map(dishes => ({
-        ...dishes, id_enterprise
+      dishes.map(({ name, description }) => ({
+        name,
+        description,
+        id_enterprise
       })),
-      { returning: true}
+      { returning: true }
     )
 
     await menu.setDishes(newDishes)
       
     return { success: true}
   } catch (error) {
+    console.error('Erro ao atualizar menu:', error)
     throw error
   }
 }
