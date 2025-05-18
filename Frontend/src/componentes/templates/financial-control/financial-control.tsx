@@ -56,12 +56,6 @@ export function Dashboard () {
   const months = [ 'março', 'abril', 'maio' ]
   const years = [ '2025' ]
 
-  const [year, setYear] = useState<number> (new Date().getFullYear())
-  
-  const toggleYear = (year: number) => {
-    setYear(prevYear => year)
-  }
-
   return (
     <div className="dashboard">
 
@@ -72,20 +66,12 @@ export function Dashboard () {
           <h3>Dashboard Financeiro </h3>
         </article>
 
-        <header>
-          Valores recebidos:
-        </header>
-
         <button className="card">
           <div className="title">
             <Icons.AiOutlineRise size={25} /> Receita
           </div>
           <label className="value" style={{color: 'green'}}>R${receiveTotal}</label>
         </button>
-
-        <header>
-          Categoria de gastos:
-        </header>
 
         <button className="card">
           <div className="title">

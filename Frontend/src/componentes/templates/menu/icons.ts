@@ -3,7 +3,7 @@ import { GrFormPrevious } from "react-icons/gr"
 import { TfiWrite } from "react-icons/tfi";
 import { FaTrashArrowUp } from "react-icons/fa6";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import { MdClose } from "react-icons/md";
+import { FaArrowRightLong } from "react-icons/fa6"
 
 export {
   GrFormNext,
@@ -11,6 +11,6 @@ export {
   TfiWrite, 
   FaTrashArrowUp,
   IoMdAddCircleOutline,
-  MdClose,
+  FaArrowRightLong ,
 }
 

@@ -3,12 +3,13 @@ $default-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.6);
 .dashboard {
   display: flex;
   width: 85%;
-  height: calc(100vh - 9rem);
+  margin-top: 6rem;
+  margin-bottom: 2rem;
   margin-inline: auto;
-  margin-top: 6.5rem;
   border-radius: 10px;
   box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.2);
   text-align: center;
+  align-items: stretch;
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
@@ -25,7 +26,8 @@ $default-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.6);
     padding-block: 2rem;
     padding-inline: 0.5rem;
     width: clamp(10rem, 20vw, 30rem);
-    height: 100%;
+    height: auto;
+    max-height: 100%;
     background-color: #fafafa;
     border-right: 2px solid #5c9bc5;
     box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.2);
@@ -89,7 +91,8 @@ $default-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.6);
     flex: 1;
     flex-direction: column;
     background-color: #f4f4f4;
-    height: 100%;
+    height: auto;
+    max-height: 100%;
     overflow-y: auto;
 
     header {
@@ -275,10 +278,8 @@ $default-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.6);
 @media (max-width: 768px) {
   .dashboard {
     flex-direction: column;
-    height: 100%;
-    width: 100%;
-    margin-top: 0;
-    border-radius: 0;
+    height: auto;
+    width: 90%;
     box-shadow: none;
 
     aside {

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef  } from 'react'
-import { GrFormNext, GrFormPrevious, TfiWrite, FaTrashArrowUp, IoMdAddCircleOutline, MdClose } from './icons'
+import { GrFormNext, GrFormPrevious, TfiWrite, FaTrashArrowUp, IoMdAddCircleOutline, FaArrowRightLong  } from './icons'
 import { MenuDish, Dish } from '../../../models/Menu'
 import './calendar.sass'
 
@@ -113,10 +113,6 @@ export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
     }
   }
 
-  const handleCancelNewDish = () => {
-    setNewDish(null);
-  }
-
   return (
     <section className='menuContainer'>
       
@@ -158,15 +154,16 @@ export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
       {/* Verifica tamanho do array, caso esteja vazio, informa não ter */}
         { dishes.length > 0 ? 
         (dishes.map((dish) => (
-          <div className={`dish ${openDescription === dish.id ? 'expanded' : ''} ${deleted ? 'active' : ''}`} key={dish.id} onClick={() => handleDescription(dish.id)}>
-            {dish.name}
+          <div className={`dish ${openDescription === dish.id ? 'expanded' : ''}`} key={dish.id} onClick={() => handleDescription(dish.id)}>
+            <span>{dish.name} { deleted && (<FaArrowRightLong className='btn-delete' />)}</span>
             <p>{dish.description}</p>
           </div>
         ))) :
         (<div className='dish'>Nenhuma refeição foi encontrada</div>)}
 
         {newDish && (
-          <div className="dish expanded">
+          // Criar novo prato ativa estilo para expansão suave
+          <div className="dish new-dish">
             <div className='flex flex-col gap-2'>
               <input
                 name='name'
@@ -179,19 +176,18 @@ export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
                 placeholder="Modo de preparo"
                 value={newDish.description}
                 onChange={handleNewDishChange}
-                rows={2}
               />
             </div>
             <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', justifyContent: 'center' }}>
               <button onClick={handleSaveNewDish}>Salvar</button>
-              <button onClick={handleCancelNewDish}>Cancelar</button>
+              <button onClick={() => setNewDish(null)}>Cancelar</button>
             </div>
           </div>
         )}
 
         <footer className='menu-footer'>
           <TfiWrite cursor={'pointer'}/>
-          <IoMdAddCircleOutline cursor={'pointer'} size={25} onClick={() => setNewDish({ id: Date.now(), name: '', description: '' })}/>
+          <IoMdAddCircleOutline cursor={'pointer'} size={25} onClick={() => newDish ? setNewDish(null) : setNewDish({ id: 0, name: '', description: '' })}/>
           <FaTrashArrowUp cursor={'pointer'} onClick={() => setDeleted(!deleted)}/>
         </footer>
 
