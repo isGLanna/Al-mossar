@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = 'http://localhost:3001';
+const API_URL = import.meta.env.VITE_API_URL || 'https://192.168.3.82:3001'
 
 export type Employee = {
   id: number; 
@@ -40,6 +40,7 @@ export const loginUser = async (user: { email: string; password: string; remembe
 
     return { success: true, message: message, employee: employee}
   } catch (error: any) {
+    alert(error)
     const message = error?.response?.data?.message || 'Erro ao fazer login'
     return { success: false, message, employee: null}
   }

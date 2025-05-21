@@ -8,7 +8,7 @@
 
   color-scheme: light dark;
   color: var(--texto);
-  background: linear-gradient(to right, var(--background-color), white, var(--background-color));
+  background: linear-gradient(to right, var(--background-color), #f5f7ff, var(--background-color));
 
 
   font-synthesis: none;

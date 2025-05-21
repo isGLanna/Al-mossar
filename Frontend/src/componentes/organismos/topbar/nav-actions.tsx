@@ -33,7 +33,7 @@ export function NavActions({ employee }: Props){
   }
 
   const handleDashBoard = () => {
-    navigate({ to: '/financial-control' }); // Agora passando um objeto com 'to'
+    navigate({ to: '/dashboard' })
   }
 
   return(
