@@ -184,7 +184,7 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
                 </td>
                 
                 {employee.canEditEmployeePanel() && (<td>
-                  { emp.email !== employee.email && <HiOutlineTrash onClick={() => handleDelete(emp.email)} color={'#a33'} size={20} />}
+                  { emp.email !== employee.email && <HiOutlineTrash style={{cursor:'pointer'}} onClick={() => handleDelete(emp.email)} color={'#a33'} size={20} />}
                 </td>)}
               </tr>
             ))}
@@ -226,19 +226,37 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
           </form>
         )}
 
-        {employee.canEditEmployeePanel() && (<button
-          className="add-button"
-          onClick={(e) => {
-            e.preventDefault()
-            if (addEmployee) {
-              handleSubmit()
-            } else {
-              setAddEmployee(true)
-            }
-          }}
-        >
-          {addEmployee ? 'Confirmar' : <IoMdPersonAdd size={20}/>}
-        </button>)}
+        <div className='flex row justify-center'>
+          {employee.canEditEmployeePanel() && (
+            <>
+              <button
+              className="add-button"
+              onClick={(e) => {
+                e.preventDefault()
+                if (addEmployee) {
+                  handleSubmit()
+                } else {
+                  setAddEmployee(true)
+                }
+              }}
+            >
+              {addEmployee ? 'Confirmar' : <IoMdPersonAdd size={20}/>}
+            </button>
+
+            { addEmployee && (<button
+                className="remove-button"
+                onClick={(e) => {
+                  e.preventDefault()
+                  if (addEmployee)
+                    setAddEmployee(false)
+
+                }}
+              >
+                  Cancelar
+              </button>)}
+          </>
+        )}
+        </div>
         
       </div>
     </section>

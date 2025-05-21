@@ -1,13 +1,21 @@
-$default-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.6);
+$default-box-shadow: 3px 4px 4px #00000030;
+
+.dashboard-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-block: 1rem;
+  min-height: calc(100dvh - 70px);
+  height: auto;
+}
 
 .dashboard {
   display: flex;
-  width: 85%;
-  margin-top: 6rem;
-  margin-bottom: 2rem;
+  width: 90%;
   margin-inline: auto;
   border-radius: 10px;
-  box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: $default-box-shadow;
   text-align: center;
   align-items: stretch;
   overflow: hidden;
@@ -16,7 +24,7 @@ $default-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.6);
 
   ::-webkit-scrollbar {
     width: 5px;
-    height: 6px;;
+    height: 6px;
   }
 
   aside {
@@ -134,6 +142,7 @@ $default-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.6);
       select {
         background: #797979;
         width: 10rem;
+        height: 1.6rem;
         outline: none;
         border-radius: 5px;
         align-self: center;
@@ -275,7 +284,7 @@ $default-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.6);
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 720px) and (min-width: 480px) {
   .dashboard {
     flex-direction: column;
     height: auto;
@@ -287,7 +296,7 @@ $default-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.6);
       height: auto;
       border-right: none;
       border-bottom: 2px solid #5c9bc5;
-      padding-block: 1rem;
+      padding-block: 0.5rem;
       padding-inline: 0.5rem;
 
       article {
@@ -300,9 +309,65 @@ $default-box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.6);
       header {
         flex-direction: wrap;
         align-items: center;
-        gap: 1rem;
+        gap: 0.5rem;
       }
     }
   }
-  
+}
+
+@media (max-width: 520px) {
+  .dashboard {
+    flex-direction: column;
+    height: auto;
+    width: 90%;
+    box-shadow: none;
+
+    aside {
+      width: 100%;
+      height: auto;
+      border-right: none;
+      border-bottom: 2px solid #5c9bc5;
+      padding-block: 0.5rem;
+      padding-inline: 0.5rem;
+
+      .card {
+        height: 3.5rem;
+        padding: 0
+      }
+
+      article {
+        height: auto;
+        border-bottom: none;
+      }
+    }
+
+    main {
+      header {
+        display: flex;
+        flex-direction: wrap;
+        align-items: center;
+        gap: 0.6rem;
+        width: 100%;
+
+        h3 {
+          font-size: 1.1rem;
+        }
+
+        p {
+          font-size: 1.2rem;
+        }
+
+        select {
+          width: 9rem;
+          height: 1.4rem;
+        }
+
+        .box {
+          width: 9rem;
+          height: 4rem;
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
 }

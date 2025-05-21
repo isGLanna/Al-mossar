@@ -12,8 +12,8 @@
 
 .calendar, 
 .menu
-  margin-top: 50px
-  border-radius: 20px
+  margin-top: 2rem
+  border-radius: 10px
   font-family: sans-serif
   background: var(--menuContainers)
   overflow: hidden
@@ -149,7 +149,7 @@
       transition: background-color 0.3s ease
 
       &:hover
-        background: #809aba   
+        background: #809aba 
 
   ::-webkit-scrollbar-track
     background-color: #f7f7f7
@@ -161,13 +161,13 @@
 @media (max-width: 720px)
   .calendar, .menu
     button
-      width: clamp(2rem, 7dvw, 55px)
-      height: clamp(2rem, 6dvw, 45px)
+      width: clamp(2.3rem, 7dvw, 90px)
+      height: clamp(2.3rem, 7dvw, 45px)
       padding: 0
 
   .h3
-    margin-inline: clamp(10px, 6dvw, 40px)
-    font-size: 1.4em;
+    margin-inline: clamp(2px, 2lvw, 14px)
+    font-size: clamp(1rem, 3dvw, 1.5rem);
 
   .calendar
     .header 
@@ -181,3 +181,7 @@
 
       span
         font-size: 16px
+  
+  .menu
+    margin-bottom: 4rem
+    margin-inline: 1rem

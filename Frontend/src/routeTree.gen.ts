@@ -12,7 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as MenuImport } from './routes/menu'
-import { Route as FinancialControlImport } from './routes/financial-control'
+import { Route as DashboardImport } from './routes/dashboard'
 import { Route as CreateEnterpriseImport } from './routes/create-enterprise'
 import { Route as CreateAccountImport } from './routes/create-account'
 import { Route as IndexImport } from './routes/index'
@@ -25,9 +25,9 @@ const MenuRoute = MenuImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const FinancialControlRoute = FinancialControlImport.update({
-  id: '/financial-control',
-  path: '/financial-control',
+const DashboardRoute = DashboardImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -74,11 +74,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CreateEnterpriseImport
       parentRoute: typeof rootRoute
     }
-    '/financial-control': {
-      id: '/financial-control'
-      path: '/financial-control'
-      fullPath: '/financial-control'
-      preLoaderRoute: typeof FinancialControlImport
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardImport
       parentRoute: typeof rootRoute
     }
     '/menu': {
@@ -97,7 +97,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/create-account': typeof CreateAccountRoute
   '/create-enterprise': typeof CreateEnterpriseRoute
-  '/financial-control': typeof FinancialControlRoute
+  '/dashboard': typeof DashboardRoute
   '/menu': typeof MenuRoute
 }
 
@@ -105,7 +105,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/create-account': typeof CreateAccountRoute
   '/create-enterprise': typeof CreateEnterpriseRoute
-  '/financial-control': typeof FinancialControlRoute
+  '/dashboard': typeof DashboardRoute
   '/menu': typeof MenuRoute
 }
 
@@ -114,7 +114,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/create-account': typeof CreateAccountRoute
   '/create-enterprise': typeof CreateEnterpriseRoute
-  '/financial-control': typeof FinancialControlRoute
+  '/dashboard': typeof DashboardRoute
   '/menu': typeof MenuRoute
 }
 
@@ -124,21 +124,16 @@ export interface FileRouteTypes {
     | '/'
     | '/create-account'
     | '/create-enterprise'
-    | '/financial-control'
+    | '/dashboard'
     | '/menu'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/create-account'
-    | '/create-enterprise'
-    | '/financial-control'
-    | '/menu'
+  to: '/' | '/create-account' | '/create-enterprise' | '/dashboard' | '/menu'
   id:
     | '__root__'
     | '/'
     | '/create-account'
     | '/create-enterprise'
-    | '/financial-control'
+    | '/dashboard'
     | '/menu'
   fileRoutesById: FileRoutesById
 }
@@ -147,7 +142,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CreateAccountRoute: typeof CreateAccountRoute
   CreateEnterpriseRoute: typeof CreateEnterpriseRoute
-  FinancialControlRoute: typeof FinancialControlRoute
+  DashboardRoute: typeof DashboardRoute
   MenuRoute: typeof MenuRoute
 }
 
@@ -155,7 +150,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CreateAccountRoute: CreateAccountRoute,
   CreateEnterpriseRoute: CreateEnterpriseRoute,
-  FinancialControlRoute: FinancialControlRoute,
+  DashboardRoute: DashboardRoute,
   MenuRoute: MenuRoute,
 }
 
@@ -172,7 +167,7 @@ export const routeTree = rootRoute
         "/",
         "/create-account",
         "/create-enterprise",
-        "/financial-control",
+        "/dashboard",
         "/menu"
       ]
     },
@@ -185,8 +180,8 @@ export const routeTree = rootRoute
     "/create-enterprise": {
       "filePath": "create-enterprise.tsx"
     },
-    "/financial-control": {
-      "filePath": "financial-control.tsx"
+    "/dashboard": {
+      "filePath": "dashboard.tsx"
     },
     "/menu": {
       "filePath": "menu.tsx"

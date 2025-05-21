@@ -2,7 +2,7 @@ import '../../moleculas/cardapio.module.scss'
 import { NavActions } from '../../organismos/topbar/nav-actions'
 import { createEmployee } from '../../../models/EmployeeFactory'
 import { useAuthStore } from '../../../store/auth-store.ts'
-import { DailyMenu } from './dailyMenu'
+import { DailyMenu } from './daily-menu.tsx'
 
 export function Menu() {
   const employee = useAuthStore((state) => state.employee)

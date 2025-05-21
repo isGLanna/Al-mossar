@@ -95,12 +95,20 @@
   margin: 1rem;
   padding: 0.3rem 0.5rem;
   background: rgb(87, 167, 111);
-  transition: 200ms ease;
+  transition: 150ms ease;
   color: white;
   border: none;
   border-radius: 5px;
   outline: none;
   cursor: pointer;
+
+  &.remove-button{
+    background: #c52121;
+    
+    &:hover {
+      background: #9c1b1b;
+    }
+  }
   
   &:hover {
     background: rgb(63, 131, 85);
