@@ -1,1 +1,3 @@
-// Impelementar um chat entre funcionários da empresa
+import { useState } from 'react'
+
+const [ message, setMessage ] = useState<string>('')
