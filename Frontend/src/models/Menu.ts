@@ -47,6 +47,10 @@ export class MenuDish {
   // POST - criar cardápio
   async createMenu(): Promise<MenuResponse> {
     try {
+      if (typeof this.idEnterprise !== 'number' || typeof this.day !== 'string' || !Array.isArray(this.dishes)) {
+        throw { success: false, message: 'Erro ao criar cardápio' }
+      }
+
       await axios.post(`${API_URL}/api/menu/`, {
         date: this.day,
         id_enterprise: this.idEnterprise,

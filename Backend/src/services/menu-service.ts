@@ -32,7 +32,18 @@ export async function createMenu (
   dishes: { name: string; description: string}[]) {
   
   try {
-    const menu = await Menu.create({ id_enterprise, day })
+    // Verifica se já existe um menu para o dia e empresa para evitar duplicidade
+    let menu = await Menu.findOne({
+      where: { id_enterprise, day },
+      include: [{ association: 'dishes' }],
+    })
+
+
+    if (!menu) {
+      menu = await Menu.create({ id_enterprise, day });
+    } else {
+      updateMenu(day, id_enterprise, dishes)
+    }
 
     const createdDishes = await Dish.bulkCreate(
       dishes.map(({ name, description }) => ({
@@ -85,20 +96,31 @@ export async function updateMenu (
   }
 }
 
-export async function deleteMenu (day:string, id_enterprise: number) {
+export async function deleteMenu(id_enterprise: number, name: string, day: string) {
   try {
     const menu = await Menu.findOne({
-      where: { id_enterprise, day }
-    })
+      where: { id_enterprise, day },
+      include: [{ association: 'dishes' }],
+    });
 
-    if (!menu) throw new Error ('Menu não encontrado')
+    if (!menu) throw new Error('Menu não encontrado');
+    if (!menu.dishes) throw new Error('Nenhum prato encontrado');
 
-    // Remove vínculo com pratos e deleta menu
-    await menu.setDishes([])
-    await menu.destroy()
+    const dishToDelete = menu.dishes.find(dish => dish.name === name);
+    if (!dishToDelete) throw new Error('Prato não encontrado no menu');
 
-    return { success: true }
+    if (menu.dishes.length === 1) {
+      // Só 1 prato? Deleta o menu inteiro
+      await menu.setDishes([]);
+      await menu.destroy();
+    } else {
+      // Mais de 1 prato? Apenas remove o prato
+      await menu.removeDish(dishToDelete.id);
+    }
+
+    return { success: true };
   } catch (error) {
-    return { error, success: false}
+    return { error, success: false };
   }
 }
+
