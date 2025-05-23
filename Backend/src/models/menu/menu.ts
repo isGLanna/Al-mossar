@@ -7,8 +7,10 @@ class Menu extends Model {
   public day!: string;
   public description?: string;
   public id_enterprise!: number;
-
+  
   public setDishes!: (dishes: Dish[] | number[], options?: any) => Promise<void>;
+  public removeDish!: (dish: Dish | number) => Promise<void>;
+  public dishes?: Dish[];
   public static associations: {
     dishes: Association<Menu, Dish>;
   };
