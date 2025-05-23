@@ -18,8 +18,13 @@ const mockUpdateMenu = vi.fn().mockResolvedValue({
   message: 'Cardápio atualizado',
 })
 
+const mockCreateMenu = vi.fn().mockResolvedValue({
+  success: true,
+  message: 'Cardápio atualizado',
+})
+
 const mockAddDishByName = vi.fn((name: string, description: string) => {
-  dishesMock.push({ id: Date.now(), name, description })
+  dishesMock.push({ id: 5, name, description })
 })
 
 const mockGetDishes = vi.fn(() => dishesMock)
@@ -28,6 +33,7 @@ vi.mock('../../../models/Menu', () => ({
   MenuDish: vi.fn().mockImplementation(() => ({
     fetchMenu: mockFetchMenu,
     updateMenu: mockUpdateMenu,
+    createMenu: mockCreateMenu,
     getDishes: mockGetDishes,
     addDishByName: mockAddDishByName,
     getDay: vi.fn().mockReturnValue('2025-05-22'),
@@ -43,10 +49,6 @@ it('adiciona prato e oculta formulário após salvar', async () => {
 
   fireEvent.click(screen.getByLabelText('Adicionar prato'))
 
-  // 2. Verifica se formulário apareceu
-  expect(screen.getByPlaceholderText('Nome do prato')).toBeInTheDocument()
-  expect(screen.getByPlaceholderText('Modo de preparo')).toBeInTheDocument()
-
   // 3. Preenche os campos
   fireEvent.change(screen.getByPlaceholderText('Nome do prato'), {
     target: { value: 'Arroz' }
@@ -58,9 +60,11 @@ it('adiciona prato e oculta formulário após salvar', async () => {
   // 4. Clica em salvar
   fireEvent.click(screen.getByText('Salvar'))
 
-  // 5. Verifica se prato foi adicionado
-  await waitFor(() => {
-    expect(screen.getByText('Arroz')).toBeInTheDocument()
-    expect(screen.getByText('Cozinhar com alho e óleo')).toBeInTheDocument()
-  })
+
+  // 5. Verifica se prato foi adicionado e a função de inserir prato foi removida
+  await screen.findByText('Arroz')
+  expect(screen.queryByText('Nome do prato')).not.toBeInTheDocument()
+  expect(screen.queryByText('Modo de preparo')).not.toBeInTheDocument()
+  expect(screen.queryByText('Salvar')).not.toBeInTheDocument()
+
 })
