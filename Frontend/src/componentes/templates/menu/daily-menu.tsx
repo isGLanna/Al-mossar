@@ -4,7 +4,7 @@ import { MenuDish, Dish } from '../../../models/Menu'
 import './calendar.sass'
 
 
-export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
+export function DailyMenu( {idEnterprise} : { idEnterprise: number }) {
   const today = new Date()
   const week = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
 
@@ -100,16 +100,43 @@ export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
 
     const menuDish = menuDishRef.current;
     menuDish.addDishByName(newDish.id, newDish.name.trim(), newDish.description.trim());
+    try {
+      const response = dishes.length === 0 ?
+        await menuDish.createMenu() :
+        await menuDish.updateMenu()
 
-    const response = dishes.length === 0 ?
-      await menuDish.createMenu() :
-      await menuDish.updateMenu()
+      if (response.success) {
+        setNewDish(null);
+        setDishes(menuDish.getDishes());
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error: any) {
+      alert(error);
+    }
+  }
 
-    if (response.success) {
-      setNewDish(null);
-      setDishes(menuDish.getDishes());
-    } else {
-      alert(response.message);
+  // Deletar prato
+  const handleDeleteDish = async (id: number) => {
+    
+    if (!menuDishRef.current) return
+
+    const menuDish = menuDishRef.current
+    
+    try {
+      const dishToDelete = menuDish.getDishes().find(dish => dish.id === id)
+
+      if (!dishToDelete) return
+
+      const updatedDishes = menuDish.getDishes().filter(dish => dish.id !== id)
+      
+      menuDish.setDishes(updatedDishes)
+      const response = await menuDish.updateMenu()
+      if (response.success) {
+        setDishes(updatedDishes)
+      }
+     } catch(error: any) {
+        alert(error)
     }
   }
 
@@ -155,7 +182,10 @@ export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
         { dishes.length > 0 ? 
         (dishes.map((dish) => (
           <div className={`dish ${openDescription === dish.id ? 'expanded' : ''}`} key={dish.id} onClick={() => handleDescription(dish.id)}>
-            <span>{dish.name} { deleted && (<FaArrowRightLong className='btn-delete' />)}</span>
+            <span>{dish.name} { deleted && (
+              <FaArrowRightLong className='btn-delete' onClick={() => handleDeleteDish(dish.id)}/>
+              )}
+            </span>
             <p>{dish.description}</p>
           </div>
         ))) :
@@ -187,7 +217,9 @@ export function DailyMenu({ idEnterprise }: { idEnterprise: number }){
 
         <footer className='menu-footer'>
           <TfiWrite cursor={'pointer'}/>
-          <IoMdAddCircleOutline cursor={'pointer'} size={25} onClick={() => newDish ? setNewDish(null) : setNewDish({ id: 0, name: '', description: '' })}/>
+          <button aria-label="Adicionar prato" onClick={() => newDish ? setNewDish(null) : setNewDish({ id: 0, name: '', description: '' })}>
+            <IoMdAddCircleOutline cursor={'pointer'} size={25}/>
+          </button>
           <FaTrashArrowUp cursor={'pointer'} onClick={() => setDeleted(!deleted)}/>
         </footer>
 

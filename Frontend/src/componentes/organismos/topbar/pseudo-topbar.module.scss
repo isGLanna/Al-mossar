@@ -2,7 +2,7 @@
   position: fixed;
   top: 0;
   right: 0;
-  height: 70px;
+  height: 65px;
   width: clamp(140px, 25dvw, 210px);
   display: flex;
   align-items: center;
@@ -24,7 +24,7 @@
 .menu {
   position: absolute;
   width: 90px;
-  top: 70px;
+  top: 65px;
   right: -25px;
   max-height: 0;
   background-color: var(--menu);
@@ -32,13 +32,15 @@
   border-end-start-radius: 5px;
   border-end-end-radius: 5px;
   border-inline: 2px solid #0f5904;
-  transition: width 200ms ease-out, max-height 300ms ease-out, opacity 1s ease;
+  transition: width 200ms ease-out, max-height 200ms ease-out, opacity 1s ease;
   overflow-y: scroll;
+  user-select: none;
+  -webkit-user-select: none;
   opacity: 0;
   backdrop-filter: blur(3px);
 
   &.open {
-    transition: max-height 300ms ease-out, opacity 500ms ease;
+    transition: max-height 200ms ease-out, opacity 400ms ease;
     max-height: 105px;
     opacity: 1;
   }
@@ -85,6 +87,7 @@
   }
 
   .menu {
+    right: 0.4rem;
     width: 30%;
   }
 }

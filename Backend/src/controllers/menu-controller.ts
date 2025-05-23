@@ -55,10 +55,10 @@ export async function update ( req: Request, res: Response ): Promise<void> {
 }
 
 export async function deleted(req: Request, res: Response ): Promise<void> {
-  const { id_enterprise, date } = req.body
+  const { id_enterprise, name, date } = req.body
 
   try {
-    const result = await deleteMenu(date, id_enterprise)
+    const result = await deleteMenu(id_enterprise, name, date)
 
     res.status(200).json(result)
   } catch (error) {
