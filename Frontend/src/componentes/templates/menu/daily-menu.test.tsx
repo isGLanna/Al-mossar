@@ -4,7 +4,6 @@ import '@testing-library/jest-dom'
 import { DailyMenu } from './daily-menu'
 
 
-
 type Dish = { id: number; name: string; description: string }
 var dishesMock: Dish[] = []
 
