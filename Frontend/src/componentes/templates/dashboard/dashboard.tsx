@@ -3,7 +3,7 @@ import { NavActions } from '../../organismos/topbar/nav-actions'
 import { createEmployee } from '../../../models/EmployeeFactory'
 import { useAuthStore } from '../../../store/auth-store.ts'
 import * as Icons from './icons.ts'
-import "./Dashboard.scss"
+import "./dashboard.scss"
 
 export function Dashboard () {
     const employee = useAuthStore((state) => state.employee)
