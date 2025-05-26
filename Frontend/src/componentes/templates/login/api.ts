@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://a382-170-247-103-68.ngrok-free.app"
-
+const API_URL = import.meta.env.BASE_URL
 
 export type Employee = {
   id: number; 
