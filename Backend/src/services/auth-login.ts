@@ -7,13 +7,13 @@ export const authenticateUser = async (email: string, password: string) => {
     const employee = await Employee.findOne({ where: { email } })
 
     if (!employee) {
-      throw new Error('Usuário não encontrado.')
+      return { success: false, message: 'Email ou senha incorretos' }
     }
 
     const isValid = await bcrypt.compare(password, employee.password)
 
     if (!isValid) {
-      throw new Error('Senha incorreta.')
+      return { success: false, message: 'Email ou senha incorretos' }
     }
 
     const token = crypto.randomBytes(64).toString('base64')
@@ -30,6 +30,6 @@ export const authenticateUser = async (email: string, password: string) => {
     
   } catch (error) {
     console.log(error)
-    return null
+    return { success: false, message: 'internal-error' }
   }
 }

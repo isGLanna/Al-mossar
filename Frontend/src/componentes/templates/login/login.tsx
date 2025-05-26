@@ -80,17 +80,21 @@ export function Login() {
     try {
       const response = await loginUser(user);
 
-      if (response.success && response.employee) {
-        setEmployee(response.employee)
-        navigate({ to: '/menu'})
+      // Se o login for bem-sucedido, armazena o usuário e redireciona
+      if (!response.success || !response.employee) {
+        setEmptyField({ email: false, password: false })
+        throw new Error(response.message || 'Erro ao fazer login');
       }
+
+      setEmployee(response.employee)
+      navigate({ to: '/menu'})
+
     } catch (err) {
       setUser(user => ({
         ...user, email: '', password: ''}));
-      alert(Response.error || 'Email ou senha inválidos.');
     } finally {
       setIsLoading(false)
-    } 
+    }
   }
 
   return (
