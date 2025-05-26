@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://192.168.3.82:3001'
+const API_URL = "https://a382-170-247-103-68.ngrok-free.app"
+
 
 export type Employee = {
   id: number; 
