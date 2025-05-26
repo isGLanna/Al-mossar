@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+const API_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:3001'
+
 export interface Dish {
   id: number
   name: string
@@ -11,8 +13,6 @@ interface MenuResponse {
   message: string,
   dishes?: Dish[]
 }
-
-const API_URL = import.meta.env.BASE_URL
 
 export interface Dish {
   id: number
