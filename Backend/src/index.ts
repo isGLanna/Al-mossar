@@ -1,15 +1,21 @@
 import express from 'express'
 import cors from 'cors'
 import routes from './routes/index'
+import https from 'https'
+import fs from 'fs'
 
-const app = express();
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
+const sslOptions = {
+  key: fs.readFileSync('certificates/server.key'),
+  cert: fs.readFileSync('certificates/server.crt'),
+}
+
+const app = express()
+const PORT = 3001
 
 app.use(express.json())
 app.use(cors())
+app.use('/api', routes)
 
-app.use('/api', routes);
-
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Servidor rodando em http://0.0.0.0:${PORT}`)
+https.createServer(sslOptions, app).listen(PORT, '0.0.0.0', () => {
+  console.log(`Servidor HTTPS rodando em https://0.0.0.0:${PORT}`)
 })
