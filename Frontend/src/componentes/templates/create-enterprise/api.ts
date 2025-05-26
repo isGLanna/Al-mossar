@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+const API_URL = import.meta.env.VITE_BASE_URL || 'https://localhost:3001'
+
 // Formato de entrada
 type EnterpriseRegisterData = {
   name: string,
@@ -17,8 +19,6 @@ type RegisterResponse = {
   message?: string;
   status?: number
 }
-
-const API_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:3001'
 
 export const registerEnterprise = async (
   user: EnterpriseRegisterData
