@@ -66,5 +66,4 @@ it('adiciona prato e oculta formulário após salvar', async () => {
   expect(screen.queryByText('Nome do prato')).not.toBeInTheDocument()
   expect(screen.queryByText('Modo de preparo')).not.toBeInTheDocument()
   expect(screen.queryByText('Salvar')).not.toBeInTheDocument()
-
 })
