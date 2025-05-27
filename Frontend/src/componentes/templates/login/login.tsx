@@ -82,16 +82,18 @@ export function Login() {
 
       // Se o login for bem-sucedido, armazena o usuário e redireciona
       if (!response.success || !response.employee) {
-        setEmptyField({ email: false, password: false })
-        throw new Error(response.message || 'Erro ao fazer login');
+        setEmptyField({ email: true, password: true })
+        throw new Error(response.message || 'Erro ao fazer login')
       }
 
-      setEmployee(response.employee)
+      setEmployee(response.employee) 
       navigate({ to: '/menu'})
 
     } catch (err) {
+      alert(err)
       setUser(user => ({
-        ...user, email: '', password: ''}));
+        ...user, email: '', password: ''}))
+      
     } finally {
       setIsLoading(false)
     }
@@ -149,7 +151,7 @@ export function Login() {
               value={isLoading ? 'Carregando...' : 'Entrar'}
               disabled={isLoading}
               />
-            {( emptyField.email || emptyField.password ) && <span>Preencha todos os campos</span>}
+            {( emptyField.email || emptyField.password ) && <span>Preencha os campos corretamente</span>}
           </div>
 
           <div>

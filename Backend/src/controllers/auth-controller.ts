@@ -27,8 +27,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return
     }
 
-    if (!authResult.success) {
-      res.status(200).json({ success: false, message: authResult.message })
+    if (authResult.success === false) {
+      res.status(401).json({ success: false, message: authResult.message })
       return
     }
 
