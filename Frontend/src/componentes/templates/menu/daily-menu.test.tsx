@@ -1,5 +1,5 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import {it, expect, vi } from 'vitest'
+import { render, screen, fireEvent } from '@testing-library/react'
+import {it, expect, vi, describe  } from 'vitest'
 import '@testing-library/jest-dom'
 import { DailyMenu } from './daily-menu'
 
@@ -23,8 +23,10 @@ const mockCreateMenu = vi.fn().mockResolvedValue({
   message: 'Cardápio atualizado',
 })
 
-const mockAddDishByName = vi.fn((name: string, description: string) => {
-  dishesMock.push({ id: 5, name, description })
+const mockAddDishByName = vi.fn((id: number, name: string, description: string) => {
+  const newId = dishesMock.length + 1
+  const newDish = { id: newId, name, description }
+  dishesMock.push(newDish)
 })
 
 const mockGetDishes = vi.fn(() => dishesMock)
@@ -44,46 +46,71 @@ vi.mock('../../../models/Menu', () => ({
 }))
 
 
-it('adiciona prato e oculta formulário após salvar', async () => {
-  render(<DailyMenu idEnterprise={31}/>)
+describe('Adição de pratos', () => {
 
-  fireEvent.click(screen.getByLabelText('Adicionar prato'))
+  const positiveTestCases = [
+    { name: 'Arroz', description: 'Cozinhar com alho e óleo'},
+    { name: 'Feijão', description: 'Deixar de molho e temperar com sazon'},
+    { name: 'Macarrão', description: 'Cozinhar na água e sal, adicionar molho'},
+    { name: 'Salada Caesar', description: 'Alface, croutons, parmesão e molho Caesar'},
+    { name: 'Bife à Parmegiana', description: 'Bife empanado, molho de tomate e queijo'},
+    { name: 'Sopa de Legumes', description: 'Cozinhar cenoura, batata, chuchu e macarrãozinho em caldo de galinha.'},
+    { name: 'Lasanha Bolonhesa', description: 'Camadas de massa, molho bolonhesa, presunto, queijo e molho branco.'},
+    { name: 'Frango Grelhado', description: 'Peito de frango temperado com ervas finas e grelhado.'},
+    { name: 'Purê de Batata', description: 'Batatas cozidas e amassadas com manteiga e leite.'},
+    { name: 'Peixe Assado', description: 'Peixe temperado com limão, azeite e alecrim, assado no forno com batatas.'}
+  ]
 
-  // 3. Preenche os campos
-  fireEvent.change(screen.getByPlaceholderText('Nome do prato'), {
-    target: { value: 'Arroz' }
-  })
-  fireEvent.change(screen.getByPlaceholderText('Modo de preparo'), {
-    target: { value: 'Cozinhar com alho e óleo' }
-  })
-
-  // 4. Clica em salvar
-  fireEvent.click(screen.getByText('Salvar'))
-
-
-  // 5. Verifica se prato foi adicionado e a função de inserir prato foi removida
-  await screen.findByText('Arroz')
-  expect(screen.queryByText('Nome do prato')).not.toBeInTheDocument()
-  expect(screen.queryByText('Modo de preparo')).not.toBeInTheDocument()
-  expect(screen.queryByText('Salvar')).not.toBeInTheDocument()
-})
-
-it('adiciona prato e oculta formulário após salvar', async () => {
-  render(<DailyMenu idEnterprise={31}/>)
-
-  fireEvent.click(screen.getByLabelText('Adicionar prato'))
-
-  // 3. Preenche os campos
-  fireEvent.change(screen.getByPlaceholderText('Nome do prato'), {
-    target: { value: 'Arroz' }
-  })
-  fireEvent.change(screen.getByPlaceholderText('Modo de preparo'), {
-    target: { value: 'Cozinhar com alho e óleo' }
-  })
-
-  // 4. Clica em salvar
-  fireEvent.click(screen.getByText('Salvar'))
+  const negativeTestCases = [
+    { name: '', description: 'Cozinhar com alho e óleo'},
+    { name: 'Feijão', description: 'Deixar de molho e temperar com sazon'},
+    { name: 'Macarrão', description: 0},
+    { name: 15, description: 65},
+    { name: null, description: 'Bife empanado, molho de tomate e queijo'},
+    { name: 'Sopa de Legumes', description: null},
+    { name: undefined, description: 'Camadas de massa, molho bolonhesa, presunto, queijo e molho branco.'},
+    { name: 0.5, description: 'Peito de frango temperado com ervas finas e grelhado.'},
+    { name: '', description: 2},
+    { name: ['array', 'arrays'], description: 'Peixe temperado com limão, azeite e alecrim, assado no forno com batatas.'}
+  ]
   
-  // 5. Verifica se prato foi adicionado e a função de inserir prato foi removida
-  await screen.findByText('Arroz')
+  it.each(positiveTestCases)('Adicionar prato e oculta formulário após salvar', async ({ name, description }) => {
+    render(<DailyMenu idEnterprise={1}/>)
+
+    fireEvent.click(screen.getByLabelText('Adicionar prato'))
+
+    // Escreve nos campos
+    fireEvent.change(screen.getByPlaceholderText('Nome do prato'), { target: { value: name } })
+    fireEvent.change(screen.getByPlaceholderText('Modo de preparo'), { target: { value: description } })
+
+    // Salva conteúdo
+    fireEvent.click(screen.getByText('Salvar'))
+
+
+    // Verifica se o prato foi inserido de fato
+    const dishbtn = await screen.findByText(name)
+    expect(screen.queryByText('Salvar')).not.toBeInTheDocument()
+
+    // Verifica se a descrição foi inserida
+    fireEvent.click(dishbtn)
+    const descriptionExpectation = await screen.findByText(description)
+    expect(descriptionExpectation).toBeVisible()
+  })
+
+  it.each(negativeTestCases)('Adicionar prato e oculta formulário após salvar', async ({ name, description }) => {
+    render(<DailyMenu idEnterprise={1}/>)
+
+    fireEvent.click(screen.getByLabelText('Adicionar prato'))
+
+    // Escreve nos campos
+    fireEvent.change(screen.getByPlaceholderText('Nome do prato'), { target: { value: name } })
+    fireEvent.change(screen.getByPlaceholderText('Modo de preparo'), { target: { value: description } })
+
+    // Salva conteúdo
+    fireEvent.click(screen.getByText('Salvar'))
+
+    // Verifica se a opção salvar ainda está na tela (pratos não foram salvos)
+    expect(screen.getByText('Salvar')).toBeInTheDocument()
+  })
+
 })
