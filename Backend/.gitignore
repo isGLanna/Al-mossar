@@ -76,4 +76,5 @@ docker-compose.yml
 docker/
 certificates/
 /src/models/index.ts
+.dockerfile
 .env
