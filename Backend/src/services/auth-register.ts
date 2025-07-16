@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
-import { Employee } from '../models/employee'
-import { Enterprise } from '../models/enterprise'
+import { Employee } from '../repositories/employee'
+import { Enterprise } from '../repositories/enterprise'
 
 export const authenticateRegister = async (
   name: string,

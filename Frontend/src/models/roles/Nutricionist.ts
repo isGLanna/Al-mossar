@@ -1,8 +1,8 @@
 import { Employee } from '../Employee'
 
-export class Manager extends Employee {
-  constructor (idEnterprise: number,name: string, surname: string, email: string, token: string) {
-    super (idEnterprise, name, surname, email, 'gerente', token)
+export class Nutritionist extends Employee {
+  constructor (idEnterprise: number,name: string, surname: string, email: string, role: string,token: string) {
+    super (idEnterprise, name, surname, email, role, token)
   }
 
   canViewMenuDescription() { return true }
@@ -12,4 +12,5 @@ export class Manager extends Employee {
   canViewSalary() { return true }
   canViewFoodExpenses() { return true }
   canViewUserExpenses() { return true }
+  canViewMenuCalories() { return true }
 }

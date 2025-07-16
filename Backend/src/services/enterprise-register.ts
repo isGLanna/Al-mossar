@@ -1,5 +1,5 @@
-import { Enterprise } from '../models/enterprise'
-import { Employee } from '../models/employee'
+import { Enterprise } from '../repositories/enterprise'
+import { Employee } from '../repositories/employee'
 import bcrypt from 'bcrypt'
 
 // Formato de input/output

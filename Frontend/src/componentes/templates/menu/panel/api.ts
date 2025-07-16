@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://localhost:3001'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://localhost'
 
 export async function getEmployeesAPI(idEnterprise: number) {
   const res = await axios.get(`${API_BASE_URL}/api/employee`, {
