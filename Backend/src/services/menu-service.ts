@@ -1,4 +1,4 @@
-import { Menu, Dish } from '../models/menu'
+import { Menu, Dish } from '../repositories/menu'
 
 // Query ao menu
 export async function getMenuByDate (day:string, id_enterprise: number): Promise<(Menu & { dishes: Dish[] })> {

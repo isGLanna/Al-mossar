@@ -1,4 +1,4 @@
-import { Employee } from '../models/employee'
+import { Employee } from '../repositories/employee'
 import { Op } from 'sequelize'
 
 export async function addEmployee(email: string, role: string, id_enterprise: number) {

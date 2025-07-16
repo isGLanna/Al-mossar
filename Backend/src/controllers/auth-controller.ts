@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { authenticateUser } from '../services/auth-login'
 import { authenticateRegister } from '../services/auth-register'
-import { Employee } from '../models/employee'
+import { Employee } from '../repositories/employee'
 
 
 // Adormecer 
@@ -9,7 +9,6 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Logar usuários
 export const login = async (req: Request, res: Response): Promise<void> => {
-  console.log('Está entrando aqui')
 
   try{
     const { email, password } = req.body

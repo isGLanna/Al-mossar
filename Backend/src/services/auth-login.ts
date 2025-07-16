@@ -1,10 +1,21 @@
-import crypto from 'crypto'
 import bcrypt from "bcrypt"
-import { Employee } from "../models/employee"
+import jwt from "jsonwebtoken"
+import { Employee } from "../repositories/employee"
+import { Permission } from "../repositories/permission"
+
+const JWT_SECRET = process.env.JWT_SECRET || 'sua-chave-secreta-de-desenvolvimento';
 
 export const authenticateUser = async (email: string, password: string) => {
   try {
-    const employee = await Employee.findOne({ where: { email } })
+    const employee = await Employee.findOne({ 
+      where: { email },
+      include: [{
+        model: Permission,
+        as: 'permissions',
+        attributes: ['name'], // Inclui apenas o nome da permissão
+        through: { attributes: [] } // Ignora a tabela de junção
+      }] 
+    })
 
     if (!employee) {
       return { success: false, message: 'Email ou senha incorretos' }
@@ -16,7 +27,19 @@ export const authenticateUser = async (email: string, password: string) => {
       return { success: false, message: 'Email ou senha incorretos' }
     }
 
-    const token = crypto.randomBytes(64).toString('base64')
+    const permissionNames = (employee as any).permissions.map((p: Permission) => p.name)
+
+    const payload = {
+      id: employee.id,
+      idEnterprise: employee.id_enterprise,
+      role: employee.role,
+      permissions: permissionNames
+    }
+
+    // Gerar o token JWT com acesso de 15 minutos
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' })
+
+    // Armazenar o token no banco de dados
     await employee.update({ token })
 
     return {

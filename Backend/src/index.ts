@@ -10,12 +10,12 @@ const sslOptions = {
 }
 
 const app = express()
-const PORT = 3001
+const PORT = 443
 
 app.use(express.json())
 app.use(cors())
 app.use('/api', routes)
 
-https.createServer(sslOptions, app).listen(PORT, '0.0.0.0', () => {
+https.createServer(sslOptions, app).listen(PORT, () => {
   console.log(`Servidor HTTPS rodando em https://0.0.0.0:${PORT}`)
 })
