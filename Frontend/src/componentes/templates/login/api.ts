@@ -70,7 +70,7 @@ export const getUserByToken = async (): Promise<{ success: boolean; message: str
       headers: { Authorization: `Bearer ${token}`}
     })
     
-    const { success, message, id, email, name, surname, idEnterprise, role } = response.data
+    const { success, message, email, name, surname, idEnterprise, role } = response.data
 
     if (!success) throw new Error(message)
 
