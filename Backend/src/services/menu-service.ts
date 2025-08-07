@@ -1,8 +1,21 @@
 import { Menu, Dish } from '../repositories/menu'
+import sequelize  from '../repositories'
+import { QueryTypes } from 'sequelize'
 
 // Query ao menu
-export async function getMenuByDate (day:string, id_enterprise: number): Promise<(Menu & { dishes: Dish[] })> {
+export async function getMenuByDate (token: string, day:string ): Promise<(Menu & { dishes: Dish[] })> {
   try {
+    // Consulta id da empresa do funcionário logado
+    const id_enterprise_arr = await sequelize.query<{ id_enterprise: number }>(
+      `SELECT id_enterprise FROM Employee WHERE token = :token`,
+      {
+        replacements: { token },
+        type: QueryTypes.SELECT
+      }
+    )
+
+    const id_enterprise = id_enterprise_arr[0].id_enterprise;
+
     const menu = await Menu.findOne({
       where: { id_enterprise, day},
       include: {

@@ -1,12 +1,13 @@
 import { Request, Response } from 'express'
 import { getMenuByDate, createMenu, updateMenu, deleteMenu } from '../services/menu-service'
+import { refreshToken } from '../services/authenticator'
 
 // Selecionar o menu
 export async function get ( req: Request, res: Response ): Promise<void> {
-  const { day, id_enterprise } = req.query
+  const { token, day } = req.query
 
   try {
-    const menu = await getMenuByDate(String(day), Number(id_enterprise))
+    const menu = await getMenuByDate(token as string, day as string)
 
     // Retorna operação efetuada com sucesso ou nenhum valor encontrado
     if (!menu) {
@@ -20,9 +21,13 @@ export async function get ( req: Request, res: Response ): Promise<void> {
       description: dish.description
     }))
 
-    console.log(formattedDishes)
+    const result = await refreshToken(token as string)
 
-    res.status(200).json({ dishes: formattedDishes, success: true })
+    if (!result || result.success === false) {
+      res.status(401).json({ message: 'Invalid token or expired', success: false })
+    }
+
+    res.status(200).json({ token: result.token, dishes: formattedDishes, success: true })
 
   } catch (error) {
     res.status(500).json({ message: error, success: false })

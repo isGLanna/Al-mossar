@@ -75,7 +75,7 @@ describe('Adição de pratos', () => {
   ]
   
   it.each(positiveTestCases)('Adicionar prato e oculta formulário após salvar', async ({ name, description }) => {
-    render(<DailyMenu idEnterprise={1}/>)
+    render(<DailyMenu />)
 
     fireEvent.click(screen.getByLabelText('Adicionar prato'))
 
@@ -98,7 +98,7 @@ describe('Adição de pratos', () => {
   })
 
   it.each(negativeTestCases)('Adicionar prato e oculta formulário após salvar', async ({ name, description }) => {
-    render(<DailyMenu idEnterprise={1}/>)
+    render(<DailyMenu />)
 
     fireEvent.click(screen.getByLabelText('Adicionar prato'))
 

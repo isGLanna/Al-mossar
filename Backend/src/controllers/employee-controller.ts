@@ -11,8 +11,6 @@ export async function addEmployee(req: Request, res: Response): Promise<void> {
   console.log('aqui tá chegando')
   const { email, role, idEnterprise } = req.body
 
-  console.log('Tá aqui: ', idEnterprise)
-
   if (!email || !role || !idEnterprise) {
     res.status(400).json({ error: 'Email, cargo e ID da empresa são obrigatórios.' })
     return 
@@ -29,17 +27,12 @@ export async function addEmployee(req: Request, res: Response): Promise<void> {
 
 // Busca todos os funcionários de uma empresa
 export async function getEmployees(req: Request, res: Response): Promise<void> {
-  const { idEnterprise } = req.query
-
-  if (!idEnterprise) {
-    res.status(400).json({ message: 'ID da empresa não encontrado.' })
-    return 
-  }
+  const { token, idEnterprise } = req.query
 
   try {
-    const result = await getEmployeesService(Number(idEnterprise))
-    res.json(result)
-    return 
+    const result = await getEmployeesService(token as string, Number(idEnterprise))
+
+    res.status(200).json(result)
   } catch (error) {
     res.status(500).json({ message: 'Erro ao buscar funcionários.' })
     return 

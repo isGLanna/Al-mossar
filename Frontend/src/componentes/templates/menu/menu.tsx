@@ -10,7 +10,6 @@ export function Menu() {
   if (!employee) return <p>Usuário não encontrado</p>
 
   const user = createEmployee(
-    employee.id,
     employee.idEnterprise,
     employee.email,
     employee.name,
@@ -28,7 +27,7 @@ export function Menu() {
         </h3>
 
         <main>
-          <DailyMenu idEnterprise={user.idEnterprise}/>
+          <DailyMenu />
         </main>
 
       </div>

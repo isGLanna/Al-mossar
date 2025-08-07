@@ -4,7 +4,7 @@ import { MenuDish, Dish } from '../../../models/Menu'
 import './calendar.sass'
 
 
-export function DailyMenu( {idEnterprise} : { idEnterprise: number }) {
+export function DailyMenu() {
   const today = new Date()
   const week = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
 
@@ -67,7 +67,7 @@ export function DailyMenu( {idEnterprise} : { idEnterprise: number }) {
 
   // Criar uma função para buscar cardápio do dia no backend
   const fetchMenuForDay = async (day: number) => {
-    const menuDish = new MenuDish(idEnterprise, `${currentYear}-${currentMonth + 1}-${day}`)
+    const menuDish = new MenuDish(`${currentYear}-${currentMonth + 1}-${day}`)
     await menuDish.fetchMenu()
     setDishes(menuDish.getDishes() || [])
     menuDishRef.current = menuDish
@@ -95,7 +95,7 @@ export function DailyMenu( {idEnterprise} : { idEnterprise: number }) {
   const handleSaveNewDish = async () => {
     if (!newDish || !newDish.name.trim()) return;
 
-    menuDishRef.current = new MenuDish(idEnterprise, `${currentYear}-${currentMonth + 1}-${selectedDay}`);
+    menuDishRef.current = new MenuDish(`${currentYear}-${currentMonth + 1}-${selectedDay}`);
     await menuDishRef.current.fetchMenu();
 
     const menuDish = menuDishRef.current;
