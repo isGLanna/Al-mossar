@@ -1,13 +1,25 @@
 import axios from 'axios'
+import { getToken, setNewToken } from '../../login/api'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://localhost'
 
 export async function getEmployeesAPI(idEnterprise: number) {
-  const res = await axios.get(`${API_BASE_URL}/api/employee`, {
-    params: { idEnterprise },
-  })
+  try {
+    const token = getToken()
+    const res = await axios.get(`${API_BASE_URL}/api/employee`, {
+      params: { token, idEnterprise },
+    })
 
-  return res.data
+    if(!res.data.token) {
+      throw new Error('Token not found in response, please log in again.')
+    }
+    
+    setNewToken(res.data.token)
+
+    return res.data
+  } catch (error: any) {
+    alert(error?.response?.data?.message || 'Erro desconhecido ao buscar funcionários.')
+  }
 }
 
 // Adicionar novo empregado (pré-cadastro com email e cargo)

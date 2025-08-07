@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize'
 import { Enterprise } from './enterprise'
+import { Permission } from './permission/permissions'
 import sequelize from '.'
 
 
@@ -12,6 +13,7 @@ export class Employee extends Model {
     public id_enterprise?: number;
     public start_of_contract?: Date;
     public role?: string
+    public permissions?: Permission[];
 }
 
 Employee.init(

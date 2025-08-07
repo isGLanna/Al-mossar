@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getToken, setNewToken } from '../componentes/templates/login/api'
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://localhost'
 
@@ -22,11 +23,9 @@ export interface Dish {
 
 export class MenuDish {
   private day: string = ''
-  private idEnterprise: number = 0
   private dishes: Dish[] = []
 
-  constructor(idEnterprise: number, day: string) {
-    this.idEnterprise = idEnterprise
+  constructor(day: string) {
     this.day = day
   }
 
@@ -34,10 +33,14 @@ export class MenuDish {
   async fetchMenu(): Promise<void> {
     try {
       const result = await axios.get(`${API_URL}/api/menu/`, {
-        params: { id_enterprise: this.idEnterprise, day: this.day }
-      })
+        params: { 
+          token: getToken(), 
+          day: this.day 
+        }}
+      )
 
       this.dishes = result.data.dishes
+      setNewToken(result.data.token)
 
     } catch (error) {
       this.dishes = []
@@ -47,13 +50,9 @@ export class MenuDish {
   // POST - criar cardápio
   async createMenu(): Promise<MenuResponse> {
     try {
-      if (typeof this.idEnterprise !== 'number' || typeof this.day !== 'string' || !Array.isArray(this.dishes)) {
-        throw { success: false, message: 'Erro ao criar cardápio' }
-      }
-
       await axios.post(`${API_URL}/api/menu/`, {
-        date: this.day,
-        id_enterprise: this.idEnterprise,
+        token: getToken(),
+        date: this.day, 
         dishes: this.dishes,
       })
 
@@ -67,10 +66,11 @@ export class MenuDish {
   async updateMenu(): Promise<MenuResponse> {
     try {
       await axios.put(`${API_URL}/api/menu/`, {
+        token: getToken(),
         date: this.day,
-        id_enterprise: this.idEnterprise,
         dishes: this.dishes
       })
+
       return { success: true, message: 'Cardápio atualizado'}
     } catch (error: any) {
       return { success: false, message: error?.response?.data?.message || 'Erro ao atualizar'}
@@ -82,7 +82,7 @@ export class MenuDish {
     try {
       await axios.delete(`${API_URL}/api/menu`, {
         params: 
-        { id_enterprise: this.idEnterprise,
+        { token: getToken(),
           day: this.day
         }
       })
@@ -115,9 +115,5 @@ export class MenuDish {
 
   setDay(day: string): void {
     this.day = day
-  }
-
-  setEnterpriseId(id: number): void {
-    this.idEnterprise = id
   }
 }

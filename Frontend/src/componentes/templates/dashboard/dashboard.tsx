@@ -11,7 +11,6 @@ export function Dashboard () {
     if (!employee) return <p>Usuário não encontrado</p>
   
     const user = createEmployee(
-      employee.id,
       employee.idEnterprise,
       employee.email,
       employee.name,

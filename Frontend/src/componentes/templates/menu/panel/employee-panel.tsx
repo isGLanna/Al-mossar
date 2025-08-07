@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import { HiOutlineTrash } from "react-icons/hi"
 import { IoMdPersonAdd } from "react-icons/io"
 import { Employee } from '../../../../models/Employee'
 import { addEmployeeAPI, deleteEmployeeAPI, getEmployeesAPI, editEmployeeAPI } from './api'
+import { CardContainer } from './sub-templates/card-container'
 import '../../../moleculas/formulario.sass'
-import './employee-panel.scss'
+import './panel.scss'
 
 type EmployeePanelProps = {
   isOpen: boolean
@@ -29,22 +29,21 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
       setVisible(true)
       fetchEmployees()
     } else {
-      // Ao fechar, salvar alterações antes de sumir
+      // Ao fechar, salvar alterações antes de fechar
       saveAllChanges()
       const timeout = setTimeout(() => setVisible(false), 200)
       return () => clearTimeout(timeout)
     }
   }, [isOpen])
 
+  // Busca e converte o objeto employee para um array
   const fetchEmployees = async () => {
-    try {
-      const data = await getEmployeesAPI(employee.idEnterprise)
-      setEmployees(data)
-    } catch (error) {
-      alert('Erro ao buscar funcionários')
-    }
+    const data = await getEmployeesAPI(employee.idEnterprise)
+    const employeesArray = Array.isArray(data.employees) ? data.employees : []
+    setEmployees(employeesArray)
   }
 
+  // Cria novo usuário
   const handleSubmit = async () => {
     if (!email || !role) return
     
@@ -60,6 +59,7 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
     }
   }
 
+  // Atualiza o estado de edição dos funcionários
   const handleEditChange = (email: string, field: keyof Employee, value: string) => {
     setEditedEmployees(prev => ({
       ...prev,
@@ -104,7 +104,6 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
         }
       }
     }
-
     // Limpa alterações após salvar
     setEditedEmployees({})
   }
@@ -120,76 +119,10 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
     <section className={`panelOverlay ${isOpen ? 'fadeIn' : 'fadeOut'}`} onClick={handlePanelClose}>
       <div className='panel' onClick={(e) => e.stopPropagation()}>
         <header className='header'>
-          <h2>Gerenciamento de Funcionários {isOpen}</h2>
+          <h2>Gerencia de Funcionários</h2>
         </header>
-        <table className='table'>
-          <thead>
-            <tr>
-              <th style={{ width: '8rem' }}>Nome</th>
-              <th style={{ width: '20rem' }}>Sobrenome</th>
-              <th style={{ width: '18rem' }}>Email</th>
-              <th style={{ width: '11rem' }}>Cargo</th>
-              {employee.canEditEmployeePanel() && (<th style={{ width: '5rem' }}></th>)}
-            </tr>
-          </thead>
-          <tbody>
-            {employees.map(emp => (
-              <tr key={emp.id}>
-                <td>
-                  <input
-                    value={editedEmployees[emp.email]?.name ?? emp.name}
-                    readOnly
-                  />
-                </td>
-                <td>
-                  <input
-                    value={editedEmployees[emp.email]?.surname ?? emp.surname}
-                    readOnly
-                  />
-                </td>
-                <td>
-                  <input
-                    value={editedEmployees[emp.email]?.email ?? emp.email}
-                    readOnly
-                  />
-                </td>
-                <td>
-                  {employee.canEditEmployeePanel() ? (
-                    emp.email === employee.email ?
-                    (<span>{emp.role}</span>
-                    ) : (
-                  <select
-                    value={editedEmployees[emp.email]?.role ?? emp.role}
-                    onChange={(e) => handleEditChange(emp.email, 'role', e.target.value)}
-                  >
 
-                  {!roles.includes(editedEmployees[emp.email]?.role ?? emp.role) && (
-                    <option disabled value="">
-                      {editedEmployees[emp.email]?.role ?? emp.role}
-                    </option>
-                  )}
-
-                      {roles.map((r, i) => (
-                        <option key={i} value={r}>
-                          {r}
-                        </option>
-                      ))}
-                    </select>
-                    )
-                  ) :
-                  (
-                    <span>{emp.role}</span>
-                  )
-                  }
-                </td>
-                
-                {employee.canEditEmployeePanel() && (<td>
-                  { emp.email !== employee.email && <HiOutlineTrash style={{cursor:'pointer'}} onClick={() => handleDelete(emp.email)} color={'#a33'} size={20} />}
-                </td>)}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <CardContainer employees={employees} handleEditChange={handleEditChange} handleDelete={handleDelete}/>
 
         {employee.canEditEmployeePanel() && (<form className='add-form' onSubmit={(e) => { e.preventDefault(); handleSubmit() }}>
             {addEmployee && (
@@ -249,7 +182,6 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
                   e.preventDefault()
                   if (addEmployee)
                     setAddEmployee(false)
-
                 }}
               >
                   Cancelar

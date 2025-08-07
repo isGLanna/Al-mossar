@@ -3,7 +3,6 @@ import axios from "axios";
 const API_URL = 'https://localhost'
 
 export type Employee = {
-  id: number; 
   idEnterprise: number;
   email: string;
   name: string;
@@ -18,7 +17,7 @@ export const loginUser = async (user: { email: string; password: string; remembe
 
   try {
     const response = await axios.post(`${API_URL}/api/login`, user);
-    const { success, message, id, email, name, surname, idEnterprise, role, token } = response.data;
+    const { success, message, email, name, surname, idEnterprise, role, token } = response.data;
    
     if (!success) throw new Error(message)
 
@@ -29,7 +28,6 @@ export const loginUser = async (user: { email: string; password: string; remembe
     storage.setItem('authToken', JSON.stringify({ token }));
 
     const employee: Employee = {
-      id,
       idEnterprise,
       email,
       name,
@@ -40,6 +38,7 @@ export const loginUser = async (user: { email: string; password: string; remembe
 
     return { success: true, message: message, employee: employee}
   } catch (error: any) {
+    console.log('Erro tá sendo tratado pelo menos:', error)
     const message = error?.response?.data?.message || 'Erro ao fazer login'
     return { success: false, message, employee: null}
   }
@@ -47,7 +46,14 @@ export const loginUser = async (user: { email: string; password: string; remembe
 
 // Pega o token do localStorage ou sessionStorage
 export const getToken = () => {
-  return localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || null
+  const data = JSON.parse(localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || '{}')
+  return data.token
+}
+
+// Verifica onde está o token e o armazena atualizado
+export const setNewToken = (token: string) => {
+  const storage = localStorage.getItem('authToken') ? localStorage : sessionStorage
+  storage.setItem('authToken', JSON.stringify({ token }))
 }
 
 // Pegar informações do usuário com base no token armazenado
@@ -69,7 +75,6 @@ export const getUserByToken = async (): Promise<{ success: boolean; message: str
     if (!success) throw new Error(message)
 
     const employee: Employee = {
-      id,
       idEnterprise,
       email,
       name,

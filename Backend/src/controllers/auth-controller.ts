@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { authenticateUser } from '../services/auth-login'
+import { authenticateUser } from '../services/authenticator'
 import { authenticateRegister } from '../services/auth-register'
 import { Employee } from '../repositories/employee'
 
@@ -32,9 +32,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return
     }
 
-    const { id, name, surname, idEnterprise, role, token } = authResult
+    const {name, surname, idEnterprise, role, token } = authResult
 
-    res.json({ success: true, id, email, name, surname, idEnterprise, role, token})
+    res.json({ success: true, email, name, surname, idEnterprise, role, token})
 
   } catch (error) {
     console.log('Erro:', error)
@@ -88,7 +88,7 @@ export const tokenLogin = async (req: Request, res: Response): Promise<void> => 
 
     const employee = await Employee.findOne({
       where: { token },
-      attributes: ['id', 'name', 'surname', 'role', 'id_enterprise'],
+      attributes: ['name', 'surname', 'role', 'id_enterprise'],
     })
 
     if (!employee) {
@@ -103,7 +103,6 @@ export const tokenLogin = async (req: Request, res: Response): Promise<void> => 
 
     res.status(200).json({
       success: true,
-      id: employee.id,
       name: employee.name,
       surname: employee.surname,
       idEnterprise: employee.id_enterprise,
