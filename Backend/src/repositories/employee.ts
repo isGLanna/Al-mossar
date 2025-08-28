@@ -12,7 +12,10 @@ export class Employee extends Model {
     public surname!: string;
     public id_enterprise?: number;
     public start_of_contract?: Date;
-    public role?: string
+    public end_of_contract?: Date;
+    public role?: string;
+    public telefone?: string;
+    public endereco?: string;
     public permissions?: Permission[];
 }
 
@@ -48,9 +51,25 @@ Employee.init(
                 key: 'id',
             },
         },
+        start_of_contract: {
+          type: DataTypes.DATE,
+          allowNull: true,
+        },
+        end_of_contract: {
+          type: DataTypes.DATE,
+          allowNull: true,
+        },
         role: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        telefone: {
+          type: DataTypes.STRING,
+          allowNull: true,
+        },
+        endereco: {
+          type: DataTypes.STRING,
+          allowNull: true,
         },
         token: {
           type: DataTypes.STRING,

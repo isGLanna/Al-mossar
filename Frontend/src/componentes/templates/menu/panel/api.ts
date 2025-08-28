@@ -17,7 +17,7 @@ export async function getEmployeesAPI(idEnterprise: number) {
     setNewToken(res.data.token)
 
     return res.data
-  } catch (error: any) {
+  } catch (error) {
     alert(error?.response?.data?.message || 'Erro desconhecido ao buscar funcionários.')
   }
 }
@@ -35,7 +35,7 @@ export async function deleteEmployeeAPI(email: string, idEnterprise: number): Pr
       params: { idEnterprise, email},
     })
     return res.data
-  } catch (error: any) {
+  } catch (error) {
     const message = error?.response?.data?.message || 'Erro desconhecido ao excluir funcionário.'
     return { success: false, message }
   }
@@ -48,7 +48,7 @@ export async function editEmployeeAPI(idEnterprise: number, email: string, name?
     await axios.put(`${API_BASE_URL}/api/employee`, {idEnterprise, email, name, surname, role})
 
     return { success: true, message: 'Atualização concluída com êxito' }
-  } catch (error: any) {
+  } catch (error) {
     const message = error?.response?.data?.message || 'Error desconhecido'
     return { success: false, message }
   }

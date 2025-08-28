@@ -26,7 +26,7 @@ export const authenticateUser = async (email: string, password: string) => {
     }
 
     // Gerar o token JWT com acesso de 15 minutos
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '10m' })
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '30m' })
 
     // Armazenar o token no banco de dados
     await employee.update({ token })
