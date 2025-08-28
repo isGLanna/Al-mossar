@@ -111,7 +111,7 @@ export function DailyMenu() {
       } else {
         throw new Error(response.message);
       }
-    } catch (error: any) {
+    } catch (error) {
       alert(error);
     }
   }
@@ -135,7 +135,7 @@ export function DailyMenu() {
       if (response.success) {
         setDishes(updatedDishes)
       }
-     } catch(error: any) {
+     } catch(error) {
         alert(error)
     }
   }

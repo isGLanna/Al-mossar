@@ -1,4 +1,6 @@
 import { Employee } from '../repositories/employee'
+import { Salary } from '../repositories/salary'
+import { getEmployeePhoto } from '../repositories/employee-photo'
 import { refreshToken } from './authenticator'
 
 export async function addEmployee(email: string, role: string, id_enterprise: number) {
@@ -22,28 +24,63 @@ export async function addEmployee(email: string, role: string, id_enterprise: nu
 
 export async function getEmployees(token: string, id_enterprise: number) {
   try {
-    // Confirmar se o id da empresa condiz com o token
-    const id_enterprise_arr = await Employee.findOne({
+    const user = await Employee.findOne({
       where: { token, id_enterprise },
-      attributes: ['id_enterprise'],
+      attributes: ['id'],
     })
 
-    if (!id_enterprise_arr) {
-      return { success: false, message: 'Empresa não encontrada.' }
+    if (!user) {
+      return { success: false, message: 'Empresa não encontrada ou token inválido.' }
     }
 
+    // Confirmar se o id da empresa condiz com o token
     const employees = await Employee.findAll({
-      where: { id_enterprise: id_enterprise },
-      attributes: ['email', 'name', 'surname', 'role']
+      where: { id_enterprise },
+      attributes: [
+        'id',
+        'email',
+        'name',
+        'surname',
+        'start_of_contract',
+        'end_of_contract',
+        'role',
+        'telefone',
+        'endereco'
+      ],
+      include: [
+        {
+          model: Salary,
+          as: 'salary',
+          attributes: ['amount', 'updated_at'],
+        },
+      ],
     })
+
+    // Consulta e processa fotos dos empregados
+    const employeesWithPhotos = await Promise.all(
+      employees.map(async (employee) => {
+        const employeeData = employee.toJSON()
+        const photoResult = await getEmployeePhoto(employeeData.id)
+
+        return {
+          ...employeeData,
+          photo: photoResult.exists ? photoResult.exists : null,
+          hasPhoto: photoResult.exists
+        }
+      })
+    )
+
+    if (!employees || employees.length === 0) {
+      return { success: false, message: 'Empresa não encontrada ou token inválido.' }
+    }
 
     const newToken = await refreshToken(token)
 
     if (!newToken.success) {
-      return { success: false, message: newToken.message || 'Erro ao atualizar token.' }
+      return { success: false, status: 401 }
     }
 
-    return { success: true, token : newToken.token, employees}
+    return { success: true, token : newToken.token, employees: employeesWithPhotos }
   } catch (error: any) {
     return { success: false, message: error.message || 'Employee not found'}
   }

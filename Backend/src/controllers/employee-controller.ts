@@ -28,14 +28,19 @@ export async function addEmployee(req: Request, res: Response): Promise<void> {
 // Busca todos os funcionários de uma empresa
 export async function getEmployees(req: Request, res: Response): Promise<void> {
   const { token, idEnterprise } = req.query
+  let result
 
   try {
-    const result = await getEmployeesService(token as string, Number(idEnterprise))
+    result = await getEmployeesService(token as string, Number(idEnterprise))
 
     res.status(200).json(result)
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao buscar funcionários.' })
-    return 
+    if(result && result.status === 401){
+      res.status(401).json({ message: 'Token expirou.' })
+    } else {
+      res.status(500).json({ message: 'Erro ao buscar funcionários.' })
+    }
+
   }
 }
 

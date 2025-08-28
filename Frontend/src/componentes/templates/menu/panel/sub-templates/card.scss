@@ -4,76 +4,169 @@
   justify-self: center;
   align-items: center;
   justify-content: center;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
 
-  .floating-label{
+  input[type="search"]{
+    width: 14rem;
+    height: 1.8rem;
+    border-top: 2px solid var(--background-color);
+    border-left: 2px solid var(--background-color);
+    border-right: 2px solid var(--background-color);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding-left: 10px;
+    outline: none;
+
+    &:focus {
+      border: 2px solid cornflowerblue;
+      border-bottom: none;
+    }
+    &:focus + label,
+    &:not(:placeholder-shown) + label {
+      transform: translate(-15px, -15px) scale(0.9);
+    }
+  }
+  label{
     position: absolute;
-    align-self: center;
     background: #f2f5ff;
+    margin-right: 5rem;
     color: grey;
-    margin-left: 10px;
-    transition: 100ms ease;
+    align-self: center;
+    transition: 150ms ease;
     user-select: none;
     --webkit-user-select: none;
     pointer-events: none;
-
-    &.active{
-      transform: translate(-5px, -15px);
-    }
   }
 }
 
-input[type="search"]{
-  width: 14rem;
-  height: 1.8rem;
-  border-top: 2px solid var(--background-color);
-  border-left: 2px solid var(--background-color);
-  border-right: 2px solid var(--background-color);
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  padding-left: 10px;
-  outline: none;
-}
-
-
 .card-container{
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   flex-wrap: wrap;
-  gap: 2.5rem;
+  gap: 2.0rem;
   padding: 2rem;
-  align-items: center;
-  justify-content: center;
+  place-items: center;
   border: 4px solid var(--background-color);
   border-right: 4px solid var(--background-color);
   border-top: 1px solid var(--background-color);
   border-bottom: 1px solid var(--background-color);
-  border-radius: 10px;;
+  border-radius: 10px;
   overflow-x: hidden;
   outline: none;
-  max-height: 70dvh;
+  max-height: 62dvh;
 
   .card {
+    display: grid;
+    grid-template-columns: 14rem 10rem;
+    grid-template-rows: 2.5rem 3rem 1fr 1fr;
+    grid-template-areas:
+      "a ."
+      "b c"
+      "d e"
+      "f g";
     background-color: white;
-    height: 16rem;
-    width: 12rem;
-    color: red;
+    height: 18rem;
+    width: 14rem;
+    color: grey;
     border-radius: 10px;
     border: 2px solid silver;
-    transition: 150ms ease;
+    transition: 250ms ease;
 
-    .image {
+    .card__content {
+      display: flex;
+      flex-direction: column;
       position: relative;
-      top: -1.5rem;
-      justify-self: center;
-      background: green;
-      height: 4rem;
-      width: 4rem;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 25%;
+        width: 50%;
+        height: 1px;
+        background: #dcdfe1;
+      }
+    }
+
+    .image-container {
+      position: relative;
+      top: -2rem;
+      left: 7rem;
+      transform: translateX(-50%);
+      width: 4.2rem;
+      height: 4.2rem;
       border-radius: 50%;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #186220;
+
+      .label {
+        color: #f0f0f0;
+        font-size: 2rem;
+      }
+    }
+
+    .image-container img.image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
 
-    &:hover {
-      width: 14rem;
-      height: 19rem;
+
+    .area-a { grid-area: a; }
+    .area-b { grid-area: b; }
+    .area-c { grid-area: c; overflow: hidden; opacity: 0; transition: opacity 200ms }
+    .area-d { grid-area: d; }
+    .area-e { grid-area: e; overflow: hidden; opacity: 0; transition: opacity 200ms }
+    .area-f { grid-area: f; }
+    .area-g { grid-area: g; overflow: hidden; opacity: 0; transition: opacity 200ms }
+
+    &.active {
+      grid-template-columns: 8rem 14rem;
+      width: 23rem;
+      z-index: 2;
+
+
+      .image{
+        width: 7rem;
+        height: 5rem;
+        border-radius: 10px;
+        animation: slideShift ease forwards;
+      }
+      .area-c,
+      .area-e,
+      .area-g {
+        transition-delay: 150ms;
+        opacity: 1;
+      }
     }
+  }
+}
+
+@keyframes slideShift {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(4.45rem, 2.25rem);
+  }
+}
+
+@media (max-width:60rem) and (min-width: 40rem) {
+  .card-container{
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 44rem) {
+  .card-container{
+    grid-template-rows: 1fr;
+    grid-auto-flow: column;
+    overflow-x: scroll;
+    overflow-y: hidden;
   }
 }

@@ -119,7 +119,7 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
     <section className={`panelOverlay ${isOpen ? 'fadeIn' : 'fadeOut'}`} onClick={handlePanelClose}>
       <div className='panel' onClick={(e) => e.stopPropagation()}>
         <header className='header'>
-          <h2>Gerencia de Funcionários</h2>
+          <h2>Gestão de Funcionários</h2>
         </header>
 
         <CardContainer employees={employees} handleEditChange={handleEditChange} handleDelete={handleDelete}/>
@@ -176,14 +176,12 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
               {addEmployee ? 'Confirmar' : <IoMdPersonAdd size={20}/>}
             </button>
 
-            { addEmployee && (<button
-                className="remove-button"
-                onClick={(e) => {
+            { addEmployee && (
+              <button className="remove-button" onClick={(e) => {
                   e.preventDefault()
                   if (addEmployee)
                     setAddEmployee(false)
-                }}
-              >
+                }}>
                   Cancelar
               </button>)}
           </>

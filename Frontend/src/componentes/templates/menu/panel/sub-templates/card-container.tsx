@@ -1,7 +1,7 @@
 import { Employee } from '../../../../../models/Employee'
-import { IoPersonRemoveSharp } from "react-icons/io5"
-import { MdPersonSearch } from "react-icons/md";
+import { MdPersonSearch } from "react-icons/md"
 import { useState } from 'react'
+import { EmployeeCard} from "./card.tsx"
 import './card.scss'
 
 type CardContainerProps = {
@@ -12,31 +12,25 @@ type CardContainerProps = {
 
 export function CardContainer({ handleEditChange, handleDelete, employees }: CardContainerProps) {
   const [searchTerm, setSearchTerm] = useState('')
-  const [searchIsFocus, setSearchIsFocus] = useState<boolean>(false)
+  const [selectedCard, setSelectedCard] = useState<number>(-1)
 
   const filteredEmployees = employees.filter(emp => {
     const fullName = `${emp.name} ${emp.surname}`.toLowerCase()
     return fullName.includes(searchTerm.toLowerCase())
   })
 
-
   return(
     <>
       <form className='search-bar'>
-        <div>
-          <label className={`floating-label ${searchIsFocus ? 'active' : ''}`}>
-            Buscar empregado
-          </label>
-          <input 
-            type='search' 
-            autoComplete='on' 
-            list="names"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onFocus={() => setSearchIsFocus(true)}
-            onBlur={() => setSearchIsFocus(false)}
-            />
-        </div>
+        <input
+          type='search'
+          id='search'
+          placeholder=" "
+          autoComplete='on'
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <label htmlFor='search'>Buscar empregado</label>
         <MdPersonSearch size={25} color='silver' style={{position: 'fixed', marginLeft:'12rem'}}/>
         <datalist id="names">
           {employees.map((emp) => (
@@ -48,14 +42,17 @@ export function CardContainer({ handleEditChange, handleDelete, employees }: Car
         </datalist>
       </form>
 
-      <div className='card-container'>
-        {filteredEmployees.map((emp) => (
-          <div key={emp.email} className='card' style={{ color: 'red'}}>
-            <div className='image'></div>
-            <span>{emp.name} {emp.surname}</span>
-          </div>
-          ))}
-      </div>
+      <section className='card-container'>
+        {filteredEmployees.map((emp, index) => (
+          <EmployeeCard
+            key={emp.email}
+            emp={emp}
+            index={index}
+            selectedCard={selectedCard}
+            setSelectedCard={setSelectedCard}>
+          </EmployeeCard>
+        ))}
+      </section>
     </>
   )
 }
