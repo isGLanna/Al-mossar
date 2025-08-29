@@ -6,37 +6,37 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://localhost'
 export async function getEmployeesAPI(idEnterprise: number) {
   try {
     const token = getToken()
-    const res = await axios.get(`${API_BASE_URL}/api/employee`, {
+    const response = await axios.get(`${API_BASE_URL}/api/employee`, {
       params: { token, idEnterprise },
     })
 
-    if(!res.data.token) {
+    if(!response.data.token) {
       throw new Error('Token not found in response, please log in again.')
     }
     
-    setNewToken(res.data.token)
+    setNewToken(response.data.token)
 
-    return res.data
+    return response.data
   } catch (error) {
-    alert(error?.response?.data?.message || 'Erro desconhecido ao buscar funcionários.')
+    alert('Erro desconhecido ao buscar funcionários.')
   }
 }
 
 // Adicionar novo empregado (pré-cadastro com email e cargo)
 export async function addEmployeeAPI(data: { email: string, role: string, idEnterprise: number}) {
-  const res = await axios.post(`${API_BASE_URL}/api/employee`, data)
-  return res.data
+  const response = await axios.post(`${API_BASE_URL}/api/employee`, data)
+  return response.data
 }
 
 // Excluir empregado por e-mail
 export async function deleteEmployeeAPI(email: string, idEnterprise: number): Promise<{success: boolean, message: string}> {
   try {
-    const res = await axios.delete(`${API_BASE_URL}/api/employee`, {
+    const response = await axios.delete(`${API_BASE_URL}/api/employee`, {
       params: { idEnterprise, email},
     })
-    return res.data
+    return response.data
   } catch (error) {
-    const message = error?.response?.data?.message || 'Erro desconhecido ao excluir funcionário.'
+    const message = 'Erro desconhecido ao excluir funcionário.'
     return { success: false, message }
   }
 }
@@ -49,7 +49,7 @@ export async function editEmployeeAPI(idEnterprise: number, email: string, name?
 
     return { success: true, message: 'Atualização concluída com êxito' }
   } catch (error) {
-    const message = error?.response?.data?.message || 'Error desconhecido'
+    const message = 'Error desconhecido'
     return { success: false, message }
   }
 }
