@@ -1,20 +1,13 @@
 import { Menu, Dish } from '../repositories/menu'
 import sequelize  from '../repositories'
 import { QueryTypes } from 'sequelize'
+import { TokenService } from './token-service'
 
 // Query ao menu
 export async function getMenuByDate (token: string, day:string ): Promise<(Menu & { dishes: Dish[] })> {
   try {
     // Consulta id da empresa do funcionário logado
-    const id_enterprise_arr = await sequelize.query<{ id_enterprise: number }>(
-      `SELECT id_enterprise FROM Employee WHERE token = :token`,
-      {
-        replacements: { token },
-        type: QueryTypes.SELECT
-      }
-    )
-
-    const id_enterprise = id_enterprise_arr[0].id_enterprise;
+    const id_enterprise = await TokenService.queryEnterpriseId(token)
 
     const menu = await Menu.findOne({
       where: { id_enterprise, day},
@@ -40,11 +33,19 @@ export async function getMenuByDate (token: string, day:string ): Promise<(Menu 
 
 // Criar cardápio
 export async function createMenu (
-  day:string,
-  id_enterprise: number, 
+  token:string,
+  day:string, 
   dishes: { name: string; description: string}[]) {
   
   try {
+    const { token: newToken, status: status } = await TokenService.refreshToken(token)
+
+    if (status !== 201) {
+      return { status: status, message: 'Token inválido ou expirado' }
+    }
+
+    const id_enterprise = await TokenService.queryEnterpriseId(token)
+
     // Verifica se já existe um menu para o dia e empresa para evitar duplicidade
     let menu = await Menu.findOne({
       where: { id_enterprise, day },
@@ -55,7 +56,7 @@ export async function createMenu (
     if (!menu) {
       menu = await Menu.create({ id_enterprise, day });
     } else {
-      updateMenu(day, id_enterprise, dishes)
+      updateMenu(token, day, dishes)
     }
 
     const createdDishes = await Dish.bulkCreate(
@@ -69,7 +70,7 @@ export async function createMenu (
 
     await menu.setDishes(createdDishes)
 
-    return { success: true}
+    return { status: 200, token: newToken}
   } catch (error) {
     console.error('Erro ao criar menu:', error)
     return { error, success: false}
@@ -77,11 +78,18 @@ export async function createMenu (
 }
 
 export async function updateMenu (
-  day: string,
-  id_enterprise: number,  
+  token:string,
+  day:string,   
   dishes: { name: string, description: string}[]) {
 
   try {
+    const { token: newToken, status: status } = await TokenService.refreshToken(token)
+
+    if (status !== 201) {
+      return { status: status, message: 'Token inválido ou expirado' }
+    }
+    
+    const id_enterprise = await TokenService.queryEnterpriseId(token)
     // Consulta menu igual
     const menu = await Menu.findOne({
       where: { id_enterprise, day}
@@ -102,15 +110,26 @@ export async function updateMenu (
 
     await menu.setDishes(newDishes)
       
-    return { success: true}
+    return { status: 200, token: newToken}
   } catch (error) {
     console.error('Erro ao atualizar menu:', error)
     throw error
   }
 }
 
-export async function deleteMenu(id_enterprise: number, name: string, day: string) {
+export async function deleteMenu(
+  token:string,
+  name: string, 
+  day: string) {
   try {
+    const { token: newToken, status: status } = await TokenService.refreshToken(token)
+
+    if (status !== 201) {
+      return { status: status, message: 'Token inválido ou expirado' }
+    }
+    
+    const id_enterprise = await TokenService.queryEnterpriseId(token)
+
     const menu = await Menu.findOne({
       where: { id_enterprise, day },
       include: [{ association: 'dishes' }],
@@ -131,7 +150,7 @@ export async function deleteMenu(id_enterprise: number, name: string, day: strin
       await menu.removeDish(dishToDelete.id);
     }
 
-    return { success: true };
+    return { status: 200, token: newToken}
   } catch (error) {
     return { error, success: false };
   }

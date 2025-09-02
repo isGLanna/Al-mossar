@@ -59,6 +59,10 @@ export const EmployeeCard = memo(({ emp, index, selectedCard, setSelectedCard }:
         )}
       </div>
 
+      <div className='card__content justify-center area-c'> 
+        <span>{emp.email}</span>
+      </div>
+
       <div className='card__content area-b'>
         <span className='text-green-950'>{emp.name} {emp.surname}</span>
         <span>{emp.role.charAt(0).toUpperCase() + emp.role.slice(1)}</span>
@@ -66,20 +70,22 @@ export const EmployeeCard = memo(({ emp, index, selectedCard, setSelectedCard }:
 
       <div className='card__content justify-center area-d'>
         <span>Contato</span>
+        <span>Endereço</span>
       </div>
-      <div className='card__content area-e'>
-        <span>{emp.email}</span>
-        <span>{emp.endereco}</span>
+      <div className='card__content justify-center area-e'>
         <span>{emp.telefone}</span>
+        <span>{emp.endereco}</span>
       </div>
 
       <div className='card__content justify-center area-f'>
         <span>Contrato</span>
+        <span>Salário</span>
+        <span>Última alteração</span>
       </div>
       <div className='card__content justify-center area-g'>
         <span>
-          {emp.start_of_contract ? getFormattedDate(emp.start_of_contract, false) : '--/--/--'}
-          {' - '}
+          {emp.start_of_contract ? getFormattedDate(emp.start_of_contract, false) : '--/--'}
+          {' até '}
           {emp.end_of_contract ? getFormattedDate(emp.end_of_contract, false) : '--/--/--'}
         </span>
         <span>{getSalary()}</span>
