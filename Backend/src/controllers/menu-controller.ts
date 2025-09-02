@@ -25,6 +25,7 @@ export async function get ( req: Request, res: Response ): Promise<void> {
 
     if (!result || result.success === false) {
       res.status(401).json({ message: 'Invalid token or expired', success: false })
+      return
     }
 
     res.status(200).json({ token: result.token, dishes: formattedDishes, success: true })
@@ -36,10 +37,10 @@ export async function get ( req: Request, res: Response ): Promise<void> {
 
 // Cria o menu
 export async function create ( req: Request, res: Response ): Promise<void> {
-  const { date, id_enterprise, dishes } = req.body
+  const { token, date, dishes } = req.body
 
   try {
-    const newMenu = await createMenu(date, id_enterprise, dishes)
+    const newMenu = await createMenu( token, date, dishes)
 
     res.status(201).json(newMenu)
   } catch (error) {
@@ -48,22 +49,22 @@ export async function create ( req: Request, res: Response ): Promise<void> {
 }
 
 export async function update ( req: Request, res: Response ): Promise<void> {
-  const { date, id_enterprise, dishes } = req.body
+  const { token, date, dishes } = req.body
 
   try {
-    const updated = await updateMenu(date, id_enterprise, dishes)
+    const updated = await updateMenu(token, date, dishes)
 
-    res.json(updated)
+    res.status(201).json(updated)
   } catch (error) {
     res.status(500).json({ error: 'Erro ao atualizar cardápio' })
   }
 }
 
 export async function deleted(req: Request, res: Response ): Promise<void> {
-  const { id_enterprise, name, date } = req.body
+  const { token, name, date } = req.body
 
   try {
-    const result = await deleteMenu(id_enterprise, name, date)
+    const result = await deleteMenu(token, name, date)
 
     res.status(200).json(result)
   } catch (error) {

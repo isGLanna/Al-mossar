@@ -1,7 +1,7 @@
 import { useNavigate } from '@tanstack/react-router'
 import { logoutUser } from '../../templates/login/api'
 import { GrLogout, FaCircleUser, IoIosPeople, FaMoneyBillTransfer } from "./icons"
-import { EmployeePanel } from '../../templates/menu/panel'
+import { EmployeePanel } from './panel'
 import styles from './pseudo-topbar.module.scss'
 import { Employee } from '../../../models/Employee'
 import { useState } from 'react'

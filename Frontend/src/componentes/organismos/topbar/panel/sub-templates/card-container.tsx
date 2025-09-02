@@ -1,4 +1,4 @@
-import { Employee } from '../../../../../models/Employee'
+import { Employee } from '../../../../../models/Employee.ts'
 import { MdPersonSearch } from "react-icons/md"
 import { useState } from 'react'
 import { EmployeeCard} from "./card.tsx"

@@ -65,7 +65,7 @@ export function DailyMenu() {
     fetchMenuForDay(day)
   }
 
-  // Criar uma função para buscar cardápio do dia no backend
+  // Criar uma função para buscar cardápio do dia
   const fetchMenuForDay = async (day: number) => {
     const menuDish = new MenuDish(`${currentYear}-${currentMonth + 1}-${day}`)
     await menuDish.fetchMenu()

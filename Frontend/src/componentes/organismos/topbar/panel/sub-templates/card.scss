@@ -101,7 +101,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #186220;
+      background: #175f1f;
 
       .label {
         color: #f0f0f0;
@@ -126,8 +126,8 @@
     .area-g { grid-area: g; overflow: hidden; opacity: 0; transition: opacity 200ms }
 
     &.active {
-      grid-template-columns: 8rem 14rem;
-      width: 23rem;
+      grid-template-columns: 8rem 16rem;
+      width: 26rem;
       z-index: 2;
 
 
@@ -156,7 +156,7 @@
   }
 }
 
-@media (max-width:60rem) and (min-width: 40rem) {
+@media (max-width:64rem) and (min-width: 44rem) {
   .card-container{
     grid-template-columns: 1fr 1fr;
   }
