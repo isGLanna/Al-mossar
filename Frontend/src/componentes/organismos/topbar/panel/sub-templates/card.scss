@@ -102,6 +102,7 @@
       justify-content: center;
       align-items: center;
       background: #175f1f;
+      transition: 200ms;
 
       .label {
         color: #f0f0f0;
@@ -132,10 +133,8 @@
 
 
       .image{
-        width: 7rem;
-        height: 5rem;
         border-radius: 10px;
-        animation: slideShift ease forwards;
+        animation: slideShift 250ms forwards;
       }
       .area-c,
       .area-e,
@@ -152,7 +151,10 @@
     transform: translate(0, 0);
   }
   to {
-    transform: translate(4.45rem, 2.25rem);
+    height: 5.5rem;
+    width: 4.5rem;
+    filter: drop-shadow(0 0 3px var(--orange));
+    transform: translate(6.8rem, 2rem);
   }
 }
 
