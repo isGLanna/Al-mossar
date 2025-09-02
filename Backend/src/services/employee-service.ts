@@ -62,13 +62,17 @@ export async function getEmployees(token: string, id_enterprise: number) {
         const employeeData = employee.toJSON()
         const photoResult = await getEmployeePhoto(employeeData.id)
 
+        console.log(photoResult.exists)
+
         return {
           ...employeeData,
-          photo: photoResult.exists ? photoResult.exists : null,
+          photo: photoResult.exists ? photoResult.photo : null,
           hasPhoto: photoResult.exists
         }
       })
     )
+
+    
 
     if (!employees || employees.length === 0) {
       return { success: false, message: 'Empresa não encontrada ou token inválido.' }
