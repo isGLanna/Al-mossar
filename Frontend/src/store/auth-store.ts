@@ -1,19 +1,16 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-export type Employee = {
-  idEnterprise: number
-  email: string
-  name: string
-  surname: string
-  role: string
-  token: string
+export type User = {
+  hasUser: boolean
+  hasLogged: boolean
+  logoutUser: boolean
 }
 
 type AuthState = {
-  employee: Employee | null
-  setEmployee: (employee: Employee) => void
-  clearEmployee: () => void
+  user: User | null
+  setUser: (user: User) => void
+  clearUser: () => void
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -21,9 +18,9 @@ export const useAuthStore = create<AuthState>()(
   não precise fazer login novamente a cada atualização de página */
   persist(
     (set) => ({
-      employee: null,
-      setEmployee: (employee) => set({ employee }),
-      clearEmployee: () => set({ employee: null }),
+      user: null,
+      setUser: (user) => set({ user }),
+      clearUser: () => set({ user: null }),
     }),
     {
       name: 'auth-storage',

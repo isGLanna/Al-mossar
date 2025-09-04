@@ -33,3 +33,30 @@ export async function getEmployeePhoto (employeeId: number){
     }
   }
 }
+
+export class PhotoManager {
+
+  static async getUserPhoto(id: number, user: string) {
+    try {
+      let photoPath
+
+      if(user === 'client') {
+          photoPath = path.join(__dirname, '../../uploads/client', `client${id}.webp`)
+      } else if (user === 'employee') {
+        photoPath = path.join(__dirname, '../../uploads/employee', `${id}.webp`)
+      } else {
+        return { photo: null}
+      }
+
+      const protoBuffer = fs.readFileSync(photoPath)
+      const base64 = protoBuffer.toString('base64')
+      const dataUrl = `data:image/webp;base64,${base64}`
+
+      return { photo: dataUrl }
+
+    } catch(error) {
+      return { photo: null }
+
+    }
+  }
+}

@@ -2,6 +2,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { logoutUser } from '../../templates/login/api'
 import { GrLogout, FaCircleUser, IoIosPeople, FaMoneyBillTransfer } from "./icons"
 import { EmployeePanel } from './panel'
+import { useAuthStore } from '../../../store/auth-store'
 import styles from './pseudo-topbar.module.scss'
 import { Employee } from '../../../models/Employee'
 import { useState } from 'react'
@@ -15,6 +16,7 @@ export function NavActions({ employee }: Props){
   const navigate = useNavigate()
   const [ menuIsOpen, setMenuIsOpen ] = useState<boolean>(false)
   const [ panelIsOpen, setPanelIsOpen ] = useState<boolean>(false)
+  const clearUser = useAuthStore(state => state.clearUser)
   
   // lidar com open/close das configurações
   const handleSettings = () => {
@@ -29,6 +31,7 @@ export function NavActions({ employee }: Props){
   // Finalizar validade do token
   const handleLogout = () => {
     logoutUser();
+    clearUser()
     navigate({ to: '/' });
   }
 

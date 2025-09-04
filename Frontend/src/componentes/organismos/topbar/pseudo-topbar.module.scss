@@ -27,8 +27,8 @@
   top: 65px;
   right: -25px;
   max-height: 0;
-  background-color: var(--menu);
-  box-shadow: 3px 3px 6px var(--shadow);
+  background: var(--second-700-a);
+  box-shadow: 3px 3px 6px var(--second-700);
   border-end-start-radius: 5px;
   border-end-end-radius: 5px;
   border-inline: 2px solid #0f5904;
@@ -79,7 +79,7 @@
 }
 
 
-@media (max-width: 520px){
+@media (max-width: 720px){
   .iconGroup {
     width: 100%;
     margin-inline: auto;

@@ -4,11 +4,10 @@
   left: 0;
   width: 100vw;
   height: calc(100vh - 65px);
-  background: #175f1f30;
+  background: #175f1f40;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100;
   
   &.fadeIn {
     animation: fadeIn 200ms ease-in forwards;
@@ -50,7 +49,6 @@
   background: #f2f5ff;
   border-radius: 10px;
   border: 2px solid var(--background-color);
-  box-shadow: 0 0 8px #c4cfef;
   overflow: hidden;
 
   .header{
