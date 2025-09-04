@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import menuRouter from './menu-routes'
 import authRouter from './login-register-routes'
+import userRouter from './user-routes'
 import employeeRouter from './employee-routes'
 
 const router = Router()
@@ -13,5 +14,7 @@ router.use(authRouter)
 
 // Rota para /api/employee
 router.use(employeeRouter)
+
+router.use(userRouter)
 
 export default router

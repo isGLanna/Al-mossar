@@ -10,18 +10,18 @@ import './styles.sass';
 
 export function Login() {
   const navigate = useNavigate()
-  const setEmployee = useAuthStore(state => state.setEmployee)
+  const setUser  = useAuthStore(state => state.setUser)
 
   // Efeito de delay de carregamento para login
   const [isLoading, setIsLoading] = useState(false);
 
-  type User = {
+  type credentials = {
     email: string;
     password: string;
     remember: boolean;
   };
 
-  const [user, setUser] = useState<User>({
+  const [credentials, setcredentials] = useState<credentials>({
     email: '',
     password: '',
     remember: false,
@@ -36,13 +36,13 @@ export function Login() {
     const { name, value, type, checked } = e.target;
 
     if (type === 'checkbox') {
-      setUser({
-        ...user,
+      setcredentials({
+        ...credentials,
         [name]: checked,
       });
     } else {
-      setUser({
-        ...user,
+      setcredentials({
+        ...credentials,
         [name]: value,
       });
     }
@@ -54,7 +54,7 @@ export function Login() {
       const response = await getUserByToken()
 
       if (response.success && response.employee){
-        setEmployee(response.employee)
+        setUser({ hasUser: true, hasLogged: true })
         navigate({ to: '/menu'})
       }
     }
@@ -66,8 +66,8 @@ export function Login() {
     e.preventDefault();
 
     const fields = {
-      email: !user.email.trim(),
-      password: !user.password.trim()
+      email: !credentials.email.trim(),
+      password: !credentials.password.trim()
     }
 
     setEmptyField(fields)
@@ -78,7 +78,7 @@ export function Login() {
     setIsLoading(true)
   
     try {
-      const response = await loginUser(user);
+      const response = await loginUser(credentials);
 
       // Se o login for bem-sucedido, armazena o usuário e redireciona
       if (!response.success || !response.employee) {
@@ -86,13 +86,12 @@ export function Login() {
         throw new Error(response.message || 'Erro ao fazer login')
       }
 
-      setEmployee(response.employee) 
+      setUser({ hasUser: true, hasLogged: true }) 
       navigate({ to: '/menu'})
-
     } catch (err) {
       alert(err)
-      setUser(user => ({
-        ...user, email: '', password: ''}))
+      setcredentials(credentials => ({
+        ...credentials, email: '', password: ''}))
       
     } finally {
       setIsLoading(false)
@@ -115,7 +114,7 @@ export function Login() {
               name="email"
               placeholder="Digite seu email"
               autoComplete='current-password'
-              value={user.email}
+              value={credentials.email}
               onChange={handleChange}
             />
           </div>
@@ -127,7 +126,7 @@ export function Login() {
               type="password"
               name="password"
               placeholder="Digite sua senha"
-              value={user.password}
+              value={credentials.password}
               onChange={handleChange}
             />
           </div>
@@ -137,7 +136,7 @@ export function Login() {
               <input
                 type="checkbox"
                 name="remember"
-                checked={user.remember}
+                checked={credentials.remember}
                 onChange={handleChange}
                 style={{padding:'0px'}}
               />
@@ -158,7 +157,6 @@ export function Login() {
             <Link to="/create-account">Criar conta</Link>
           </div>
 
-          {/* FUNCIONALIDADE SERÁ CRIADA FUTURAMENTE */}
           <div>
             <Link to="/create-enterprise">Cadastrar corporação</Link>
           </div>

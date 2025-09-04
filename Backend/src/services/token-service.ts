@@ -13,7 +13,7 @@ export class TokenService {
       const result = await sequelize.query<{ id_enterprise: number }> (
         `SELECT id_enterprise FROM Employee WHERE token = :token`,
         {
-          replacements: { token},
+          replacements: { token },
           type: QueryTypes.SELECT
         }
       )

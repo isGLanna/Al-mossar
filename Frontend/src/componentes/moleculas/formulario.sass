@@ -18,7 +18,7 @@
   margin-block: 80px
   padding-block: 30px
   padding-inline: 25px
-  background: var(--formulario)
+  background: var(--form)
   box-shadow: 2px 2px 8px #00000080
   align-items: center
   border-radius: 5px
@@ -46,10 +46,10 @@
   input
     width: 18rem
     height: 2.5rem
-    background: var(--input)
+    background: var(--form)
     color: var(--texto)
     margin-block: 10px
-    border: 2px solid var(--orange)
+    border: 2px solid var(--branding-600)
     border-radius: 5px
     padding-inline: 10px
     transition: 200ms ease
@@ -70,15 +70,17 @@
         color: #c03520
 
   input[type=submit]
-    background: var(--orange)
-    width: 10rem
+    background: var(--branding-600)
+    width: 8rem
+    height: 2.3rem
     border-radius: 5px
+    border: none
     color: white
     transition: background 200ms ease
     font-weight: 700
 
     &:hover
-      background: var(--light-orange)
+      background: var(--branding-400)
 
   // Remover o spin
   input[type="number"]

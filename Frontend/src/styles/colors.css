@@ -2,18 +2,25 @@
   --background-color: #c4cfef;
   --texto: #252525;
 
-  --light-orange: #b29036;
-  --orange: #dfa81a;
+  --branding-700: #d69147;
+  --branding-600: #dfa81a;
+  --branding-500: #ffb253;
+  --branding-400: #c7a137;
+  
 
   --a: #efba5b;
   --a-hover: #ff9500;
 
-  --formulario: #fafafa;
+  --form: #fafafa;
 
-  --shadow: #3b5e3e;
+  --second-700-a: #134a0d80;
+  --second-500-a: #26682380;
+  --second-300-a: #3b5e3e80;
 
-  --menu: #134a0da0;
-  --menu-description: #266823;
+  --second-700: #134a0d;
+  --second-500: #266823;
+  --second-300: #3b5e3e;
+  
   --menuContainers: #ebebf8;
 
   --input: #fafafa;

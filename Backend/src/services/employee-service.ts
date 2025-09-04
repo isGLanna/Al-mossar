@@ -1,6 +1,6 @@
 import { Employee } from '../repositories/employee'
 import { Salary } from '../repositories/salary'
-import { getEmployeePhoto } from '../repositories/employee-photo'
+import { getEmployeePhoto } from '../repositories/user-photo'
 import { refreshToken } from './authenticator'
 
 export async function addEmployee(email: string, role: string, id_enterprise: number) {
