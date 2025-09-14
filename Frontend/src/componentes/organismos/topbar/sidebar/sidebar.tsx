@@ -11,17 +11,11 @@ type SidebarProps = {
 
 export function Sidebar({ isOpen }: SidebarProps) {
   const [photo, setPhoto] = useState<string | null>(null)
-  const [open, setOpen] = useState<boolean>(false)
 
   useEffect(() => {
-    if(isOpen) setOpen(prev => !prev)
+    if(!photo && isOpen) {
+      getPhoto().then(res => setPhoto(res.photo))}
   }, [isOpen])
-
-  useEffect(() => {
-    getPhoto().then(res => {
-      if(res?.photo) setPhoto(res.photo)
-    })
-  }, [open])
 
   return (
     <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
@@ -41,7 +35,7 @@ export function Sidebar({ isOpen }: SidebarProps) {
           <li><a href="dashboard">Painel Financeiro</a></li>
           <li><a href="nutricion">Informações Nutricionais</a></li>
           <li><a href="personalize">Personalizar</a></li>
-          <li><a href="about">Sobre</a></li>
+          <li><a href="about"></a></li>
           <li><a href="exit" onClick={logoutUser}>Sair</a></li>
         </ul>
       </nav>
