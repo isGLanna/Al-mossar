@@ -1,11 +1,11 @@
 package db
 
 import (
+	"BackendGL/src/models"
 	"fmt"
 	"log"
 	"os"
 
-	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -22,15 +22,15 @@ func InitDB() {
 		getEnv("DB_PORT", "5432"),
 	)
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	conn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}
 
 	// Migrar tabelas
-	db.AutoMigrate(&Role{}, &RolePermission{})
+	conn.AutoMigrate(&models.Role{}, &models.RolePermission{})
 
-	DB = db
+	DB = conn
 	log.Println("Database connection established")
 }
 
