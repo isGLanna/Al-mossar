@@ -1,8 +1,6 @@
 import sequelize from '../repositories'
 import { QueryTypes } from 'sequelize'
-import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import e from 'express';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'chave-super-secreta-mesmo';
 

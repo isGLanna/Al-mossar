@@ -8,16 +8,15 @@ import {
 
 // Adiciona funcionário
 export async function addEmployee(req: Request, res: Response): Promise<void> {
-  console.log('aqui tá chegando')
-  const { email, role, idEnterprise } = req.body
+  const { email, role, token } = req.body
 
-  if (!email || !role || !idEnterprise) {
-    res.status(400).json({ error: 'Email, cargo e ID da empresa são obrigatórios.' })
+  if (!email || !role || !token) {
+    res.status(400).json({ error: 'Email, cargo e token são obrigatórios.' })
     return 
   }
 
   try {
-    await addEmployeeService(email, role, idEnterprise)
+    await addEmployeeService(email, role, token)
     res.status(201).json({ success: true })
     return 
   } catch (error) {
@@ -27,11 +26,11 @@ export async function addEmployee(req: Request, res: Response): Promise<void> {
 
 // Busca todos os funcionários de uma empresa
 export async function getEmployees(req: Request, res: Response): Promise<void> {
-  const { token, idEnterprise } = req.query
+  const { token } = req.query
   let result
 
   try {
-    result = await getEmployeesService(token as string, Number(idEnterprise))
+    result = await getEmployeesService(token as string)
 
     res.status(200).json(result)
   } catch (error) {
@@ -46,15 +45,15 @@ export async function getEmployees(req: Request, res: Response): Promise<void> {
 
 // Exclui funcionário
 export async function deleteEmployee(req: Request, res: Response): Promise<void> {
-  const { email, idEnterprise} = req.query
+  const { email, token} = req.query
 
-  if (!email || !idEnterprise) {
-    res.status(400).json({ success: false, message: 'Email e ID da empresa são obrigatórios.' })
+  if (!email || !token) {
+    res.status(400).json({ success: false, message: 'Email e token são obrigatórios.' })
     return 
   }
 
   try {
-    await deleteEmployeeService(email as string, Number(idEnterprise))
+    await deleteEmployeeService(email as string, token as string)
     res.status(204).json({ success: true, message: ''})
 
     return 
@@ -66,20 +65,20 @@ export async function deleteEmployee(req: Request, res: Response): Promise<void>
 
 // Edita funcionário
 export async function editEmployee(req: Request, res: Response): Promise<void> {
-  const { email, name, surname, role, idEnterprise } = req.body
+  const { token, email, name, surname, role } = req.body
 
   if (!email || !email.trim()) {
     res.status(400).json({ message: 'O email é obrigatório.' })
     return
   }
 
-  if (!idEnterprise) {
-    res.status(400).json({ message: 'ID da empresa é obrigatório.' })
+  if (!token) {
+    res.status(400).json({ message: 'Token é obrigatório' })
     return 
   }
 
   try {
-    const updated = await editEmployeeService(String(email), Number(idEnterprise), { name, surname, role })
+    const updated = await editEmployeeService(String(email), token, { name, surname, role })
     res.status(200).json({ success: true, message: '' })
 
     return 

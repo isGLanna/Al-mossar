@@ -8,19 +8,19 @@ import { Nutritionist } from './roles/Nutricionist.ts';
 import { GenericEmployee } from './roles/GenericEmployee.ts'
 import { Employee } from './Employee';
 
-export function createEmployee(idEnterprise: number, email: string, name: string, surname: string, role: string, token: string ): Employee {
+export function createEmployee(email: string, name: string, surname: string, role: string): Employee {
   switch (role) {
     case 'administrador':
-      return new Administrator(idEnterprise, name, surname, email, token)
+      return new Administrator(name, surname, email)
     case 'gerente':
-      return new Manager(idEnterprise, name, surname, email, token)
+      return new Manager(name, surname, email)
     case 'cozinheiro':
-      return new Cook(idEnterprise, name, surname, email, token)
+      return new Cook(name, surname, email)
     case 'cliente':
-      return new Customer(idEnterprise, name, surname, email, role, token)
+      return new Customer(name, surname, email, role)
     case 'nutricionista':
-      return new Nutritionist(idEnterprise, name, surname, email, role, token)
+      return new Nutritionist(name, surname, email, role)
     default:
-      return new GenericEmployee(idEnterprise, name, surname, email, role, token)
+      return new GenericEmployee(name, surname, email, role)
   }
 }

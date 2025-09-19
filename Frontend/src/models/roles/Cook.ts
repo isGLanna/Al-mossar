@@ -1,8 +1,8 @@
 import { Employee } from '../Employee'
 
 export class Cook extends Employee {
-  constructor(idEnterprise: number,name: string, surname: string, email: string, token: string) {
-    super (idEnterprise, name, surname, email, 'Cozinheiro', token)
+  constructor(name: string, surname: string, email: string) {
+    super (name, surname, email, 'Cozinheiro')
   }
 
   canAccessEmployeePanel(): boolean { return true }

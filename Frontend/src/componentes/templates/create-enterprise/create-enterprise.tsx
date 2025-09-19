@@ -34,7 +34,7 @@ export function CreateEnterprise() {
 
   const [employees, setEmployees] = useState<{ email: string, role: string }[]>([])
 
-  const roles = ['Gerente', 'Cozinheiro','Auxiliar de cozinha', 'Limpeza', 'Outros' ]
+  const roles = ['Gerente', 'Cozinheiro', 'Nutricionista','Auxiliar de cozinha', 'Limpeza', 'Outros' ]
 
   // Adiciona um novo funcionário com campos vazios
   const addEmployee = () => {

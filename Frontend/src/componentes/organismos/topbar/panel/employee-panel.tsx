@@ -38,7 +38,7 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
 
   // Busca e converte o objeto employee para um array
   const fetchEmployees = async () => {
-    const data = await getEmployeesAPI(employee.idEnterprise)
+    const data = await getEmployeesAPI()
     const employeesArray = Array.isArray(data.employees) ? data.employees : []
     setEmployees(employeesArray)
   }
@@ -47,9 +47,8 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
   const handleSubmit = async () => {
     if (!email || !role) return
     
-    const idEnterprise = employee.getIdEnterprise()
     try {
-      await addEmployeeAPI({ email, role, idEnterprise })
+      await addEmployeeAPI({ email, role })
       setEmail('')
       setRole('')
       setAddEmployee(false)
@@ -72,7 +71,7 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
 
   const handleDelete = async (email: string) => {
     try {
-      const result = await deleteEmployeeAPI(email, employee.idEnterprise)
+      const result = await deleteEmployeeAPI(email)
 
       if (!result.success) {
         return
@@ -98,7 +97,7 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
       const hasChanges = Object.keys(data).some(key => data[key as keyof Employee] !== (original[key as keyof Employee] ?? ''))
       if (hasChanges) {
         try {
-          await editEmployeeAPI(employee.idEnterprise, email, data.name, data.surname, data.role) // Edita baseado no e-mail
+          await editEmployeeAPI(email, data.name, data.surname, data.role) // Edita baseado no e-mail
         } catch (error) {
           console.error(`Erro ao salvar alterações para ${email}`, error)
         }

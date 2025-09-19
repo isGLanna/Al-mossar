@@ -14,8 +14,6 @@ type AuthState = {
 }
 
 export const useAuthStore = create<AuthState>()(
-  /* Persiste o estado do usuário no localStorage para que o usuário
-  não precise fazer login novamente a cada atualização de página */
   persist(
     (set) => ({
       user: null,

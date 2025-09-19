@@ -1,8 +1,8 @@
 import { Employee } from '../Employee'
 
 export class Administrator extends Employee {
-  constructor (idEnterprise: number,name: string, surname: string, email: string, token: string) {
-    super(idEnterprise, name, surname, email, 'Administrador', token);
+  constructor (name: string, surname: string, email: string) {
+    super( name, surname, email, 'Administrador');
   }
 
   canViewMenuDescription(): boolean { return true }

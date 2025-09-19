@@ -11,7 +11,7 @@ export function RootLayout({ children }: Props) {
   return (
     <>
       <TopBar />
-      <div className="mt-[70px] relative">{children}</div>
+      <div className="mt-[65px] relative">{children}</div>
     </>
   )
 }

@@ -40,7 +40,7 @@ export async function createMenu (
   try {
     const { token: newToken, status: status } = await TokenService.refreshToken(token)
 
-    if (status !== 201) {
+    if (status !== 201 || !newToken) {
       return { status: status, message: 'Token inválido ou expirado' }
     }
 
@@ -85,11 +85,11 @@ export async function updateMenu (
   try {
     const { token: newToken, status: status } = await TokenService.refreshToken(token)
 
-    if (status !== 201) {
+    if (status !== 201 || !newToken) {
       return { status: status, message: 'Token inválido ou expirado' }
     }
     
-    const id_enterprise = await TokenService.queryEnterpriseId(token)
+    const id_enterprise = await TokenService.queryEnterpriseId(newToken)
     // Consulta menu igual
     const menu = await Menu.findOne({
       where: { id_enterprise, day}
@@ -124,7 +124,7 @@ export async function deleteMenu(
   try {
     const { token: newToken, status: status } = await TokenService.refreshToken(token)
 
-    if (status !== 201) {
+    if (status !== 201 || !newToken) {
       return { status: status, message: 'Token inválido ou expirado' }
     }
     

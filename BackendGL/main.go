@@ -1,6 +1,7 @@
 package main
 
 import (
+	"BackendGL/src/middlewares"
 	"BackendGL/src/routes"
 
 	"github.com/gin-gonic/gin"
@@ -8,8 +9,7 @@ import (
 
 func main() {
 	r := gin.Default()
-	r.Use(gin.Logger())
-	r.Use(gin.Recovery())
+	r.Use(middlewares.CORSMiddleware())
 
 	routes.RegisterRoutes(r)
 

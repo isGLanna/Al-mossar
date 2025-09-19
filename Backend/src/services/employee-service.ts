@@ -2,13 +2,18 @@ import { Employee } from '../repositories/employee'
 import { Salary } from '../repositories/salary'
 import { getEmployeePhoto } from '../repositories/user-photo'
 import { refreshToken } from './authenticator'
+import { TokenService } from './token-service'
 
-export async function addEmployee(email: string, role: string, id_enterprise: number) {
+export async function addEmployee(email: string, role: string, token: string) {
+  const id_enterprise = await TokenService.queryEnterpriseId(token)
+
   const existing = await Employee.findOne({ where: { email, id_enterprise } })
 
   if (existing) {
     throw new Error('Funcionário já cadastrado nesta empresa.')
   }
+
+  role = role.toLowerCase()
 
   const newEmployee = await Employee.create({
     email,
@@ -22,8 +27,10 @@ export async function addEmployee(email: string, role: string, id_enterprise: nu
   return newEmployee
 }
 
-export async function getEmployees(token: string, id_enterprise: number) {
+export async function getEmployees(token: string) {
   try {
+    const id_enterprise = await TokenService.queryEnterpriseId(token)
+
     const user = await Employee.findOne({
       where: { token, id_enterprise },
       attributes: ['id'],
@@ -33,7 +40,6 @@ export async function getEmployees(token: string, id_enterprise: number) {
       return { success: false, message: 'Empresa não encontrada ou token inválido.' }
     }
 
-    // Confirmar se o id da empresa condiz com o token
     const employees = await Employee.findAll({
       where: { id_enterprise },
       attributes: [
@@ -56,13 +62,10 @@ export async function getEmployees(token: string, id_enterprise: number) {
       ],
     })
 
-    // Consulta e processa fotos dos empregados
     const employeesWithPhotos = await Promise.all(
       employees.map(async (employee) => {
         const employeeData = employee.toJSON()
         const photoResult = await getEmployeePhoto(employeeData.id)
-
-        console.log(photoResult.exists)
 
         return {
           ...employeeData,
@@ -71,8 +74,6 @@ export async function getEmployees(token: string, id_enterprise: number) {
         }
       })
     )
-
-    
 
     if (!employees || employees.length === 0) {
       return { success: false, message: 'Empresa não encontrada ou token inválido.' }
@@ -90,7 +91,8 @@ export async function getEmployees(token: string, id_enterprise: number) {
   }
 }
 
-export async function deleteEmployee(email: string, id_enterprise: number) {
+export async function deleteEmployee(email: string, token: string) {
+  const id_enterprise = await TokenService.queryEnterpriseId(token)
   await Employee.destroy({
     where: { email, id_enterprise }
   })
@@ -98,9 +100,10 @@ export async function deleteEmployee(email: string, id_enterprise: number) {
 
 export async function editEmployee(
   email: string,
-  id_enterprise: number,
+  token: string,
   updates: Partial<Pick<Employee, 'name' | 'surname' | 'role'>>
 ) {
+  const id_enterprise = await TokenService.queryEnterpriseId(token)
   await Employee.update(updates, {
     where: { email, id_enterprise }
   })

@@ -12,6 +12,11 @@
   z-index: 10;
 }
 
+.iconGroup:first-child {
+  left: 0;
+  padding: 0 1rem;
+}
+
 .icon {
   cursor: pointer;
   transition: transform 100ms ease;
@@ -79,11 +84,16 @@
 }
 
 
-@media (max-width: 720px){
+@media (max-width: 628px){
   .iconGroup {
     width: 100%;
     margin-inline: auto;
     justify-content: space-around;
+  }
+
+  .iconGroup > *:not(:first-child) {
+    display: none;
+    z-index: 0;
   }
 
   .menu {
