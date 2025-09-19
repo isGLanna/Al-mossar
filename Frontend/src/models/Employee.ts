@@ -13,12 +13,10 @@ export abstract class Employee {
   };
 
   constructor(
-    public idEnterprise: number,
     public name: string,
     public surname: string,
     public email: string,
     public role: string,
-    public token: string,
   ) {}
 
   canViewMenuDescription(): boolean {
@@ -63,9 +61,5 @@ export abstract class Employee {
 
   haveProfile(): boolean {
     return true
-  }
-
-  getIdEnterprise(): number {
-    return this.idEnterprise
   }
 }

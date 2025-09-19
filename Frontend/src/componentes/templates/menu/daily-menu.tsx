@@ -1,63 +1,21 @@
-import { useState, useEffect, useRef  } from 'react'
-import { GrFormNext, GrFormPrevious, TfiWrite, FaTrashArrowUp, IoMdAddCircleOutline, FaArrowRightLong  } from './icons'
-import { MenuDish, Dish } from '../../../models/Menu'
-import './calendar.sass'
-
+import { useState, useEffect, useRef } from "react"
+import {TfiWrite, FaTrashArrowUp, IoMdAddCircleOutline, FaArrowRightLong} from "./icons"
+import { MenuDish, Dish } from "../../../models/Menu"
+import { Calendar } from "./sub-template/calendar"
+import "./calendar.sass"
 
 export function DailyMenu() {
   const today = new Date()
-  const week = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
-
   const [dishes, setDishes] = useState<Dish[]>([])
   const menuDishRef = useRef<MenuDish | null>(null)
   const [openDescription, setOpenDescription] = useState<number | null>(null)
   const [newDish, setNewDish] = useState<Dish | null>(null)
+  const [deleted, setDeleted] = useState(false)
 
-  // Seleciona dia da semana
-  const getDaysInMonth = (year: number, month: number) => {
-    return new Date(year, month + 1, 0).getDate()
-  }
-
-  // Pega nome do mês
-  const getMonthName = (month: number) => {
-    return new Date(0, month).toLocaleString("default", { month: "long" })
-  }
-
-  // lida com consulta do calendário
-  const [ currentMonth, setCurrentMonth ] = useState(today.getMonth())
-  const [ currentYear, setCurrentYear ] = useState(today.getFullYear())
-  const [ selectedDay, setSelectedDay ] = useState(today.getDate());
-  const [ deleted, setDeleted ] = useState(false)
-
-  const daysInMonth = getDaysInMonth(currentYear, currentMonth)
-
-  const firstDayIndex = new Date(currentYear, currentMonth, 1).getDay()
-
-  const daysArray = [
-    ...Array(firstDayIndex).fill(null),
-    ...Array.from({ length: daysInMonth }, (_, i) => i + 1)
-  ]
-
-  // Decrementar mês
-  const handlePrevMonth = () => {
-      if (currentMonth === 0) {
-        setCurrentYear((y) => y - 1)
-        setCurrentMonth(11)
-      }else{
-        setCurrentMonth(currentMonth - 1)
-      }
-  }
-
-  // Incrementar mês
-  const handleNextMonth = () => {
-
-    if (currentMonth === 11) {
-      setCurrentYear((y) => y + 1)
-      setCurrentMonth(0)
-    }else{
-      setCurrentMonth(currentMonth + 1)
-    }
-  }
+  // Estados do calendário
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth())
+  const [currentYear, setCurrentYear] = useState(today.getFullYear())
+  const [selectedDay, setSelectedDay] = useState(today.getDate())
 
   // Alterar dia selecionado
   const handleDayClick = (day: number) => {
@@ -65,7 +23,7 @@ export function DailyMenu() {
     fetchMenuForDay(day)
   }
 
-  // Criar uma função para buscar cardápio do dia
+  // Buscar cardápio do dia
   const fetchMenuForDay = async (day: number) => {
     const menuDish = new MenuDish(`${currentYear}-${currentMonth + 1}-${day}`)
     await menuDish.fetchMenu()
@@ -73,130 +31,116 @@ export function DailyMenu() {
     menuDishRef.current = menuDish
   }
 
-  // Lidar com expansão de descrição de pratos
+  // Expansão de descrição
   const handleDescription = (id: number) => {
-    if (openDescription === id)
-      setOpenDescription(null)
-    else
-      setOpenDescription(id)
+    setOpenDescription(openDescription === id ? null : id)
   }
 
   useEffect(() => {
-    fetchMenuForDay(today.getDate()) // Ao montar o componente, busca o cardápio do dia
+    fetchMenuForDay(today.getDate())
   }, [currentMonth, currentYear])
 
-  // Adicionar novo prato
-  const handleNewDishChange  = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    if (newDish) setNewDish( {
-      ...newDish, [e.target.name]: e.target.value
-    })}
+  // Novo prato
+  const handleNewDishChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (newDish) setNewDish({ ...newDish, [e.target.name]: e.target.value })
+  }
 
-  // Salvar novo prato e atualizar backend
   const handleSaveNewDish = async () => {
-    if (!newDish || !newDish.name.trim()) return;
+    if (!newDish || !newDish.name.trim()) return
 
-    menuDishRef.current = new MenuDish(`${currentYear}-${currentMonth + 1}-${selectedDay}`);
-    await menuDishRef.current.fetchMenu();
+    menuDishRef.current = new MenuDish(
+      `${currentYear}-${currentMonth + 1}-${selectedDay}`
+    )
+    await menuDishRef.current.fetchMenu()
 
-    const menuDish = menuDishRef.current;
-    menuDish.addDishByName(newDish.id, newDish.name.trim(), newDish.description.trim());
+    const menuDish = menuDishRef.current
+    menuDish.addDishByName(
+      newDish.id,
+      newDish.name.trim(),
+      newDish.description.trim()
+    )
+
     try {
-      const response = dishes.length === 0 ?
-        await menuDish.createMenu() :
-        await menuDish.updateMenu()
+      const response =
+        dishes.length === 0
+          ? await menuDish.createMenu()
+          : await menuDish.updateMenu()
 
       if (response.success) {
-        setNewDish(null);
-        setDishes(menuDish.getDishes());
+        setNewDish(null)
+        setDishes(menuDish.getDishes())
       } else {
-        throw new Error(response.message);
+        throw new Error(response.message)
       }
     } catch (error) {
-      alert(error);
+      alert(error)
     }
   }
 
-  // Deletar prato
+  // Excluir prato
   const handleDeleteDish = async (id: number) => {
-    
     if (!menuDishRef.current) return
-
     const menuDish = menuDishRef.current
-    
+
     try {
-      const dishToDelete = menuDish.getDishes().find(dish => dish.id === id)
-
-      if (!dishToDelete) return
-
-      const updatedDishes = menuDish.getDishes().filter(dish => dish.id !== id)
-      
+      const updatedDishes = menuDish.getDishes().filter((dish) => dish.id !== id)
       menuDish.setDishes(updatedDishes)
       const response = await menuDish.updateMenu()
-      if (response.success) {
-        setDishes(updatedDishes)
-      }
-     } catch(error) {
-        alert(error)
+      if (response.success) setDishes(updatedDishes)
+    } catch (error) {
+      alert(error)
     }
   }
 
   return (
-    <section className='menuContainer'>
-      
-      <article className='calendar'>
-        <header className='header'>
-          <button onClick={handlePrevMonth}> <GrFormPrevious size={25}/> </button>
-          <span>{getMonthName(currentMonth)} / {currentYear}</span>
-          <button onClick={handleNextMonth}> <GrFormNext size={25}/> </button>
-        </header>
+    <section className="menuContainer">
+      {/* Calendário modularizado */}
+      <Calendar
+        currentMonth={currentMonth}
+        currentYear={currentYear}
+        selectedDay={selectedDay}
+        onMonthChange={(year, month) => {
+          setCurrentYear(year)
+          setCurrentMonth(month)
+        }}
+        onDaySelect={handleDayClick}
+      />
 
-        <div className='week'>
-          {week.map((day) => (
-            <div key={day}> 
-              {day}
+      <article className="menu">
+        <header className="menu-header">Cardápio</header>
+
+        {dishes.length > 0 ? (
+          dishes.map((dish) => (
+            <div
+              className={`dish ${
+                openDescription === dish.id ? "expanded" : ""
+              }`}
+              key={dish.id}
+              onClick={() => handleDescription(dish.id)}
+            >
+              <span>
+                {dish.name}{" "}
+                {deleted && (
+                  <FaArrowRightLong
+                    className="btn-delete"
+                    onClick={() => handleDeleteDish(dish.id)}
+                  />
+                )}
+              </span>
+              <p>{dish.description}</p>
             </div>
-          ))}
-        </div>
-
-        <div className='days'>
-          {daysArray.map((day, index) => (
-            day ? (
-            <button
-              key={day}
-              className={`day ${ day === selectedDay  ? 'selected' : ''}`}
-              onClick={() => handleDayClick(day)}
-              >
-                {day}
-            </button>
-            ) : (
-              <div key={`empty-${index}`} className='empty' />
-            )))}
-        </div>
-
-      </article>
-
-      <article className='menu'>
-        <header className='menu-header'>Cardápio</header>
-      
-      {/* Verifica tamanho do array, caso esteja vazio, informa não ter */}
-        { dishes.length > 0 ? 
-        (dishes.map((dish) => (
-          <div className={`dish ${openDescription === dish.id ? 'expanded' : ''}`} key={dish.id} onClick={() => handleDescription(dish.id)}>
-            <span>{dish.name} { deleted && (
-              <FaArrowRightLong className='btn-delete' onClick={() => handleDeleteDish(dish.id)}/>
-              )}
-            </span>
-            <p>{dish.description}</p>
-          </div>
-        ))) :
-        (<div className='dish'>Nenhuma refeição foi encontrada</div>)}
+          ))
+        ) : (
+          <div className="dish">Nenhuma refeição foi encontrada</div>
+        )}
 
         {newDish && (
-          // Criar novo prato ativa estilo para expansão suave
           <div className="dish new-dish">
-            <div className='flex flex-col gap-2'>
+            <div className="flex flex-col gap-2">
               <input
-                name='name'
+                name="name"
                 placeholder="Nome do prato"
                 value={newDish.name}
                 onChange={handleNewDishChange}
@@ -208,24 +152,28 @@ export function DailyMenu() {
                 onChange={handleNewDishChange}
               />
             </div>
-            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', justifyContent: 'center' }}>
+            <div className="flex gap-2 justify-center mt-2">
               <button onClick={handleSaveNewDish}>Salvar</button>
               <button onClick={() => setNewDish(null)}>Cancelar</button>
             </div>
           </div>
         )}
 
-        <footer className='menu-footer'>
-          <TfiWrite cursor={'pointer'}/>
-          <button aria-label="Adicionar prato" onClick={() => newDish ? setNewDish(null) : setNewDish({ id: 0, name: '', description: '' })}>
-            <IoMdAddCircleOutline cursor={'pointer'} size={25}/>
+        <footer className="menu-footer">
+          <TfiWrite cursor={"pointer"} />
+          <button
+            aria-label="Adicionar prato"
+            onClick={() =>
+              newDish
+                ? setNewDish(null)
+                : setNewDish({ id: 0, name: "", description: "" })
+            }
+          >
+            <IoMdAddCircleOutline cursor={"pointer"} size={25} />
           </button>
-          <FaTrashArrowUp cursor={'pointer'} onClick={() => setDeleted(!deleted)}/>
+          <FaTrashArrowUp cursor={"pointer"} onClick={() => setDeleted(!deleted)} />
         </footer>
-
       </article>
-
     </section>
   )
-
 }

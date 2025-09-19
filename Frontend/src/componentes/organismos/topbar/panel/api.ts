@@ -3,19 +3,24 @@ import { getToken, setNewToken } from '../../../templates/login/api'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://localhost'
 
-export async function getEmployeesAPI(idEnterprise: number) {
+// Helper para headers com token
+function authHeaders() {
+  const token = getToken()
+  return { Authorization: `Bearer ${token}` }
+}
+
+// Buscar funcionários
+export async function getEmployeesAPI() {
   try {
-    const token = getToken()
     const response = await axios.get(`${API_BASE_URL}/api/employee`, {
-      params: { token, idEnterprise },
+      headers: authHeaders(),
     })
 
-    if(!response.data.token) {
-      throw new Error('Token not found in response, please log in again.')
+    if (!response.data.token) {
+      throw new Error('Token não encontrado na resposta, faça login novamente.')
     }
-    
-    setNewToken(response.data.token)
 
+    setNewToken(response.data.token)
     return response.data
   } catch (error) {
     alert('Erro desconhecido ao buscar funcionários.')
@@ -23,16 +28,25 @@ export async function getEmployeesAPI(idEnterprise: number) {
 }
 
 // Adicionar novo empregado (pré-cadastro com email e cargo)
-export async function addEmployeeAPI(data: { email: string, role: string, idEnterprise: number}) {
-  const response = await axios.post(`${API_BASE_URL}/api/employee`, data)
-  return response.data
+export async function addEmployeeAPI(data: { email: string; role: string }) {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/api/employee`, data, {
+      headers: authHeaders(),
+    })
+    return response.data
+  } catch (error) {
+    return { success: false, message: 'Erro desconhecido ao adicionar funcionário.' }
+  }
 }
 
 // Excluir empregado por e-mail
-export async function deleteEmployeeAPI(email: string, idEnterprise: number): Promise<{success: boolean, message: string}> {
+export async function deleteEmployeeAPI(
+  email: string
+): Promise<{ success: boolean; message: string }> {
   try {
     const response = await axios.delete(`${API_BASE_URL}/api/employee`, {
-      params: { idEnterprise, email},
+      headers: authHeaders(),
+      data: { email }, // DELETE não aceita params com body vazio em alguns backends
     })
     return response.data
   } catch (error) {
@@ -41,15 +55,23 @@ export async function deleteEmployeeAPI(email: string, idEnterprise: number): Pr
   }
 }
 
-
 // Editar empregado por e-mail
-export async function editEmployeeAPI(idEnterprise: number, email: string, name?: string, surname?: string, role?: string): Promise<{success: boolean, message: string}> {
-  try{
-    await axios.put(`${API_BASE_URL}/api/employee`, {idEnterprise, email, name, surname, role})
+export async function editEmployeeAPI(
+  email: string,
+  name?: string,
+  surname?: string,
+  role?: string
+): Promise<{ success: boolean; message: string }> {
+  try {
+    await axios.put(
+      `${API_BASE_URL}/api/employee`,
+      { email, name, surname, role },
+      { headers: authHeaders() }
+    )
 
-    return { success: true, message: 'Atualização concluída com êxito' }
+    return { success: true, message: 'Atualização concluída com êxito.' }
   } catch (error) {
-    const message = 'Error desconhecido'
+    const message = 'Erro desconhecido ao atualizar funcionário.'
     return { success: false, message }
   }
 }

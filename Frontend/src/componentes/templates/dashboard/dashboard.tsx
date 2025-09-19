@@ -6,18 +6,23 @@ import * as Icons from './icons.ts'
 import "./dashboard.scss"
 
 export function Dashboard () {
-    const employee = useAuthStore((state) => state.employee)
-  
-    if (!employee) return <p>Usuário não encontrado</p>
-  
-    const user = createEmployee(
-      employee.idEnterprise,
-      employee.email,
-      employee.name,
-      employee.surname,
-      employee.role,
-      employee.token
-    )
+  /* Deverá usar Zustand para implementar ordem aos layouts a chamarem os métodos
+  e passarem a informação, ao invés de o próprio topbar, que não possui informação do empregado
+  ou enviar somente o token de acesso e realizar nova consulta no banco de dados para reduzir
+  complexidade desnecessária
+  */
+  const employee = useAuthStore((state) => state.employee)
+
+  if (!employee) return <p>Usuário não encontrado</p>
+
+  const user = createEmployee(
+    employee.idEnterprise,
+    employee.email,
+    employee.name,
+    employee.surname,
+    employee.role,
+    employee.token
+  )
 
   // Se a largura da tela reduzir, o mês será abreviado
   const [ nameMonths, setNameMonths ] = useState<string[]> ([])

@@ -3,7 +3,7 @@
   position: fixed;
   display: grid;
   grid-area: left / titulo / right;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 2fr auto;
   gap: 20px;
   background: var(--branding-500);
   box-shadow: 0 3px 8px 2px #00000080;
@@ -14,10 +14,6 @@
   z-index: 2;
 }
 
-.left {
-  display: flex;
-  align-items: center;
-}
 .titulo {
   justify-self: center;
   height: 55px;

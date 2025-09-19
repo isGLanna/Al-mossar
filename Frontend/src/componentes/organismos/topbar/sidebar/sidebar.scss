@@ -1,39 +1,47 @@
 .sidebar{
   display: flex;
-  flex-direction: row;
-  position: absolute;
   top: 65px;
   left: 0;
+  flex-direction: row;
+  position: fixed;
   color: white;
-  height: 100svh;
+  z-index: 3;
 
   nav {
     width: auto;
-    height: 100svh;
+    height: calc(100svh - 65px);
     background: var(--second-700-a);
     backdrop-filter: blur(4px);
-    border-left: 1rem solid var(--second-300);
+    border-left: 0.5rem solid var(--second-300);
     border-right: 2px solid var(--second-300);
+    user-select: none;
+    -webkit-user-select: none;
 
     .profile-container {
       display: flex;
       position: relative;
       align-items: center;
-      padding: 10px;
+      transition: 200ms ease background-color;
+      padding: 14px;
       gap: 1rem;
 
       .profile-content {
         display: grid;
         place-items: center;
-        padding: 20px 0;
+        padding: 15px 0;
         position: relative;
       }
 
       img{
-        width: 60px;
-        height: 80px;
-        border-radius: 5px;
+        width: auto;
+        height: 4.5rem;
+        border-radius: 10px;
         object-fit: cover;
+      }
+
+      &:hover{
+        background-color: var(--second-300-a);
+        transition: 200ms ease background-color;
       }
 
       &::after {
@@ -48,11 +56,14 @@
     }
 
     li{
-      padding: 10px 15px 10px 15px;
+      display: flex;
+      padding: 10px 3.5rem 10px 10px;
+      gap: 0.6rem;
       width: 100%;
       transition: 150ms ease;
-      border-top-right-radius: 5px;
-      border-bottom-right-radius: 5px;
+      align-items: center;
+      font-size: 1.1rem;
+      font-weight: 500;
 
       &:hover{
         transition: 150ms ease;
@@ -62,7 +73,7 @@
 
       a{
         color: white;
-        font-size: larger;
+        font-size: 1.1rem;
         font-weight: 500;
         outline: none;
       }
@@ -72,11 +83,10 @@
   &.open{
     .margin{
       transform: translateX(0);
-      transition: 300ms ease;
+      transition: 250ms ease forwards;
     }
     nav{
-      transform: translateX(0);
-      transition: 300ms ease;
+      animation: open 250ms ease forwards;
     }
   }
 
@@ -87,9 +97,27 @@
     }
 
     nav{
-      transform: translateX(-100%);
-      transition: 300ms ease;
-      opacity: 0;
+      animation: closed 300ms ease;
     }
+  }
+}
+
+@keyframes open {
+  from {
+    transform: translateX(-100%);
+    transition: 300ms ease;
+    opacity: 0;
+  } to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes closed {
+  from {
+    transform: translateX(0);
+  } to {
+    transform: translateX(-100%);
+    transition: 300ms ease;
+    opacity: 0;
   }
 }

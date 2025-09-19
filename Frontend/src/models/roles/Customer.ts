@@ -3,9 +3,8 @@
 import { Employee } from '../Employee';
 
 export class Customer extends Employee {
-  constructor(idEnterprise: number,name: string, surname: string, email: string, role: string, token: string
-  ) {
-    super(idEnterprise, name, surname, email, role, token);
+  constructor(name: string, surname: string, email: string, role: string) {
+    super(name, surname, email, role);
   }
 
   canAccessEmployeePanel(): boolean { return false }

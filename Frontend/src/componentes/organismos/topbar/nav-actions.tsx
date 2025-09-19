@@ -2,71 +2,90 @@ import { useNavigate } from '@tanstack/react-router'
 import { logoutUser } from '../../templates/login/api'
 import { GrLogout, FaCircleUser, IoIosPeople, FaMoneyBillTransfer } from "./icons"
 import { EmployeePanel } from './panel'
-import { useAuthStore } from '../../../store/auth-store'
 import styles from './pseudo-topbar.module.scss'
+import { useState, useEffect } from 'react'
+import { getUser } from './api'
 import { Employee } from '../../../models/Employee'
-import { useState } from 'react'
+import { Sidebar } from './sidebar/sidebar.tsx'
+import './topbar.scss'
 
-
-type Props = {
-  employee: Employee
-}
-
-export function NavActions({ employee }: Props){
+export function NavActions(){
   const navigate = useNavigate()
-  const [ menuIsOpen, setMenuIsOpen ] = useState<boolean>(false)
-  const [ panelIsOpen, setPanelIsOpen ] = useState<boolean>(false)
-  const clearUser = useAuthStore(state => state.clearUser)
-  
-  // lidar com open/close das configurações
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const [menuIsOpen, setMenuIsOpen] = useState(false)
+  const [panelIsOpen, setPanelIsOpen] = useState(false)
+  const [employee, setEmployee] = useState<Employee | null>(null)
+
+  useEffect(() => {
+    async function fetchEmployee() {
+      const emp = await getUser()
+      if (emp)
+        setEmployee(emp)
+    }
+    fetchEmployee()
+  }, [navigate])
+
   const handleSettings = () => {
-    setMenuIsOpen(menuIsOpen => !menuIsOpen)
+    setMenuIsOpen(prev => !prev)
   }
 
-  // Lidar com open/close do painel de empregados
   const handlePanel = () => {
-    setPanelIsOpen(panelIsOpen => !panelIsOpen)
+    setPanelIsOpen(prev => !prev)
   }
 
-  // Finalizar validade do token
   const handleLogout = () => {
-    logoutUser();
-    clearUser()
-    navigate({ to: '/' });
+    logoutUser()
+    setEmployee(null)
+    navigate({ to: '/' })
   }
 
   const handleDashBoard = () => {
     navigate({ to: '/dashboard' })
   }
 
-  return(
-    
-    <div className='navbar'>
-
+  return (
+    <div className="navbar">
       <div className={styles.iconGroup}>
-          {employee.canAccessEmployeePanel() && (
+        <div
+          id="nav-icon3"
+          className={isSidebarOpen ? "open" : ""}
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <Sidebar isOpen={isSidebarOpen} />
+      </div>
+      
+      <div className={styles.iconGroup}>
+        {employee && (
           <>
-            <FaMoneyBillTransfer className='icon' size={30} onClick={handleDashBoard} />
-            <EmployeePanel isOpen={panelIsOpen} employee={employee} onClose={() => setPanelIsOpen(false)} />
-            <IoIosPeople className='icon' size={35} onClick={handlePanel} />
+            <FaMoneyBillTransfer className="icon" size={30} onClick={handleDashBoard} />
+            <EmployeePanel 
+              isOpen={panelIsOpen} 
+              employee={employee} 
+              onClose={() => setPanelIsOpen(false)} 
+            />
+            <IoIosPeople className="icon" size={35} onClick={handlePanel} />
           </>
         )}
-        
+
         <div className={styles.userIconWrapper}>
-          {employee.haveProfile() && (
-          <>
-            <FaCircleUser className='icon' size={35} onClick={handleSettings} />
+          {employee && (
+            <>
+              <FaCircleUser className="icon" size={35} onClick={handleSettings} />
               <div className={`${styles.menu} ${menuIsOpen ? styles.open : ''}`}>
-              <div className={styles.item}>Perfil</div>
-              <div className={styles.item} onClick={handleLogout}>
-                <GrLogout style={{marginRight: '5px'}}/>
-                <label>Sair</label>
+                <div className={styles.item}>Perfil</div>
+                <div className={styles.item} onClick={handleLogout}>
+                  <GrLogout style={{ marginRight: '5px' }}/>
+                  <label>Sair</label>
+                </div>
               </div>
-            </div> 
-          </>
+            </>
           )}
         </div>
-        
       </div>
     </div>
   )

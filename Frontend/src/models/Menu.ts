@@ -50,11 +50,13 @@ export class MenuDish {
   // POST - criar cardápio
   async createMenu(): Promise<MenuResponse> {
     try {
-      await axios.post(`${API_URL}/api/menu/`, {
+      const result = await axios.post(`${API_URL}/api/menu/`, {
         token: getToken(),
         date: this.day, 
         dishes: this.dishes,
       })
+
+      setNewToken(result.data.token)
 
       return { success: true, message: 'Cardápio criado'}
     } catch (error: any) {
@@ -65,11 +67,13 @@ export class MenuDish {
   // Atualizar cardápio
   async updateMenu(): Promise<MenuResponse> {
     try {
-      await axios.put(`${API_URL}/api/menu/`, {
-        token: getToken(),
-        date: this.day,
-        dishes: this.dishes
-      })
+      const result = await axios.put(`${API_URL}/api/menu/`, {
+                    token: getToken(),
+                    date: this.day,
+                    dishes: this.dishes
+                  })
+        
+      setNewToken(result.data.token)
 
       return { success: true, message: 'Cardápio atualizado'}
     } catch (error: any) {
@@ -80,13 +84,15 @@ export class MenuDish {
   // Deletar cardápio
   async deleteMenu(): Promise<MenuResponse> {
     try {
-      await axios.delete(`${API_URL}/api/menu`, {
+       const result = await axios.delete(`${API_URL}/api/menu`, {
         params: 
         { token: getToken(),
           day: this.day
         }
       })
       this.dishes = []
+
+      setNewToken(result.data.token)
       
       return { success: true, message: 'Cardápio excluido'}
     } catch (error: any) {
