@@ -1,6 +1,7 @@
 package main
 
 import (
+	"BackendGL/src/db"
 	"BackendGL/src/middlewares"
 	"BackendGL/src/routes"
 
@@ -8,6 +9,8 @@ import (
 )
 
 func main() {
+	db.InitDB()
+
 	r := gin.Default()
 	r.Use(middlewares.CORSMiddleware())
 

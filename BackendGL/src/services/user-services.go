@@ -4,7 +4,6 @@ import (
 	"BackendGL/src/db"
 	"BackendGL/src/models"
 	"errors"
-	"fmt"
 	"strings"
 )
 
@@ -25,10 +24,14 @@ func GetRolePermissionsByName(roleName string) ([]models.RolePermission, error) 
 	return permissions, nil
 }
 
-func GetUserInfo(token string) (*models.UserResponse, error) {
-	token = strings.TrimPrefix(token, "Bearer")
+type UserResponse struct {
+	Name    string `json:"name"`
+	Surname string `json:"surname,omitempty"`
+	Role    string `json:"role"`
+}
 
-	fmt.Println("Token recebido:", token) // Log do token recebido
+func GetUserInfo(token string) (*models.UserResponse, error) {
+	token = strings.TrimSpace(strings.TrimPrefix(token, "Bearer "))
 
 	db := db.DB
 

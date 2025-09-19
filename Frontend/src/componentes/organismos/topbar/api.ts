@@ -5,16 +5,16 @@ import { createEmployee } from '../../../models/EmployeeFactory'
 
 const API_URL = "http://localhost:4001"
 
-// Função pura (sem hooks do React)
 export const getUser = async (): Promise<Employee | null> => {
   try {
     const result = await axios.get(`${API_URL}/api/user-info`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
 
-    // Cria instância do empregado
-    const { name, surname, email, role } = result.data
-    return createEmployee(email, name, surname, role)
+    const { user } = result.data
+    if (!user) return null
+
+    return createEmployee(user.email, user.name, user.surname, user.role)
   } catch (error) {
     const status = (axios.isAxiosError(error) && error.response) ? error.response.status : null
     
