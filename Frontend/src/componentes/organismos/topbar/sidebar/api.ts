@@ -1,16 +1,12 @@
 import axios from 'axios';
+import { getToken } from '../../../templates/login/api'
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://localhost'
 
 export const getPhoto = async () => {
   try {
-    let token = sessionStorage.getItem('authToken')
-
-    if(!token)
-      token = localStorage.getItem('authToken')
-
     const response = await axios.get(`${API_URL}/api/user/photo`, {
-      headers: { Authorization: `Bearer ${token}`}
+      headers: { Authorization: `Bearer ${getToken()}`}
     })
 
     return response.data
@@ -32,9 +28,8 @@ export const getPhoto = async () => {
 
 export const getPermission = async () => {
   try {
-    let token = localStorage.getItem('authToken')
     const response = await axios.get(`${API_URL}/employee/permission`, {
-      headers: { Authorization: `Bearer ${token}` }})
+      headers: { Authorization: `Bearer ${getToken()}` }})
     
     return response.data
   } catch (error) {
@@ -49,5 +44,22 @@ export const getPermission = async () => {
         alert('Erro desconhecido')
       }
     }
+  }
+}
+
+export const getUser = async (): Promise<{ name: string, surname: string, role: string } | null> => {
+  try {
+    const result = await axios.get(`http://localhost:4001/api/user-info`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+
+    const { user } = result.data
+    if (!user) return null
+
+    return { name: user.name, surname: user.surname, role: user.role }
+  } catch (error) {
+    const status = (axios.isAxiosError(error) && error.response) ? error.response.status : null
+
+    return null
   }
 }

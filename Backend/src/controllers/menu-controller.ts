@@ -9,24 +9,13 @@ export async function get ( req: Request, res: Response ): Promise<void> {
   try {
     const menu = await getMenuByDate(token as string, day as string)
 
-    // Retorna operação efetuada com sucesso ou nenhum valor encontrado
-    if (!menu) {
-      res.status(404).json({ message: 'Não há refeições para o dia.', success: true })
-      return
-    }
-
-    const formattedDishes = menu.dishes.map((dish: any) => ({
+    const formattedDishes = menu?.dishes?.map((dish: any) => ({
       id: dish.id,
       name: dish.name,
       description: dish.description
-    }))
+    })) || []
 
     const result = await refreshToken(token as string)
-
-    if (!result || result.success === false) {
-      res.status(401).json({ message: 'Invalid token or expired', success: false })
-      return
-    }
 
     res.status(200).json({ token: result.token, dishes: formattedDishes, success: true })
 

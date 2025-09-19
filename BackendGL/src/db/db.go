@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -13,11 +14,17 @@ import (
 var DB *gorm.DB
 
 func InitDB() {
+
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found")
+	}
+
+	// Configura a string de conexão (DNS) para o Postgre
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
 		getEnv("DB_HOST", "localhost"),
 		getEnv("DB_USER", "postgres"),
-		getEnv("DB_PASSWORD", "postgres"),
+		getEnv("DB_PASSWORD", ""),
 		getEnv("DB_DATABASE", "almossar"),
 		getEnv("DB_PORT", "5432"),
 	)
@@ -28,7 +35,15 @@ func InitDB() {
 	}
 
 	// Migrar tabelas
-	conn.AutoMigrate(&models.Role{}, &models.RolePermission{})
+	if err := conn.AutoMigrate(
+		&models.Role{},
+		&models.RolePermission{},
+		&models.Enterprise{},
+		&models.Employee{},
+		&models.Client{},
+		&models.Salary{}); err != nil {
+		log.Fatal("Failed to migrate database:", err)
+	}
 
 	DB = conn
 	log.Println("Database connection established")

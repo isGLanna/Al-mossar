@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"BackendGL/src/services"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -24,7 +23,6 @@ func GetRolePermissionsByName(c *gin.Context) {
 // Consulta informações do usuário para criar objeto Employee
 func GetUserInfo(c *gin.Context) {
 	token := c.GetHeader("Authorization")
-	fmt.Println("Chegou aqui")
 
 	if token == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization token is required"})

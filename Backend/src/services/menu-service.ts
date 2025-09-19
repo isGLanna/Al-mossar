@@ -4,7 +4,7 @@ import { QueryTypes } from 'sequelize'
 import { TokenService } from './token-service'
 
 // Query ao menu
-export async function getMenuByDate (token: string, day:string ): Promise<(Menu & { dishes: Dish[] })> {
+export async function getMenuByDate (token: string, day:string ): Promise<(Menu & { dishes: Dish[] }) | null> {
   try {
     // Consulta id da empresa do funcionário logado
     const id_enterprise = await TokenService.queryEnterpriseId(token)
@@ -17,14 +17,8 @@ export async function getMenuByDate (token: string, day:string ): Promise<(Menu 
       }
     })
 
-    // Se não encontrou o menu
-    if (!menu) {
-      throw ('Nenhuma refeição encontrada.');
-    }
-
     // Retorna os pratos encontrados
-    return menu as Menu & { dishes: Dish[] };
-
+    return menu ? (menu as Menu & { dishes: Dish[] }) : null
   } catch (error) {
     console.log(error)
     throw error
