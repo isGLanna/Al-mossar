@@ -44,17 +44,17 @@ export function Sidebar({ isOpen }: SidebarProps) {
             (<img src={photo} alt="" />) : 
             (<FaCircleUser className='img' size={50} />)}
             <div className='profile-content'>
-              <label>{user?.name + ' ' + user?.surname}</label>
-              <label>{user?.role}</label>
+              <label>{user?.name + ' ' + user?.surname}                             </label>
+              <label>{user?.role.charAt(0).toUpperCase() + '' + user?.role.slice(1)}</label>
             </div>
           </div>
-          <li><ImHome size={18}/>Página Principal</li>
-          <li><IoIosPeople size={20}/> Painel de Funcionários</li>
-          <li><FaMoneyBillTransfer size={20}/> Dashboard Financeiro</li>
-          <li><BiFoodMenu /> Informação Nutricional</li>
-          <li><BiSolidPaintRoll size={20}/> Personalizar</li>
-          <li><FcAbout size={20} /> Sobre</li>
-          <li onClick={handleLogout}> <GrLogout size={20}/>Sair</li>
+          <li onClick={() => navigate({to:'/menu'})}>     <ImHome size={18}/>Página Principal                   </li>
+          <li>                                            <IoIosPeople size={20}/> Painel de Funcionários       </li>
+          <li onClick={() => navigate({to:'/dashboard'})}><FaMoneyBillTransfer size={20}/> Dashboard Financeiro </li>
+          <li>                                            <BiFoodMenu /> Informação Nutricional                 </li>
+          <li>                                            <BiSolidPaintRoll size={20}/>Personalizar             </li>
+          <li>                                            <FcAbout size={20} />Sobre                            </li>
+          <li onClick={handleLogout}>                     <GrLogout size={20}/>Sair                             </li>
         </ul>
       </nav>
       )}

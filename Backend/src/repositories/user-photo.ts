@@ -56,7 +56,6 @@ export class PhotoManager {
 
     } catch(error) {
       return { photo: null }
-
     }
   }
 }

@@ -5,16 +5,7 @@ export class UserController {
   
   static async getUserPhoto(req: Request, res: Response): Promise<void> {
     try {
-      const authHeader = req.headers.authorization
-
-      if (!authHeader) {
-        res.status(401).json({ success: false })
-        return
-      }
-
-      let token = authHeader.split(' ')[1]
-      token = token.slice(10)
-      token = token.slice(0, -2)
+      const token = req.headers.authorization
 
       if (!token) {
         res.status(200).json({ success: true, hasPhoto: false })
@@ -23,7 +14,7 @@ export class UserController {
 
       const photo = await User.getUserPhoto(token)
 
-      res.status(200).json({ success: true, hasPhoto: true, photo })
+      photo ? res.status(200).json({ success: true, photo }) : res.status(200).json({ success: true, photo: null })
     } catch (error) {
       res.status(500).json({ success: false, hasPhoto: false, message: 'Erro interno do servidor' })
     }

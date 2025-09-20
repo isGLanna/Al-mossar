@@ -6,7 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'https://localhost'
 export const getPhoto = async () => {
   try {
     const response = await axios.get(`${API_URL}/api/user/photo`, {
-      headers: { Authorization: `Bearer ${getToken()}`}
+      headers: { Authorization: `${getToken()}`}
     })
 
     return response.data
@@ -29,7 +29,7 @@ export const getPhoto = async () => {
 export const getPermission = async () => {
   try {
     const response = await axios.get(`${API_URL}/employee/permission`, {
-      headers: { Authorization: `Bearer ${getToken()}` }})
+      headers: { Authorization: `${getToken()}` }})
     
     return response.data
   } catch (error) {

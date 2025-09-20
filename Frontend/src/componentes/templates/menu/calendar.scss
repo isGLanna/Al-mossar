@@ -187,12 +187,13 @@
 
     button {
       background: #6e839c;
-      padding: 8px;
+      padding: 5px;
+      width: 18%;
       color: #f7f7f7;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      font-size: 0.5em;
+      font-size: 0.8em;
       transition: background-color 0.3s ease;
 
       &:hover {

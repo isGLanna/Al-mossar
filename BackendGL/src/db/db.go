@@ -39,6 +39,9 @@ func InitDB() {
 		&models.Role{},
 		&models.RolePermission{},
 		&models.Enterprise{},
+		&models.ThemeColor{},
+		&models.FoodExpense{},
+		&models.TotalExpense{},
 		&models.Employee{},
 		&models.Client{},
 		&models.Salary{}); err != nil {

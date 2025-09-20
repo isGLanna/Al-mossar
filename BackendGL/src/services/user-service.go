@@ -4,7 +4,6 @@ import (
 	"BackendGL/src/db"
 	"BackendGL/src/models"
 	"errors"
-	"strings"
 )
 
 // Consulta as permissões associadas ao cargo do usuário
@@ -31,8 +30,6 @@ type UserResponse struct {
 }
 
 func GetUserInfo(token string) (*models.UserResponse, error) {
-	token = strings.TrimSpace(strings.TrimPrefix(token, "Bearer "))
-
 	db := db.DB
 
 	var employee models.Employee

@@ -15,9 +15,7 @@ export async function get ( req: Request, res: Response ): Promise<void> {
       description: dish.description
     })) || []
 
-    const result = await refreshToken(token as string)
-
-    res.status(200).json({ token: result.token, dishes: formattedDishes, success: true })
+    res.status(200).json({ dishes: formattedDishes, success: true })
 
   } catch (error) {
     res.status(500).json({ message: error, success: false })
