@@ -38,9 +38,7 @@ export class MenuDish {
           day: this.day 
         }}
       )
-
       this.dishes = result.data.dishes
-      setNewToken(result.data.token)
 
     } catch (error) {
       this.dishes = []
@@ -68,10 +66,10 @@ export class MenuDish {
   async updateMenu(): Promise<MenuResponse> {
     try {
       const result = await axios.put(`${API_URL}/api/menu/`, {
-                    token: getToken(),
-                    date: this.day,
-                    dishes: this.dishes
-                  })
+        token: getToken(),
+        date: this.day,
+        dishes: this.dishes
+      })
         
       setNewToken(result.data.token)
 
@@ -85,8 +83,8 @@ export class MenuDish {
   async deleteMenu(): Promise<MenuResponse> {
     try {
        const result = await axios.delete(`${API_URL}/api/menu`, {
-        params: 
-        { token: getToken(),
+        params: { 
+          token: getToken(),
           day: this.day
         }
       })

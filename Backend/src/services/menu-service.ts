@@ -1,6 +1,4 @@
 import { Menu, Dish } from '../repositories/menu'
-import sequelize  from '../repositories'
-import { QueryTypes } from 'sequelize'
 import { TokenService } from './token-service'
 
 // Query ao menu
