@@ -23,6 +23,7 @@ func GetRolePermissionsByName(c *gin.Context) {
 // Consulta informações do usuário para criar objeto Employee
 func GetUserInfo(c *gin.Context) {
 	token := c.GetHeader("Authorization")
+	token = token[len("Bearer "):]
 
 	if token == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization token is required"})
