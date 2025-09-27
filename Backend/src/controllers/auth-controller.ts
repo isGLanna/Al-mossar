@@ -3,8 +3,6 @@ import { authenticateUser } from '../services/authenticator'
 import { authenticateRegister } from '../services/auth-register'
 import { Employee } from '../repositories/employee'
 
-
-// Adormecer 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Logar usuários
@@ -20,7 +18,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     const authResult  = await authenticateUser(email, password)
 
-    await sleep(1250)
+    await sleep(1500)
     
     if (!authResult) {
       res.status(401).json({ message: 'Credenciais inválidas' })
@@ -79,12 +77,9 @@ export const tokenLogin = async (req: Request, res: Response): Promise<void> => 
       return
     }
 
-    // Recebe um dicionário com token
-    const rawToken = authHeader.split(' ')[1]
+    console.log(authHeader)
 
-    let parsedToken = JSON.parse(rawToken)
-    const token = parsedToken.token
-
+    const token = authHeader.split(' ')[1]
 
     const employee = await Employee.findOne({
       where: { token },

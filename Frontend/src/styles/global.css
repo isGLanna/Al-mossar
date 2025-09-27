@@ -8,8 +8,6 @@
 
   color-scheme: light dark;
   color: var(--texto);
-  background: linear-gradient(to right, var(--background-color), #f5f7ff, var(--background-color));
-
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -28,9 +26,9 @@ a:hover {
 }
 
 body {
+  height: calc(100vh - 70px);
   margin: 0;
-    background: linear-gradient(to right, var(--background-color),#f5f7ff, var(--background-color)
-  )
+  background: var(--background-color);
 }
 
 h1 {

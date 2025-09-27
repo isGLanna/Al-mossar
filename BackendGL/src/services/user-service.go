@@ -23,18 +23,16 @@ func GetRolePermissionsByName(roleName string) ([]models.RolePermission, error) 
 	return permissions, nil
 }
 
-type UserResponse struct {
-	Name    string `json:"name"`
-	Surname string `json:"surname,omitempty"`
-	Role    string `json:"role"`
-}
-
 func GetUserInfo(token string) (*models.UserResponse, error) {
 	db := db.DB
 
 	var employee models.Employee
-	if err := db.Where("token = ?", token).First(&employee).Error; err == nil {
+	if err := db.Raw(
+		`SELECT email, name, surname, role
+		FROM employee
+		WHERE token = ?`, token).Scan(&employee).Error; err == nil {
 		return &models.UserResponse{
+			Email:   employee.Email,
 			Name:    employee.Name,
 			Surname: employee.Surname,
 			Role:    employee.Role,
@@ -44,6 +42,7 @@ func GetUserInfo(token string) (*models.UserResponse, error) {
 	var client models.Client
 	if err := db.Where("token = ?", token).First(&client).Error; err == nil {
 		return &models.UserResponse{
+			Email:   client.Email,
 			Name:    client.Name,
 			Surname: client.Surname,
 			Role:    "client",

@@ -1,6 +1,7 @@
 import { Link, useNavigate } from '@tanstack/react-router'
 import { loginUser, getUserByToken } from './api';
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
+import { UserStateContext } from '../../../context/user-login-context'
 import logo from '../../../assets/favicon.jpg'
 import '../../moleculas/formulario.sass'
 import '../../atomos/checkbox.sass'
@@ -9,6 +10,8 @@ import './styles.sass';
 
 export function Login() {
   const navigate = useNavigate()
+  const {login, client, setLogin, setClient} = useContext(UserStateContext)
+  const [checkingToken, setCheckingToken] = useState(true)
 
   // Efeito de delay de carregamento para login
   const [isLoading, setIsLoading] = useState(false);
@@ -49,12 +52,15 @@ export function Login() {
   // Lidar com verificação do estado do token
   useEffect(() => {
     const autoLogin = async () => {
-      const response = await getUserByToken()
+      try {
+        const response = await getUserByToken()
 
-      if (response.success && response.employee){
-        navigate({ to: '/menu'})
+        if (response.success && response.employee)
+          navigate({ to: '/menu'})
+        } finally {
+          setCheckingToken(false)
+        }
       }
-    }
     autoLogin()
   }, [navigate])
 
@@ -85,7 +91,6 @@ export function Login() {
 
       navigate({ to: '/menu'})
     } catch (err) {
-      alert(err)
       setcredentials(credentials => ({
         ...credentials, email: '', password: ''}))
       
@@ -94,8 +99,11 @@ export function Login() {
     }
   }
 
+  if (checkingToken) {
+    return <div className='spinner'></div>
+  } else{
+
   return (
-    
     <div className="container" style={{position:'fixed'}}>
 
       <main className="formulario" style={{ marginTop:'0px' }}> {/* Formulário sendo centralizado na marra*/}
@@ -143,10 +151,11 @@ export function Login() {
           <div className='form-group'>
             <input
               type="submit"
-              value={isLoading ? 'Carregando...' : 'Entrar'}
+              value={isLoading ? '' : 'Entrar'}
               disabled={isLoading}
               />
-            {( emptyField.email || emptyField.password ) && <span>Preencha os campos corretamente</span>}
+            {isLoading && (<div className='spinner fixed mt-[15px]'></div>)}
+            {( emptyField.email || emptyField.password ) && <span>Credenciais inválidas</span>}
           </div>
 
           <div>
@@ -160,4 +169,5 @@ export function Login() {
       </main>
     </div>
   );
+  }
 }

@@ -1,7 +1,7 @@
 .sidebar{
   display: flex;
-  top: 65px;
-  left: 0;
+  top: calc(65px + .5rem);
+  left: .5rem;
   flex-direction: row;
   position: fixed;
   color: white;
@@ -9,11 +9,11 @@
 
   nav {
     width: auto;
-    height: calc(100svh - 65px);
+    height: calc(100svh - 1rem - 65px);
     background: var(--second-700-a);
     backdrop-filter: blur(4px);
-    border-left: 0.5rem solid var(--second-300);
-    border-right: 2px solid var(--second-300);
+    border: 1px solid var(--second-300);
+    border-radius: 10px;
     user-select: none;
     -webkit-user-select: none;
 
@@ -48,7 +48,7 @@
         content: '';
         display: block;
         position: absolute;
-        width: 100%;
+        width: 90%;
         height: 2px;
         background: linear-gradient(to right, transparent, var(--second-300), transparent);
         margin-top: 6.7rem;
@@ -64,6 +64,7 @@
       align-items: center;
       font-size: 1.1rem;
       font-weight: 500;
+
 
       &:hover{
         transition: 150ms ease;

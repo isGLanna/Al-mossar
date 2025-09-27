@@ -10,8 +10,10 @@ import (
 )
 
 func CreateOrUpdateEnterpriseTheme(token string, c *gin.Context) error {
+	var db = db.DB
+
 	var enterpriseID uint
-	if err := db.DB.Raw(
+	if err := db.Raw(
 		`SELECT id_enterprise
 		FROM employee
 		WHERE token = ? AND role IN ['administrador', 'gerente']`, token).Scan(&enterpriseID).Error; err != nil {
@@ -19,13 +21,13 @@ func CreateOrUpdateEnterpriseTheme(token string, c *gin.Context) error {
 	}
 
 	var theme models.ThemeColor
-	if err := db.DB.Where("enterprise_id = ?", enterpriseID).First(&theme).Error; err != nil {
+	if err := db.Where("enterprise_id = ?", enterpriseID).First(&theme).Error; err != nil {
 		// Caso não encontre, cria um novo tema
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			theme = models.ThemeColor{
 				EnterpriseID: enterpriseID,
 			}
-			if err := db.DB.Create(&theme).Error; err != nil {
+			if err := db.Create(&theme).Error; err != nil {
 				return err
 			}
 			return nil

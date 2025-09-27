@@ -9,12 +9,7 @@
   justify-content: space-between;
   color: #ffffff;
   margin-right: 30px;
-  z-index: 10;
-}
-
-.iconGroup:first-child {
-  left: 0;
-  padding: 0 1rem;
+  z-index: 5;
 }
 
 .icon {
@@ -86,12 +81,12 @@
 
 @media (max-width: 628px){
   .iconGroup {
-    width: 100%;
+    width: auto;
     margin-inline: auto;
-    justify-content: space-around;
+    margin-right: 1.5rem;
   }
 
-  .iconGroup > *:not(:first-child) {
+  .iconGroup > *:not(:last-child) {
     display: none;
     z-index: 0;
   }

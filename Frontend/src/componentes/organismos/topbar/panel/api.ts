@@ -23,7 +23,6 @@ export async function getEmployeesAPI() {
     setNewToken(response.data.token)
     return response.data
   } catch (error) {
-    alert('Erro desconhecido ao buscar funcionários.')
   }
 }
 
