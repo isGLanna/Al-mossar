@@ -25,14 +25,6 @@ export function NavActions(){
     fetchEmployee()
   }, [navigate])
 
-  const handleSettings = () => {
-    setMenuIsOpen(prev => !prev)
-  }
-
-  const handlePanel = () => {
-    setPanelIsOpen(prev => !prev)
-  }
-
   const handleLogout = () => {
     logoutUser()
     setEmployee(null)
@@ -45,7 +37,7 @@ export function NavActions(){
 
   return (
     <div className="navbar">
-      <div className={styles.iconGroup}>
+      <div className="fixed flex items-center justify-center p-[1.5rem] top-0 left-0 h-[65px] z-[5]">
         <div
           id="nav-icon3"
           className={isSidebarOpen ? "open" : ""}
@@ -68,14 +60,14 @@ export function NavActions(){
               employee={employee} 
               onClose={() => setPanelIsOpen(false)} 
             />
-            <IoIosPeople className="icon" size={35} onClick={handlePanel} />
+            <IoIosPeople className="icon" size={35} onClick={() => setPanelIsOpen(prev => !prev)} />
           </>
         )}
 
         <div className={styles.userIconWrapper}>
           {employee && (
             <>
-              <FaCircleUser className="icon" size={35} onClick={handleSettings} />
+              <FaCircleUser className="icon" size={35} onClick={() => setMenuIsOpen(prev => !prev)} />
               <div className={`${styles.menu} ${menuIsOpen ? styles.open : ''}`}>
                 <div className={styles.item}>Perfil</div>
                 <div className={styles.item} onClick={handleLogout}>

@@ -47,7 +47,7 @@ export const getPermission = async () => {
   }
 }
 
-export const getUser = async (): Promise<{ name: string, surname: string, role: string } | null> => {
+export const getUser = async (): Promise<{ email: string, name: string, surname: string, role: string } | null> => {
   try {
     const result = await axios.get(`http://localhost:4001/api/user-info`, {
       headers: { Authorization: `Bearer ${getToken()}` }
@@ -56,7 +56,7 @@ export const getUser = async (): Promise<{ name: string, surname: string, role: 
     const { user } = result.data
     if (!user) return null
 
-    return { name: user.name, surname: user.surname, role: user.role }
+    return { email: user.email, name: user.name, surname: user.surname, role: user.role }
   } catch (error) {
     const status = (axios.isAxiosError(error) && error.response) ? error.response.status : null
 

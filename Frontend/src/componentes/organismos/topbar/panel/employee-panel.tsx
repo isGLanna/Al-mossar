@@ -19,7 +19,6 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
   const [role, setRole] = useState('')
   const [employees, setEmployees] = useState<Employee[]>([])
   const [editedEmployees, setEditedEmployees] = useState<{ [email: string]: Partial<Employee> }>({})
-
   const roles = ['Gerente', 'Cozinheiro', 'Auxiliar de cozinha', 'Garçom', 'Limpeza', 'Outros']
 
   // Delay para transição de saída

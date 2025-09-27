@@ -4,7 +4,6 @@ import { persist } from 'zustand/middleware'
 export type User = {
   hasUser: boolean
   hasLogged: boolean
-  logoutUser: boolean
 }
 
 type AuthState = {

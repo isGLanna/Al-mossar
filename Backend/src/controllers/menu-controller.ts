@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { getMenuByDate, createMenu, updateMenu, deleteMenu } from '../services/menu-service'
-import { refreshToken } from '../services/authenticator'
 
 // Selecionar o menu
 export async function get ( req: Request, res: Response ): Promise<void> {

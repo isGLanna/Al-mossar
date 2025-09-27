@@ -3,12 +3,10 @@ import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL || 'https://localhost'
 
 export type Employee = {
-  idEnterprise: number;
   email: string;
   name: string;
   surname: string; 
   role: string;
-  token: string
 }
 
 // Realiza requisição, retorna atributos e um objeto usuário
@@ -28,12 +26,10 @@ export const loginUser = async (user: { email: string; password: string; remembe
     storage.setItem('authToken', JSON.stringify({ token }));
 
     const employee: Employee = {
-      idEnterprise,
       email,
       name,
       surname,
       role,
-      token,
     }
 
     return { success: true, message: message, employee: employee}
@@ -70,22 +66,21 @@ export const getUserByToken = async (): Promise<{ success: boolean; message: str
       headers: { Authorization: `Bearer ${token}`}
     })
     
-    const { success, message, email, name, surname, idEnterprise, role } = response.data
+    const { success, message, email, name, surname, role } = response.data
 
     if (!success) throw new Error(message)
 
     const employee: Employee = {
-      idEnterprise,
       email,
       name,
       surname,
       role,
-      token,
     }
 
     return { success: true, message: message, employee: employee}
   } catch (error: any) {
     const message = error?.response?.data?.message || 'Erro inexperado'
+    alert(message)
     return { success: false, message, employee: null }
   }
 }

@@ -5,13 +5,13 @@ import { useNavigate } from '@tanstack/react-router'
 export function TopBar() {
   const navigate = useNavigate()
 
-  const handleExit = () => {
-    navigate({ to: '/' })
+  const redirectMenu = () => {
+    navigate({to: '/menu'})
   }
 
   return (
     <div className='window'>
-      <img className='titulo' src={logo} alt="Logo Al-Mossar"/>
+      <img className='titulo' src={logo} alt="Logo Al-Mossar" onClick={redirectMenu}/>
     </div>
   )
 }
