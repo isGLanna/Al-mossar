@@ -14,7 +14,7 @@ export const UserStateContext = createContext<UserStateProps>({
   setClient: () => {}
 })
 
-export const userStateProvider = ({children}: {children: ReactNode}) => {
+export const UserStateProvider = ({children}: {children: ReactNode}) => {
   const [login, setLogin] = useState<boolean>(false)
   const [client, setClient] = useState<boolean>(false)
 

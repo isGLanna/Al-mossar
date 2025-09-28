@@ -1,9 +1,10 @@
 import { useNavigate } from '@tanstack/react-router'
 import { logoutUser } from '../../templates/login/api'
 import { GrLogout, FaCircleUser, IoIosPeople, FaMoneyBillTransfer } from "./icons"
+import { UserStateContext } from '../../../context/user-login-context.tsx'
 import { EmployeePanel } from './panel'
 import styles from './pseudo-topbar.module.scss'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { getUser } from './api'
 import { Employee } from '../../../models/Employee'
 import { Sidebar } from './sidebar/sidebar.tsx'
@@ -15,6 +16,7 @@ export function NavActions(){
   const [menuIsOpen, setMenuIsOpen] = useState(false)
   const [panelIsOpen, setPanelIsOpen] = useState(false)
   const [employee, setEmployee] = useState<Employee | null>(null)
+  const { setLogin }  = useContext(UserStateContext)
 
   useEffect(() => {
     async function fetchEmployee() {
@@ -28,6 +30,7 @@ export function NavActions(){
   const handleLogout = () => {
     logoutUser()
     setEmployee(null)
+    setLogin(false)
     navigate({ to: '/' })
   }
 
@@ -54,20 +57,20 @@ export function NavActions(){
       <div className={styles.iconGroup}>
         {employee && (
           <>
-            <FaMoneyBillTransfer className="icon" size={30} onClick={handleDashBoard} />
+            <FaMoneyBillTransfer className={styles.icon} size={30} onClick={handleDashBoard} />
             <EmployeePanel 
               isOpen={panelIsOpen} 
               employee={employee} 
               onClose={() => setPanelIsOpen(false)} 
             />
-            <IoIosPeople className="icon" size={35} onClick={() => setPanelIsOpen(prev => !prev)} />
+            <IoIosPeople className={styles.icon} size={35} onClick={() => setPanelIsOpen(prev => !prev)} />
           </>
         )}
 
         <div className={styles.userIconWrapper}>
           {employee && (
             <>
-              <FaCircleUser className="icon" size={35} onClick={() => setMenuIsOpen(prev => !prev)} />
+              <FaCircleUser className={styles.icon} size={35} onClick={() => setMenuIsOpen(prev => !prev)} />
               <div className={`${styles.menu} ${menuIsOpen ? styles.open : ''}`}>
                 <div className={styles.item}>Perfil</div>
                 <div className={styles.item} onClick={handleLogout}>

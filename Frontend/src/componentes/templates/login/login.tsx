@@ -10,10 +10,8 @@ import './styles.sass';
 
 export function Login() {
   const navigate = useNavigate()
-  const {login, client, setLogin, setClient} = useContext(UserStateContext)
+  const {login, setLogin} = useContext(UserStateContext)
   const [checkingToken, setCheckingToken] = useState(true)
-
-  // Efeito de delay de carregamento para login
   const [isLoading, setIsLoading] = useState(false);
 
   type credentials = {
@@ -55,8 +53,10 @@ export function Login() {
       try {
         const response = await getUserByToken()
 
-        if (response.success && response.employee)
+        if (response.success && response.employee){
+          setLogin(true)
           navigate({ to: '/menu'})
+        }
         } finally {
           setCheckingToken(false)
         }
@@ -88,7 +88,7 @@ export function Login() {
         setEmptyField({ email: true, password: true })
         throw new Error(response.message || 'Erro ao fazer login')
       }
-
+      setLogin(true)
       navigate({ to: '/menu'})
     } catch (err) {
       setcredentials(credentials => ({
