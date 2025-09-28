@@ -2,6 +2,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { routeTree } from './routeTree.gen'
+import { UserStateProvider } from './context/user-login-context'
 import './styles/global.css'
 
 const route = createRouter({ routeTree })
@@ -14,6 +15,8 @@ declare module '@tanstack/react-router' {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={route} />
+    <UserStateProvider>
+      <RouterProvider router={route} />
+    </UserStateProvider>
   </StrictMode>
 )

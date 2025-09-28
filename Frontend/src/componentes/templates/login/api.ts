@@ -34,7 +34,6 @@ export const loginUser = async (user: { email: string; password: string; remembe
 
     return { success: true, message: message, employee: employee}
   } catch (error: any) {
-    console.log('Erro tá sendo tratado pelo menos:', error)
     const message = error?.response?.data?.message || 'Erro ao fazer login'
     return { success: false, message, employee: null}
   }
@@ -80,7 +79,6 @@ export const getUserByToken = async (): Promise<{ success: boolean; message: str
     return { success: true, message: message, employee: employee}
   } catch (error: any) {
     const message = error?.response?.data?.message || 'Erro inexperado'
-    alert(message)
     return { success: false, message, employee: null }
   }
 }

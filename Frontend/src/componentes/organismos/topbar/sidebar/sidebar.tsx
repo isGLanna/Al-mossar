@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { logoutUser } from '../../../templates/login/api'
 import { useNavigate } from '@tanstack/react-router'
 import { GrLogout, FaCircleUser, IoIosPeople, FaMoneyBillTransfer, BiSolidPaintRoll, BiFoodMenu, FcAbout, ImHome } from "./icons"
+import { UserStateContext } from '../../../../context/user-login-context'
 import { EmployeePanel } from '../panel/employee-panel'
 import { createEmployee } from '../../../../models/EmployeeFactory'
 import { Employee } from '../../../../models/Employee'
@@ -20,6 +21,7 @@ export function Sidebar({ isOpen }: SidebarProps) {
   const [user, setUser] = useState<{ email: string, name: string, surname: string, role: string } | null>(null)
   const [employee, setEmployee] = useState<Employee | null>(null)
   const [paneIslOpen, setIsPanelIsOpen] = useState<boolean>(false)
+  const { login, setLogin } = useContext(UserStateContext)
 
   // Consultar quando sidebar for aberto
   useEffect(() => {
@@ -37,6 +39,7 @@ export function Sidebar({ isOpen }: SidebarProps) {
   const handleLogout = () => {
     logoutUser()
     setPhoto(null)
+    setLogin(false)
     navigate({ to: '/'})
   }
 

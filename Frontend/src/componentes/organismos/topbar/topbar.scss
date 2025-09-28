@@ -20,6 +20,11 @@
   filter: drop-shadow(0px 2px 2px #dfa81a);
   user-select: none;
   -webkit-user-select: none;
+  transition: 200ms scale ease-in-out;
+
+  &:hover{
+    scale: 1.02;
+  }
 }
 
 .right {
@@ -67,11 +72,6 @@
   }
 }
 
-@media (max-width: 720px) {
-  .titulo {
-    display: none;
-  }
-}
 
 @media (max-width: 520px) {
   .window {
@@ -79,9 +79,5 @@
     justify-content: center;
     padding: 0;
     width: 100%;
-  }
-  .right {
-    display: flex;
-    width: 70vw;
   }
 };
