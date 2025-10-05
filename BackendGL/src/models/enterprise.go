@@ -19,7 +19,7 @@ type ThemeColor struct {
 	Enterprise      Enterprise `gorm:"foreignKey:EnterpriseID;references:ID;constraint:OnUpdate:CASCADE" json:"enterprise"`
 	Branding500     string     `gorm:"size:7" json:"branding_500"`
 	Second500       string     `gorm:"size:7" json:"second_500"`
-	Second500A      string     `gorm:"size:9" json:"second_500_a"`
+	Second500A      string     `gorm:"size:9" json:"second_500a"`
 	BackgroundColor string     `gorm:"size:7" json:"background_color"`
 	TextColor       string     `gorm:"size:7" json:"text_color"`
 	MenuContainers  string     `gorm:"size:7" json:"menu_containers"`
