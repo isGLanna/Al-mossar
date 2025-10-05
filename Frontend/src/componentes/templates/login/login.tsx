@@ -2,15 +2,14 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import { loginUser, getUserByToken } from './api';
 import { useState, useEffect, useContext } from 'react'
 import { UserStateContext } from '../../../context/user-login-context'
-import logo from '../../../assets/favicon.jpg'
+import Logo from './sub-templates/logo'
 import '../../moleculas/formulario.sass'
 import '../../atomos/checkbox.sass'
 import '../../atomos/spinner.sass'
-import './styles.sass';
 
 export function Login() {
   const navigate = useNavigate()
-  const {login, setLogin} = useContext(UserStateContext)
+  const {setLogin} = useContext(UserStateContext)
   const [checkingToken, setCheckingToken] = useState(true)
   const [isLoading, setIsLoading] = useState(false);
 
@@ -107,7 +106,7 @@ export function Login() {
     <div className="container" style={{position:'fixed'}}>
 
       <main className="formulario" style={{ marginTop:'0px' }}> {/* Formulário sendo centralizado na marra*/}
-        <img src={logo} alt="Logo com comida" className="logoLogin" />
+        <Logo />
         
         <form className="form-container" onSubmit={handleSubmit}>
           <div className='form-group'>

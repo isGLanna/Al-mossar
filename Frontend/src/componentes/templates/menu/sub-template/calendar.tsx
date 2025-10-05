@@ -1,5 +1,6 @@
 import { GrFormNext, GrFormPrevious } from "../icons"
 import { TimeUtils } from "../../../../models/TimeUtils"
+import '../calendar.scss'
 
 interface CalendarProps {
   currentMonth: number
@@ -59,7 +60,7 @@ export function Calendar({
           day ? (
             <button
               key={day}
-              className={`day ${day === selectedDay ? "selected" : ""}`}
+              className={`${day === selectedDay ? "selected" : ""}`}
               onClick={() => onDaySelect(day)}
             >
               {day}

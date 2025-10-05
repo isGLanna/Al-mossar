@@ -31,7 +31,7 @@
     position: absolute;
     background: #f2f5ff;
     margin-right: 5rem;
-    color: grey;
+    color: var(--font-grey);
     align-self: center;
     transition: 150ms ease;
     user-select: none;
@@ -70,7 +70,7 @@
     width: 14rem;
     color: grey;
     border-radius: 10px;
-    border: 2px solid silver;
+    border: 2px solid var(--second-300);
     transition: 250ms ease;
 
     .card__content {
@@ -101,7 +101,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #175f1f;
+      background: var(--branding-500);
       transition: 200ms;
 
       .label {

@@ -41,9 +41,7 @@ export function DailyMenu() {
   }, [currentMonth, currentYear])
 
   // Novo prato
-  const handleNewDishChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleNewDishChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     if (newDish) setNewDish({ ...newDish, [e.target.name]: e.target.value })
   }
 
@@ -59,7 +57,8 @@ export function DailyMenu() {
     menuDish.addDishByName(
       newDish.id,
       newDish.name.trim(),
-      newDish.description.trim()
+      newDish.description.trim(),
+      newDish.meal_type
     )
 
     try {
@@ -145,6 +144,13 @@ export function DailyMenu() {
                 value={newDish.name}
                 onChange={handleNewDishChange}
               />
+              <select name="meal_type" onChange={handleNewDishChange} value={newDish.meal_type || "cafe_manha"}>
+                <option value="cafe_manha">Café da manhã</option>
+                <option value="almoco">Almoço</option>
+                <option value="cafe_tarde">Café da tarde</option>
+                <option value="janta">Janta</option>
+              </select>
+
               <textarea
                 name="description"
                 placeholder="Modo de preparo"
@@ -166,7 +172,7 @@ export function DailyMenu() {
             onClick={() =>
               newDish
                 ? setNewDish(null)
-                : setNewDish({ id: 0, name: "", description: "" })
+                : setNewDish({ id: 0, name: "", description: "", meal_type: "" })
             }
           >
             <IoMdAddCircleOutline cursor={"pointer"} size={25} />

@@ -5,9 +5,7 @@ import sequelize from '../index'
 class Menu extends Model {
   public id!: number;
   public day!: string;
-  public description?: string;
   public id_enterprise!: number;
-  
   public setDishes!: (dishes: Dish[] | number[], options?: any) => Promise<void>;
   public removeDish!: (dish: Dish | number) => Promise<void>;
   public dishes?: Dish[];
@@ -32,7 +30,7 @@ Menu.init(
       allowNull: false,
       references: {
         model: 'Enterprise',
-        key: 'id_enterprise',
+        key: 'id',
       },
     },
   },

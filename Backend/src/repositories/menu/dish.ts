@@ -5,7 +5,7 @@ class Dish extends Model {
   public id!: number;
   public name!: string;
   public description?: string;
-  public id_enterprise!: number;
+  public meal_type!: 'cafe_manha' | 'almoco' | 'cafe_tarde' | 'janta'
 }
 
 Dish.init(
@@ -23,9 +23,10 @@ Dish.init(
       type: DataTypes.STRING,
       allowNull: true
     },
-    id_enterprise: {
-      type: DataTypes.INTEGER,
-      allowNull: false}
+    meal_type: {
+      type: DataTypes.ENUM('cafe_manha', 'almoco', 'cafe_tarde', 'janta'),
+      allowNull: false,
+    },
   },
   {
     sequelize,
