@@ -77,5 +77,4 @@ docker/
 certificates/
 /src/models/index.ts
 .dockerfile
-.env
 uploads/*

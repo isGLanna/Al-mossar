@@ -3,22 +3,17 @@ import { getToken, setNewToken } from '../componentes/templates/login/api'
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://localhost'
 
-export interface Dish {
-  id: number
-  name: string
-  description: string
-}
-
 interface MenuResponse {
   success: boolean,
   message: string,
-  dishes?: Dish[]
+  dishes?: Dish[],
 }
 
 export interface Dish {
   id: number
   name: string
   description: string
+  meal_type: string
 }
 
 export class MenuDish {
@@ -112,8 +107,8 @@ export class MenuDish {
     this.dishes = dishes
   }
 
-  addDishByName(id: number, name: string, description: string): void {
-    const newDish: Dish = { id, name, description };
+  addDishByName(id: number, name: string, description: string, meal_type: string): void {
+    const newDish: Dish = { id, name, description, meal_type };
     this.dishes.push(newDish);
   }
 

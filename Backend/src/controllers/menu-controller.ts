@@ -1,18 +1,28 @@
 import { Request, Response } from 'express'
-import { getMenuByDate, createMenu, updateMenu, deleteMenu } from '../services/menu-service'
+import { MenuService } from '../services/menu-service'
+
+const service = new MenuService()
 
 // Selecionar o menu
 export async function get ( req: Request, res: Response ): Promise<void> {
   const { token, day } = req.query
 
   try {
-    const menu = await getMenuByDate(token as string, day as string)
+    const menu = await service.getMenuByDate(token as string, day as string)
 
-    const formattedDishes = menu?.dishes?.map((dish: any) => ({
+    const allDishes = [
+      ...menu.cafe_manha,
+      ...menu.almoco,
+      ...menu.cafe_tarde,
+      ...menu.janta
+    ]
+
+    const formattedDishes = allDishes.map((dish:any) => ({
       id: dish.id,
       name: dish.name,
-      description: dish.description
-    })) || []
+      description: dish.description,
+      meal_type: dish.meal_type
+    }))
 
     res.status(200).json({ dishes: formattedDishes, success: true })
 
@@ -26,7 +36,7 @@ export async function create ( req: Request, res: Response ): Promise<void> {
   const { token, date, dishes } = req.body
 
   try {
-    const newMenu = await createMenu( token, date, dishes)
+    const newMenu = await service.createMenu( token, date, dishes)
 
     res.status(201).json(newMenu)
   } catch (error) {
@@ -38,7 +48,7 @@ export async function update ( req: Request, res: Response ): Promise<void> {
   const { token, date, dishes } = req.body
 
   try {
-    const updated = await updateMenu(token, date, dishes)
+    const updated = await service.updateMenu(token, date, dishes)
 
     res.status(201).json(updated)
   } catch (error) {
@@ -50,7 +60,7 @@ export async function deleted(req: Request, res: Response ): Promise<void> {
   const { token, name, date } = req.body
 
   try {
-    const result = await deleteMenu(token, name, date)
+    const result = await service.deleteMenu(token, name, date)
 
     res.status(200).json(result)
   } catch (error) {

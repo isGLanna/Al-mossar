@@ -50,17 +50,17 @@
     color: var(--texto)
     margin-block: 10px
     border: 2px solid var(--branding-600)
-    border-radius: 5px
-    padding-inline: 10px
+    border-radius: 2cap
+    padding-inline: 15px
     transition: 200ms ease
     font-weight: 400
+    outline: none
 
     &:hover
       background: #e9e9e9
 
     &:focus-visible
       background: #e9e9e9
-      outline: none
 
     &.empty-input
       border: 2px solid #c03520
@@ -80,9 +80,12 @@
     font-weight: 700
 
     &:hover
-      background: var(--branding-400)
+      background: var(--branding-700)
+  
+  input[type="password"],
+  input[type="text"]
+    color: var(--texto)
 
-  // Remover o spin
   input[type="number"]
     appearance: textfield
 
@@ -116,6 +119,16 @@
       cursor: pointer
       font-size: 1.2rem
 
+  input:-webkit-autofill
+    -webkit-box-shadow: 0 0 0px 1000px #d6d9dc inset
+    -webkit-text-fill-color: var(--texto)
+    caret-color: var(--texto)
+  
+  input:-moz-autofill
+    box-shadow: 0 0 0px 1000px #d6d9dc inset
+    -moz-text-fill-color: var(--texto)
+    caret-color: var(--texto)
+
   
   select
     width: 18rem
@@ -136,7 +149,7 @@
   position: absolute
   color: #cf4526
   font-size: 20px
-  top: 41px                  // Configurações para positionar no interior do input
+  top: 41px
   left: calc(100% - 20px)
 
 

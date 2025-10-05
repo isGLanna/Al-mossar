@@ -16,5 +16,5 @@ func main() {
 
 	routes.RegisterRoutes(r)
 
-	r.Run(":4001")
+	r.Run("0.0.0.0:4001")
 }

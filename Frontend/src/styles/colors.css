@@ -1,27 +1,27 @@
 :root{
   --background-color: #dde2f1;
-  --texto: #252525;
-
-  --branding-700: #d69147;
-  --branding-600: #dfa81a;
-  --branding-500: #ffb253;
-  --branding-400: #c7a137;
-  
-
-  --a: #efba5b;
-  --a-hover: #ff9500;
-
+  --texto: #171A21;
+  --menuContainers: #ebebf8;
+  --input: #fafafa;
   --form: #fafafa;
 
-  --second-700-a: #134a0d80;
-  --second-500-a: #26682380;
-  --second-300-a: #3b5e3e80;
+  --branding-700: #C27E00;
+  --branding-600: #F09D05;
+  --branding-500: #f6b132;
+  --branding-400: #F0C16A;
+  --branding-300: #EFD39F;
 
-  --second-700: #134a0d;
-  --second-500: #266823;
-  --second-300: #3b5e3e;
-  
-  --menuContainers: #ebebf8;
+  --second-700: #324E86;
+  --second-600: #4F72B5;
+  --second-500: #768FBF;
+  --second-400: #9EAECC;
+  --second-300: #C2CBDB;
 
-  --input: #fafafa;
+  --second-700-a: #324E8680;
+  --second-500-a: #768FBF80;
+  --second-300-a: #C2CBDB80;
+
+  --font-dark: #364768;
+  --font-grey: #8594B1;
+  --font-light: #E1E6EF;
 }
