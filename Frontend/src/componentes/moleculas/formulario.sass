@@ -16,10 +16,9 @@
   display: flex
   flex-direction: column
   margin-block: 80px
-  padding-block: 30px
-  padding-inline: 25px
+  padding: 2rem
   background: var(--form)
-  box-shadow: 2px 2px 8px #00000080
+  box-shadow: var(--box-shadow)
   align-items: center
   border-radius: 5px
   user-select: none
@@ -45,7 +44,7 @@
 
   input
     width: 18rem
-    height: 2.5rem
+    height: 2.6rem
     background: var(--form)
     color: var(--texto)
     margin-block: 10px
@@ -71,13 +70,14 @@
 
   input[type=submit]
     background: var(--branding-600)
-    width: 8rem
-    height: 2.3rem
-    border-radius: 5px
+    max-width: 8.5rem
     border: none
     color: white
-    transition: background 200ms ease
+    transition: background 200ms ease, max-width 400ms ease
     font-weight: 700
+    
+    &.loading
+      max-width: 2.6rem
 
     &:hover
       background: var(--branding-700)
