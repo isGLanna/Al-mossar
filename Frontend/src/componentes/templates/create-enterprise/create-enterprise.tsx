@@ -26,10 +26,16 @@ export function CreateEnterprise() {
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value} = e.target
+
     setEnterprise({
       ...enterprise,
-      [e.target.name]: e.target.value,
+      [name]: value,
     })
+    setEmptyField(prev => ({
+      ...prev,
+      [name]: false
+    }))
   }
 
   const [employees, setEmployees] = useState<{ email: string, role: string }[]>([])

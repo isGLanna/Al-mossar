@@ -37,14 +37,18 @@ export function Login() {
       setcredentials({
         ...credentials,
         [name]: checked,
-      });
+      })
     } else {
       setcredentials({
         ...credentials,
         [name]: value,
-      });
+      })
+      setEmptyField(prev => ({
+        ...prev,
+        [name]: false
+      }))
     }
-  };
+  }
 
   // Lidar com verificação do estado do token
   useEffect(() => {
@@ -152,6 +156,7 @@ export function Login() {
               type="submit"
               value={isLoading ? '' : 'Entrar'}
               disabled={isLoading}
+              className={isLoading ? 'loading' : ''}
               />
             {isLoading && (<div className='spinner fixed mt-[15px]'></div>)}
             {( emptyField.email || emptyField.password ) && <span>Credenciais inválidas</span>}

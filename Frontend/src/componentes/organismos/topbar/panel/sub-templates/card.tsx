@@ -57,7 +57,7 @@ export const EmployeeCard = memo(({ emp, index, selectedCard, setSelectedCard }:
       </div>
 
       <div className='card__content area-b'>
-        <span className='text-green-950'>{emp.name} {emp.surname}</span>
+        <span className='text-blue-950'>{emp.name} {emp.surname}</span>
         <span>{emp.role.charAt(0).toUpperCase() + emp.role.slice(1)}</span>
       </div>
 

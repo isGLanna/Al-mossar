@@ -117,7 +117,7 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
     <section className={`panelOverlay ${isOpen ? 'fadeIn' : 'fadeOut'}`} onClick={handlePanelClose}>
       <div className='panel' onClick={(e) => e.stopPropagation()}>
         <header className='header'>
-          <h2>Gestão de Funcionários</h2>
+          <h2 className='bg-text-blue-950'>Gestão de Funcionários</h2>
         </header>
 
         <CardContainer employees={employees} handleEditChange={handleEditChange} handleDelete={handleDelete}/>
