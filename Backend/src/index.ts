@@ -6,7 +6,7 @@ import fs from 'fs'
 
 const sslOptions = {
   key: fs.readFileSync('certificates/server.key'),
-  cert: fs.readFileSync('certificates/server.crt'),
+  cert: fs.readFileSync('certificates/server.cert'),
 }
 
 const app = express()
