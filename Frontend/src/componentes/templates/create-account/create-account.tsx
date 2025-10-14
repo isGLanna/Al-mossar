@@ -35,10 +35,17 @@ export function CreateAccount() {
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const {name, value} = e.target
+
     setUser({
       ...user,
-      [e.target.name]: e.target.value,
+      [name]: value,
     })
+    
+    setEmptyField(prev => ({
+      ...prev,
+      [name]: false
+    }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
