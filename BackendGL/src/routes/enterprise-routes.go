@@ -9,9 +9,8 @@ import (
 func RegisterEnterpriseRoutes(api *gin.RouterGroup) {
 	enterprise := api.Group("/enterprise")
 	{
-		enterprise.POST("/:id/theme", controllers.CreateEnterpriseTheme)
+		enterprise.POST("/:id/theme", controllers.CreateOrUpdateEnterpriseTheme)
 		enterprise.GET("/:id/theme", controllers.GetEnterpriseTheme)
-		enterprise.PUT("/:id/theme", controllers.UpdateTheme)
 	}
 
 }
