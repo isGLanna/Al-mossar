@@ -5,11 +5,10 @@ import (
 	"BackendGL/src/models"
 	"errors"
 
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
-func CreateOrUpdateEnterpriseTheme(token string, c *gin.Context) error {
+func CreateEnterpriseTheme(token string) error {
 	var db = db.DB
 
 	var enterpriseID uint
