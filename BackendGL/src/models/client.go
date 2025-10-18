@@ -1,5 +1,9 @@
 package models
 
+import (
+	"time"
+)
+
 type Client struct {
 	ID           uint       `gorm:"primaryKey" json:"id"`
 	Email        string     `gorm:"unique;not null" json:"email"`
@@ -21,4 +25,10 @@ type UserResponse struct {
 
 func (Client) TableName() string {
 	return "client"
+}
+
+type PasswordRecoveryCode struct {
+	Email     string    `gorm:"primaryKey;size:100;not null" json:"email"`
+	Code      string    `gorm:"size:5;not null" json:"code"`
+	ExpiresAt time.Time `gorm:"not null" json:"expires_at"`
 }
