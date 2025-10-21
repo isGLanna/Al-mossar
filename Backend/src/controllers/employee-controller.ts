@@ -1,26 +1,22 @@
 import { Request, Response } from 'express'
-import {
-  addEmployee as addEmployeeService,
-  getEmployees as getEmployeesService,
-  deleteEmployee as deleteEmployeeService,
-  editEmployee as editEmployeeService
-} from '../services/employee-service'
+import {EmployeeService} from '../services/employee-service'
 
 // Adiciona funcionário
 export async function addEmployee(req: Request, res: Response): Promise<void> {
   const { email, role, token } = req.body
 
-  if (!email || !role || !token) {
-    res.status(400).json({ error: 'Email, cargo e token são obrigatórios.' })
-    return 
-  }
-
   try {
-    await addEmployeeService(email, role, token)
+    if (!email || !role || !token) 
+      res.status(400).json({ error: 'Email, cargo e token são obrigatórios.' })
+
+    await EmployeeService.addEmployee(email, role, token)
     res.status(201).json({ success: true })
     return 
-  } catch (error) {
-    res.status(500).json({ error: 'Erro ao adicionar funcionário.' })
+  } catch (error: any) {
+    const status = error.status || 500
+    const message = error.message || "Falha inexperada ao adicionar novo empregado."
+
+    res.status(status).json({ error: message })
   }
 }
 
@@ -31,16 +27,16 @@ export async function getEmployees(req: Request, res: Response): Promise<void> {
   let result
 
   try {
-    result = await getEmployeesService(token as string)
+    result = await EmployeeService.getEmployees(token as string)
+
+    if (!result.success) 
+      throw { status: result.status || 400, message: result.message || 'Falha na requisição.' }
 
     res.status(200).json(result)
-  } catch (error) {
-    if(result && result.status === 401){
-      res.status(401).json({ message: 'Token expirou.' })
-    } else {
-      res.status(500).json({ message: 'Falha no servidor, tente novamente mais tarde.' })
-    }
-
+  } catch (error: any) {
+    const status = error.status || 500
+    const message = error.message || "Falha inexperada ao consultar empregados."
+    res.status(status).json({ message: message })
   }
 }
 
@@ -48,18 +44,18 @@ export async function getEmployees(req: Request, res: Response): Promise<void> {
 export async function deleteEmployee(req: Request, res: Response): Promise<void> {
   const { email, token} = req.query
 
-  if (!email || !token) {
-    res.status(400).json({ success: false, message: 'Email e token são obrigatórios.' })
-    return 
-  }
-
   try {
-    await deleteEmployeeService(email as string, token as string)
+    if (!email || !token)
+      res.status(400).json({ success: false, message: 'Email e token são obrigatórios.' })
+
+    await EmployeeService.deleteEmployee(email as string, token as string)
     res.status(204).json({ success: true, message: ''})
 
     return 
-  } catch (error) {
-    res.status(500).json({ success: false, message: error })
+  } catch (error: any) {
+    const status = error.status || 500
+    const message = error.message || 'Erro interno ao remover empregado.'
+    res.status(status).json({ success: false, message: message })
     return
   }
 }
@@ -68,23 +64,20 @@ export async function deleteEmployee(req: Request, res: Response): Promise<void>
 export async function editEmployee(req: Request, res: Response): Promise<void> {
   const { token, email, name, surname, role } = req.body
 
-  if (!email || !email.trim()) {
-    res.status(400).json({ message: 'O email é obrigatório.' })
-    return
-  }
+  if (!email || !email.trim())  
+    throw res.status(400).json({ message: 'O email é obrigatório.' })
 
-  if (!token) {
-    res.status(400).json({ message: 'Token é obrigatório' })
-    return 
-  }
+  if (!token)
+    throw res.status(400).json({ message: 'Token é obrigatório' })
 
   try {
-    const updated = await editEmployeeService(String(email), token, { name, surname, role })
+    await EmployeeService.editEmployee(String(email), token, { name, surname, role })
     res.status(200).json({ success: true, message: '' })
 
-    return 
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Erro ao editar funcionário.' })
-    return 
+  } catch (error: any) {
+    const status = error.status || 500
+    const message = error.message || 'Erro interno ao editar funcionário.'
+
+    res.status(status).json({ success: false, message })
   }
 }
