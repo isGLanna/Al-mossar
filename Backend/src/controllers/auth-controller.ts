@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { authenticateUser } from '../services/authenticator'
 import { authenticateRegister } from '../services/auth-register'
-import { Employee } from '../repositories/employee'
+import { Employee } from '../repositories/user/employee'
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 

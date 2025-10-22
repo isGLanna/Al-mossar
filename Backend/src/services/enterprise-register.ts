@@ -1,5 +1,5 @@
 import { Enterprise } from '../repositories/enterprise'
-import { Employee } from '../repositories/employee'
+import { Employee } from '../repositories/user/employee'
 import bcrypt from 'bcrypt'
 
 // Formato de input/output

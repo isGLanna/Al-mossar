@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { Employee } from '../repositories/employee'
+import { Employee } from '../repositories/user/employee'
 import { Enterprise } from '../repositories/enterprise'
 
 export const authenticateRegister = async (

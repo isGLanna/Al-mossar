@@ -1,20 +1,15 @@
 import { DataTypes, Model } from 'sequelize'
-import sequelize from '.'
+import sequelize from '..'
+import { Employee } from './employee'
 
-class EmployeeImage extends Model{
-  public id !: number;
-  public employee_id!: number;
-  public image !: Buffer;
-}
-
-EmployeeImage.init(
+export const EmployeeImage = sequelize.define('EmployeeImage',
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    employee_id: {
+    employeeId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       unique: true,
@@ -25,11 +20,17 @@ EmployeeImage.init(
     },
   },
   {
-    sequelize,
-    modelName: 'EmployeeImage',
     tableName: 'employee_image',
     timestamps: false,
   }
 )
 
-export {EmployeeImage}
+Employee.hasOne(EmployeeImage, {
+  foreignKey: 'employeeId',
+  as: 'image'
+})
+
+EmployeeImage.belongsTo(Employee, {
+  foreignKey: 'employeeId',
+  as: 'employee'
+})

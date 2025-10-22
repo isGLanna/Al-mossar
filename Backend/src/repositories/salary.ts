@@ -1,6 +1,6 @@
 import {DataTypes, Model} from "sequelize";
 import sequelize from '.';
-import { Employee } from './employee'
+import { Employee } from './user/employee'
 
 export class Salary extends Model {
   public id!: number;
