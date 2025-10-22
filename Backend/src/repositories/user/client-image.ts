@@ -22,7 +22,7 @@ export const ClientImage = sequelize.define('ClientImage', {
 
 
 Client.hasOne(ClientImage, {
-  foregnKey: 'clientId',
+  foreignKey: 'clientId',
   as: 'image'
 })
 

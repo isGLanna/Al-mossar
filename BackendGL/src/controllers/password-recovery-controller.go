@@ -7,6 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//========== Constructor ==========
+
 type PasswordRecoveryController struct {
 	Service *services.PasswordRecoveryService
 }
@@ -14,6 +16,8 @@ type PasswordRecoveryController struct {
 func NewPasswordController(service *services.PasswordRecoveryService) *PasswordRecoveryController {
 	return &PasswordRecoveryController{Service: service}
 }
+
+// ==============================
 
 func (ctrl *PasswordRecoveryController) SendRecoveryEmail(c *gin.Context) {
 	var r struct {

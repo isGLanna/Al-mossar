@@ -1,7 +1,22 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes } from 'sequelize'
 import { Enterprise } from '../enterprise'
 import { Permission } from '../permission/permissions'
 import sequelize from '..'
+
+export interface EmployeeAttributes {
+  id: number
+  email: string
+  password?: string
+  name?: string
+  surname: string
+  id_enterprise?: number
+  start_of_contract?: Date
+  end_of_contract?: Date
+  role: string
+  telefone?: string
+  endereco?: string
+  token?: string
+}
 
 export const Employee = sequelize.define('Employee',
     {
