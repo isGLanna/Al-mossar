@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type Employee struct {
 	ID              uint       `gorm:"primaryKey" json:"id"`
@@ -15,7 +17,14 @@ type Employee struct {
 	Address         string     `json:"endereco"`
 	Token           string     `json:"token"`
 	IdEnterprise    uint       `gorm:"column:id_enterprise; not null" json:"enterprise_id"`
-	Enterprise      Enterprise `gorm:"foreignKey:IdEnterprise;references:ID;" json:"enterprise"`
+	Enterprise      Enterprise `gorm:"foreignKey:IdEnterprise;references:ID" json:"enterprise"`
+}
+
+type EmployeeImage struct {
+	ID         uint     `gorm:"primaryKey" json:"id"`
+	IdEmployee uint     `gorm:"not null" json:"id_employee"`
+	Employee   Employee `gorm:"foreignKey:IdEmployee; references:ID;" json:"employee"`
+	Image      []byte   `gorm:"type:btyea" json:"image"`
 }
 
 func (Employee) TableName() string {

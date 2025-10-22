@@ -1,4 +1,4 @@
-import { Employee } from '../repositories/user/employee'
+import { Employee, EmployeeAttributes } from '../repositories/user/employee'
 import { Salary } from '../repositories/salary'
 import { getEmployeePhoto } from '../repositories/user-photo'
 import { refreshToken } from './authenticator'
@@ -102,7 +102,7 @@ export class EmployeeService {
   static async editEmployee(
     email: string,
     token: string,
-    updates: Partial<Pick<Employee, 'name' | 'surname' | 'role'>>
+    updates: Partial<Pick<EmployeeAttributes, 'name' | 'surname' | 'role'>>
   ) {
     const id_enterprise = await TokenService.queryEnterpriseId(token)
     await Employee.update(updates, {
