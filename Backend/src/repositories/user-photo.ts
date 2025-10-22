@@ -1,61 +1,29 @@
-import fs from 'fs'
-import path from 'path'
-import { fileURLToPath } from 'url'
+import { EmployeeImage } from './user/employee-image'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+export async function getEmployeePhoto(employeeId: number) {
+  try {
+    const photoRecord = await EmployeeImage.findOne({
+      where: { employee_id: employeeId },
+      attributes: ['image'],
+    })
 
-export async function getEmployeePhoto (employeeId: number){
-  try{
-    const photoPath = path.join(__dirname, '../../uploads/employee', `${employeeId}.webp`)
-
-
-    if (!fs.existsSync(photoPath)){
-      return {
-        exists: false,
-      }
+    if (!photoRecord) {
+      return { exists: false }
     }
 
-    const protoBuffer = fs.readFileSync(photoPath)
-    const base64 = protoBuffer.toString('base64')
-    const dataUrl = `data:image/webp;base64,${base64}`
+    const imageData = photoRecord.getDataValue('image')
 
-    console.log('Daqui não tá passando', dataUrl)
+    const dataUrl = `data:image/webp;base64,${imageData}`
 
     return {
       exists: true,
-      photo: dataUrl
+      photo: dataUrl,
     }
-  } catch(err){
+  } catch (err) {
+    console.error('Erro ao buscar foto do funcionário:', err)
     return {
       exists: false,
-      message: 'Erro inesperado ao carregar foto'
-    }
-  }
-}
-
-export class PhotoManager {
-
-  static async getUserPhoto(id: number, user: string) {
-    try {
-      let photoPath
-
-      if(user === 'client') {
-          photoPath = path.join(__dirname, '../../uploads/client', `client${id}.webp`)
-      } else if (user === 'employee') {
-        photoPath = path.join(__dirname, '../../uploads/employee', `${id}.webp`)
-      } else {
-        return { photo: null}
-      }
-
-      const protoBuffer = fs.readFileSync(photoPath)
-      const base64 = protoBuffer.toString('base64')
-      const dataUrl = `data:image/webp;base64,${base64}`
-
-      return { photo: dataUrl }
-
-    } catch(error) {
-      return { photo: null }
+      message: 'Erro inesperado ao carregar foto do banco de dados.',
     }
   }
 }
