@@ -1,11 +1,11 @@
-import { Employee } from '../repositories/employee'
+import { Employee } from '../repositories/user/employee'
 import { Salary } from '../repositories/salary'
 import { getEmployeePhoto } from '../repositories/user-photo'
 import { refreshToken } from './authenticator'
 import { TokenService } from './token-service'
 
 export class EmployeeService {
-  
+
   static async addEmployee(email: string, role: string, token: string) {
     const id_enterprise = await TokenService.queryEnterpriseId(token)
 

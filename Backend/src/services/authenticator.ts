@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import { Employee } from "../repositories/employee"
+import { Employee } from "../repositories/user/employee"
 
 const JWT_SECRET = process.env.JWT_SECRET || 'chave-super-secreta-mesmo';
 

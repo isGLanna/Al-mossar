@@ -1,25 +1,9 @@
 import { DataTypes, Model } from 'sequelize'
-import { Enterprise } from './enterprise'
-import { Permission } from './permission/permissions'
-import sequelize from '.'
+import { Enterprise } from '../enterprise'
+import { Permission } from '../permission/permissions'
+import sequelize from '..'
 
-
-export class Employee extends Model {
-    public id !: number;
-    public email!: string;
-    public password!: string;
-    public name!: string;
-    public surname!: string;
-    public id_enterprise?: number;
-    public start_of_contract?: Date;
-    public end_of_contract?: Date;
-    public role?: string;
-    public telefone?: string;
-    public endereco?: string;
-    public permissions?: Permission[];
-}
-
-Employee.init(
+export const Employee = sequelize.define('Employee',
     {
         id: {
             type: DataTypes.INTEGER,
@@ -77,8 +61,6 @@ Employee.init(
         }
     },
     {
-        sequelize,
-        modelName: 'Employee',
         tableName: 'employee',
         timestamps: false,
     }
