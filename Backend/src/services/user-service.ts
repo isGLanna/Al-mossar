@@ -1,4 +1,4 @@
-import { PhotoManager } from '../repositories/user-photo'
+import { getUserPhoto } from './user-photo'
 import sequelize from '../repositories'
 import { QueryTypes } from 'sequelize'
 
@@ -15,7 +15,7 @@ export class User {
       )
 
       if (idResult.length > 0) {
-        const data = await PhotoManager.getUserPhoto(idResult[0].id, 'client')
+        const data = await getUserPhoto(idResult[0].id, 'client')
         if(data.photo){
           return data.photo
         }
@@ -30,7 +30,7 @@ export class User {
       )
 
       if(idResult.length > 0) {
-        const data = await PhotoManager.getUserPhoto(idResult[0].id, 'employee')
+        const data = await getUserPhoto(idResult[0].id, 'employee')
         if(data.photo){
           return data.photo
         }

@@ -1,6 +1,6 @@
 import { Employee, EmployeeAttributes } from '../repositories/user/employee'
 import { Salary } from '../repositories/salary'
-import { getEmployeePhoto } from '../repositories/user-photo'
+import { getUserPhoto } from './user-photo'
 import { refreshToken } from './authenticator'
 import { TokenService } from './token-service'
 
@@ -66,7 +66,7 @@ export class EmployeeService {
       const employeesWithPhotos = await Promise.all(
         employees.map(async (employee) => {
           const employeeData = employee.toJSON()
-          const photoResult = await getEmployeePhoto(employeeData.id)
+          const photoResult = await getUserPhoto(employeeData.id, 'employee')
 
           return {
             ...employeeData,
