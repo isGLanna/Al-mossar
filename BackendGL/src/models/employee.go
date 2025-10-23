@@ -13,8 +13,8 @@ type Employee struct {
 	Role            string     `json:"role"`
 	StartOfContract time.Time  `json:"start_of_contract"`
 	EndOfContract   *time.Time `json:"end_of_contract"`
-	Telefone        string     `json:"telefone"`
-	Address         string     `json:"endereco"`
+	Telephone       string     `json:"telephone"`
+	Address         string     `json:"address"`
 	Token           string     `json:"token"`
 	IdEnterprise    uint       `gorm:"column:id_enterprise; not null" json:"enterprise_id"`
 	Enterprise      Enterprise `gorm:"foreignKey:IdEnterprise;references:ID" json:"enterprise"`
