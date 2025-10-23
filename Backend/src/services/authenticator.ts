@@ -6,19 +6,15 @@ const JWT_SECRET = process.env.JWT_SECRET || 'chave-super-secreta-mesmo';
 
 export const authenticateUser = async (email: string, password: string) => {
   try {
-    const employee = await Employee.findOne({ 
-      where: { email }
-    })
+    const employee = await Employee.findOne({ where: { email }})
 
-    if (!employee) {
+    if (!employee) 
       return { success: false, message: 'Email ou senha incorretos' }
-    }
 
-    const isValid = await bcrypt.compare(password, employee.password)
+    const isValid = await bcrypt.compare(password, employee.password || '')
 
-    if (!isValid) {
+    if (!isValid)
       return { success: false, message: 'Email ou senha incorretos' }
-    }
 
     const payload = {
       email: employee.email,
