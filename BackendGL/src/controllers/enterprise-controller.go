@@ -15,6 +15,8 @@ func CreateEnterpriseTheme(c *gin.Context) {
 		return
 	}
 
+	services := services.NewEnterpriseService()
+
 	if err := services.CreateEnterpriseTheme(token); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -36,6 +38,8 @@ func UpdateEnterpriseTheme(c *gin.Context) {
 		return
 	}
 
+	services := services.NewEnterpriseService()
+
 	if err := services.UpdateEnterpriseTheme(token, themeData); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -50,6 +54,8 @@ func GetEnterpriseTheme(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization token is required"})
 		return
 	}
+
+	services := services.NewEnterpriseService()
 
 	theme, err := services.GetEnterpriseTheme(token)
 	if err != nil {
@@ -73,6 +79,8 @@ func UpdateTheme(c *gin.Context) {
 	if err := c.BindJSON(&newTheme); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 	}
+
+	services := services.NewEnterpriseService()
 
 	if err := services.UpdateEnterpriseTheme(token, newTheme); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
