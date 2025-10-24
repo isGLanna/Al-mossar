@@ -51,8 +51,8 @@ export class EmployeeService {
           'start_of_contract',
           'end_of_contract',
           'role',
-          'telefone',
-          'endereco'
+          'telephone',
+          'address'
         ],
         include: [
           {

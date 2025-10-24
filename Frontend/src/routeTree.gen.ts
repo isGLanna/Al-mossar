@@ -8,90 +8,38 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as MenuRouteImport } from './routes/menu'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CreateEnterpriseRouteImport } from './routes/create-enterprise'
+import { Route as CreateAccountRouteImport } from './routes/create-account'
+import { Route as IndexRouteImport } from './routes/index'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as MenuImport } from './routes/menu'
-import { Route as DashboardImport } from './routes/dashboard'
-import { Route as CreateEnterpriseImport } from './routes/create-enterprise'
-import { Route as CreateAccountImport } from './routes/create-account'
-import { Route as IndexImport } from './routes/index'
-
-// Create/Update Routes
-
-const MenuRoute = MenuImport.update({
+const MenuRoute = MenuRouteImport.update({
   id: '/menu',
   path: '/menu',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const DashboardRoute = DashboardImport.update({
+const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const CreateEnterpriseRoute = CreateEnterpriseImport.update({
+const CreateEnterpriseRoute = CreateEnterpriseRouteImport.update({
   id: '/create-enterprise',
   path: '/create-enterprise',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const CreateAccountRoute = CreateAccountImport.update({
+const CreateAccountRoute = CreateAccountRouteImport.update({
   id: '/create-account',
   path: '/create-account',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-// Populate the FileRoutesByPath interface
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/create-account': {
-      id: '/create-account'
-      path: '/create-account'
-      fullPath: '/create-account'
-      preLoaderRoute: typeof CreateAccountImport
-      parentRoute: typeof rootRoute
-    }
-    '/create-enterprise': {
-      id: '/create-enterprise'
-      path: '/create-enterprise'
-      fullPath: '/create-enterprise'
-      preLoaderRoute: typeof CreateEnterpriseImport
-      parentRoute: typeof rootRoute
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardImport
-      parentRoute: typeof rootRoute
-    }
-    '/menu': {
-      id: '/menu'
-      path: '/menu'
-      fullPath: '/menu'
-      preLoaderRoute: typeof MenuImport
-      parentRoute: typeof rootRoute
-    }
-  }
-}
-
-// Create and export the route tree
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -100,7 +48,6 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/menu': typeof MenuRoute
 }
-
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/create-account': typeof CreateAccountRoute
@@ -108,16 +55,14 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/menu': typeof MenuRoute
 }
-
 export interface FileRoutesById {
-  __root__: typeof rootRoute
+  __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/create-account': typeof CreateAccountRoute
   '/create-enterprise': typeof CreateEnterpriseRoute
   '/dashboard': typeof DashboardRoute
   '/menu': typeof MenuRoute
 }
-
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
@@ -137,13 +82,52 @@ export interface FileRouteTypes {
     | '/menu'
   fileRoutesById: FileRoutesById
 }
-
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CreateAccountRoute: typeof CreateAccountRoute
   CreateEnterpriseRoute: typeof CreateEnterpriseRoute
   DashboardRoute: typeof DashboardRoute
   MenuRoute: typeof MenuRoute
+}
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/menu': {
+      id: '/menu'
+      path: '/menu'
+      fullPath: '/menu'
+      preLoaderRoute: typeof MenuRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create-enterprise': {
+      id: '/create-enterprise'
+      path: '/create-enterprise'
+      fullPath: '/create-enterprise'
+      preLoaderRoute: typeof CreateEnterpriseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create-account': {
+      id: '/create-account'
+      path: '/create-account'
+      fullPath: '/create-account'
+      preLoaderRoute: typeof CreateAccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+  }
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -153,39 +137,6 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   MenuRoute: MenuRoute,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/create-account",
-        "/create-enterprise",
-        "/dashboard",
-        "/menu"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/create-account": {
-      "filePath": "create-account.tsx"
-    },
-    "/create-enterprise": {
-      "filePath": "create-enterprise.tsx"
-    },
-    "/dashboard": {
-      "filePath": "dashboard.tsx"
-    },
-    "/menu": {
-      "filePath": "menu.tsx"
-    }
-  }
-}
-ROUTE_MANIFEST_END */

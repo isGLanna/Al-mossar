@@ -22,16 +22,18 @@ export function CardContainer({ handleEditChange, handleDelete, employees }: Car
   return(
     <>
       <form className='search-bar'>
-        <input
-          type='search'
-          id='search'
-          placeholder=" "
-          autoComplete='on'
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <label htmlFor='search'>Buscar empregado</label>
-        <MdPersonSearch size={25} color='silver' style={{position: 'fixed', marginLeft:'12rem'}}/>
+        <div className="input-wrapper">
+          <input
+            type='search'
+            id='search'
+            placeholder=" "
+            autoComplete='on'
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <label htmlFor='search'>Buscar empregado</label>
+          <MdPersonSearch className="icon" size={25} color='silver'/>
+        </div>
         <datalist id="names">
           {employees.map((emp) => (
             <option

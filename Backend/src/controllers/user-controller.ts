@@ -8,15 +8,18 @@ export class UserController {
       const token = req.headers.authorization
 
       if (!token) {
-        res.status(200).json({ success: true, hasPhoto: false })
-        return
+        throw res.status(404).json({ success: false, photo: null, message: 'Usuário não possui autorização' })
       }
 
       const photo = await User.getUserPhoto(token)
 
+      console.log("Passou aqui")
+
       photo ? res.status(200).json({ success: true, photo }) : res.status(200).json({ success: true, photo: null })
-    } catch (error) {
-      res.status(500).json({ success: false, hasPhoto: false, message: 'Erro interno do servidor' })
+    } catch (error: any) {
+      const status = error.status || 500
+      const message = error.message || 'Erro interno do servidor'
+      res.status(status).json({ success: false, photo: null, message: message })
     }
   }
 }

@@ -11,7 +11,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func SetupApp() *gin.Engine {
+func SetupApp(r *gin.Engine) {
 
 	if err := godotenv.Load(); err != nil {
 		log.Println("Não deu conta de abrir o .env")
@@ -25,9 +25,5 @@ func SetupApp() *gin.Engine {
 		os.Getenv("MAIL_FROM"),
 	)
 
-	r := gin.Default()
-
 	routes.RegisterRoutes(r, mailer)
-
-	return r
 }

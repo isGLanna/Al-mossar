@@ -79,6 +79,7 @@ Employee.init(
     sequelize,
     modelName: 'Employee',
     tableName: 'employee',
+    timestamps: false 
   }
 )
 

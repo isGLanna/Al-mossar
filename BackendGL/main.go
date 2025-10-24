@@ -14,6 +14,6 @@ func main() {
 	r := gin.Default()
 	r.Use(middlewares.CORSMiddleware())
 
-	r = app.SetupApp()
+	app.SetupApp(r)
 	r.Run(":4001")
 }
