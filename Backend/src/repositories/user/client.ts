@@ -41,5 +41,6 @@ export const Client = sequelize.define('Client',
   },
   {
     tableName: 'client',
+    timestamps: false 
   }
 )

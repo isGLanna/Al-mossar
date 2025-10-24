@@ -8,10 +8,6 @@ import (
 	"strings"
 )
 
-// -----------------------------
-// Tipos e estruturas
-// -----------------------------
-
 type AttrType int
 
 const (
@@ -19,12 +15,11 @@ const (
 	Nominal
 )
 
-// Descreve um atributo (nome, tipo e valores nominais possíveis)
 type Attribute struct {
 	Name          string
 	Type          AttrType
-	NominalValues []string       // lista (se for nominal)
-	nominalIndex  map[string]int // mapa para lookup rápido (opcional)
+	NominalValues []string
+	nominalIndex  map[string]int
 }
 
 func NewNumericAttribute(name string) *Attribute {
@@ -38,10 +33,9 @@ func NewNominalAttribute(name string, values []string) *Attribute {
 	return &Attribute{Name: name, Type: Nominal, NominalValues: values, nominalIndex: idx}
 }
 
-// Uma instância de dados (valores como strings para simplificar leitura/serialização)
 type Instance struct {
-	Values []string // cada valor corresponde a Attribute na mesma ordem
-	Label  string   // classe alvo
+	Values []string
+	Label  string
 }
 
 type Dataset struct {
@@ -49,17 +43,13 @@ type Dataset struct {
 	Instances  []Instance
 }
 
-// -----------------------------
-// Classificador K*-like
-// -----------------------------
 type KStar struct {
-	X0   float64  // escala para atributos numéricos (x0 > 0)
-	S    float64  // parâmetro para atributos simbólicos (0 < s < 1)
-	Mix  float64  // mistura/suavização (>=0). 1.0 = usa P tal como está, <1 suaviza influência
-	Data *Dataset // referência ao dataset de treino
+	X0   float64
+	S    float64
+	Mix  float64
+	Data *Dataset
 }
 
-// Construtor com valores defaults (ajustáveis)
 func NewKStar(x0, s, mix float64, data *Dataset) *KStar {
 	if x0 <= 0 {
 		x0 = 1.0
@@ -73,11 +63,6 @@ func NewKStar(x0, s, mix float64, data *Dataset) *KStar {
 	return &KStar{X0: x0, S: s, Mix: mix, Data: data}
 }
 
-// -----------------------------
-// Funções utilitárias
-// -----------------------------
-
-// tenta converter string para float64, devolve (valor, ok)
 func parseFloat(s string) (float64, bool) {
 	f, err := strconv.ParseFloat(strings.TrimSpace(s), 64)
 	if err != nil {
@@ -86,8 +71,6 @@ func parseFloat(s string) (float64, bool) {
 	return f, true
 }
 
-// Estima um valor razoável para X0 (média dos desvios padrão das features numéricas).
-// Útil para inicializar automaticamente.
 func EstimateDefaultX0(data *Dataset) float64 {
 	total := 0.0
 	count := 0.0
@@ -95,7 +78,6 @@ func EstimateDefaultX0(data *Dataset) float64 {
 		if attr.Type != Numeric {
 			continue
 		}
-		// coletar valores numéricos válidos
 		var vals []float64
 		sum := 0.0
 		for _, inst := range data.Instances {
@@ -123,22 +105,12 @@ func EstimateDefaultX0(data *Dataset) float64 {
 	return total / count
 }
 
-// -----------------------------
-// Núcleo: probabilidade de transformação entre duas instâncias
-//
-// Aqui usamos uma aproximação prática:
-// - atributos numéricos: p = exp(-|a-b| / X0)
-// - atributos nominais: p = 1 - S  (se igual) ou S/(n-1) (se diferente), onde n é nº de valores
-//
-// Somamos logs (log-probabilidade) para evitar underflow.
-// -----------------------------
 func (k *KStar) logTransformProb(a Instance, b Instance) float64 {
 	logp := 0.0
-	const eps = 1e-300 // evita log(0)
+	const eps = 1e-300
 	for i, attr := range k.Data.Attributes {
 		va := strings.TrimSpace(a.Values[i])
 		vb := strings.TrimSpace(b.Values[i])
-		// missing -> prob pequena
 		if va == "" || vb == "" {
 			logp += math.Log(1e-6)
 			continue
@@ -151,12 +123,12 @@ func (k *KStar) logTransformProb(a Instance, b Instance) float64 {
 				continue
 			}
 			diff := math.Abs(fa - fb)
-			p := math.Exp(-diff / k.X0) // decai exponencialmente com a diferença
+			p := math.Exp(-diff / k.X0)
 			if p < eps {
 				p = eps
 			}
 			logp += math.Log(p)
-		} else { // nominal
+		} else {
 			if va == vb {
 				p := 1.0 - k.S
 				if p < eps {
@@ -177,12 +149,6 @@ func (k *KStar) logTransformProb(a Instance, b Instance) float64 {
 	return logp
 }
 
-// -----------------------------
-// Predição: para um exemplo x, calcula uma "probabilidade" por classe
-// - calcula logP(x -> train_i) para cada instância de treino
-// - transforma em pesos via exp(log - maxlog) (trick numérico)
-// - soma pesos por classe e normaliza
-// -----------------------------
 func (k *KStar) Predict(x Instance) (pred string, classProbs map[string]float64) {
 	n := len(k.Data.Instances)
 	if n == 0 {
@@ -199,8 +165,6 @@ func (k *KStar) Predict(x Instance) (pred string, classProbs map[string]float64)
 	weights := make([]float64, n)
 	sumW := 0.0
 	for i, l := range logs {
-		// aplicamos Mix como um expoente para modular influência do termo de prob.
-		// Mix == 1 : comportamento padrão; Mix < 1 : suaviza diferenças
 		w := math.Exp(k.Mix * (l - maxLog))
 		weights[i] = w
 		sumW += w
@@ -213,7 +177,7 @@ func (k *KStar) Predict(x Instance) (pred string, classProbs map[string]float64)
 	for c, s := range classSums {
 		classProbs[c] = s / sumW
 	}
-	// escolhe a classe com maior probabilidade
+
 	best := ""
 	bestp := -1.0
 	for c, p := range classProbs {
@@ -225,15 +189,11 @@ func (k *KStar) Predict(x Instance) (pred string, classProbs map[string]float64)
 	return best, classProbs
 }
 
-// -----------------------------
-// Exemplo de uso (toy dataset)
-// -----------------------------
 func main() {
-	// Definição de atributos (exemplo misto)
 	attrs := []*Attribute{
-		NewNumericAttribute("LOC"),                                         // lines of code (numérico)
-		NewNumericAttribute("TeamSize"),                                    // tamanho do time (numérico)
-		NewNominalAttribute("Methodology", []string{"Agile", "Waterfall"}), // nominal
+		NewNumericAttribute("LOC"),
+		NewNumericAttribute("TeamSize"),
+		NewNominalAttribute("Methodology", []string{"Agile", "Waterfall"}),
 	}
 
 	// Dataset de treino (valores como strings, ordem deve bater com attrs)

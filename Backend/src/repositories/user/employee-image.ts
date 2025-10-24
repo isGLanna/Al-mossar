@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes } from 'sequelize'
 import sequelize from '..'
 import { Employee } from './employee'
 
@@ -13,6 +13,7 @@ export const EmployeeImage = sequelize.define('EmployeeImage',
       type: DataTypes.INTEGER,
       allowNull: false,
       unique: true,
+      field: 'employee_id',
     },
     image: {
       type: DataTypes.BLOB('long'),

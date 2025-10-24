@@ -17,7 +17,7 @@ export const ClientImage = sequelize.define('ClientImage', {
   image: { type: DataTypes.BLOB('long'), allowNull: false }
 }, {
   tableName: 'client_image',
-  timestamps: true
+  timestamps: false
 })
 
 

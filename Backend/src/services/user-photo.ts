@@ -3,16 +3,16 @@ import { ClientImage } from '../repositories/user/client-image'
 
 export async function getUserPhoto(userId: number, userType: 'employee' | 'client') {
   try {
-    let photoRecord: any = null
+    let photoRecord = null
 
     if (userType === 'employee') {
       photoRecord = await EmployeeImage.findOne({
-        where: { employeeId: userId },
+        where: { employee_id: userId },
         attributes: ['image'],
       })
     } else if (userType === 'client') {
       photoRecord = await ClientImage.findOne({
-        where: { clientId: userId },
+        where: { client_id: userId },
         attributes: ['image'],
       })
     } else {

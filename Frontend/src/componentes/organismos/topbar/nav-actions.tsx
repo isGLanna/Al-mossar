@@ -7,7 +7,7 @@ import styles from './pseudo-topbar.module.scss'
 import { useState, useEffect, useContext } from 'react'
 import { getUser } from './api'
 import { Employee } from '../../../models/Employee'
-import { Sidebar } from './sidebar/sidebar.tsx'
+import { Sidebar } from '../sidebar/sidebar.tsx'
 import './topbar.scss'
 
 export function NavActions(){

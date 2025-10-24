@@ -19,25 +19,22 @@
 
 .menu {
   position: absolute;
-  width: 90px;
-  top: 65px;
+  width: 6rem;
+  top: -5rem;
   right: -25px;
-  max-height: 0;
-  background: var(--second-700);
-  box-shadow: 3px 3px 6px var(--second-700);
-  border-end-start-radius: 5px;
-  border-end-end-radius: 5px;
-  border-inline: 2px solid #768FBF;
-  transition: width 200ms ease-out, max-height 200ms ease-out, opacity 1s ease;
-  overflow-y: scroll;
+  background: var(--second-700-a);
+  backdrop-filter: blur(4px);
+  border-radius: 10px;
+  border: 1px solid var(--second-300);
+  transition: opacity 200ms ease, transform 300ms ease;
   user-select: none;
   -webkit-user-select: none;
+  overflow: hidden;
   opacity: 0;
-  backdrop-filter: blur(3px);
 
   &.open {
-    transition: max-height 200ms ease-out, opacity 400ms ease;
-    max-height: 105px;
+    transition: opacity 300ms ease, transform 300ms ease;
+    transform: translateY(calc(5.5rem + 65px));
     opacity: 1;
   }
 
@@ -53,7 +50,7 @@
   &::-webkit-scrollbar-thumb {
     animation-delay: 600ms;
     border-radius: 5px;
-    background: #30523070;
+    background: transparent
   }
 }
 
@@ -64,13 +61,12 @@
   font-size: 18px;
   font-weight: 500;
   height: 40px;
-  color: #eee;
-  border-radius: 5px;
+  color: var(--font);
   cursor: pointer;
   transition: 200ms ease;
 
   &:hover{
-    background: #20742940;
+    background: var(--second-300-a);
   }
 }
 

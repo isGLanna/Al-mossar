@@ -31,8 +31,8 @@ body {
   height: calc(100dvh - 70px);
   margin: 0;
   background:
-    url("../assets/bg-3.png") center / cover no-repeat, /* imagem por cima */
-    linear-gradient(135deg, #c9d0db, #e6e7eb);
+    url("../assets/bg.webp") center / cover no-repeat fixed,
+    #e6e7eb;
 }
 
 h1 {

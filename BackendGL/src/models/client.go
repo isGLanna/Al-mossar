@@ -15,8 +15,8 @@ type Client struct {
 type ClientImage struct {
 	ID       uint   `gorm:"primaryKey" json:"id"`
 	IdClient uint   `gorm:"not null" json:"client_id"`
-	Client   Client `gorm:"foreignkey:IdClient; references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"client"`
-	Image    []byte `gorm:"type:btyea" json:"image"`
+	Client   Client `gorm:"foreignKey:IdClient; references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"client"`
+	Image    []byte `gorm:"type:bytea" json:"image"`
 }
 
 type UserResponse struct {

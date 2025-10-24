@@ -4,8 +4,11 @@
   justify-self: center;
   align-items: center;
   justify-content: center;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
+
+  .input-wrapper{
+    position: relative;
+    width: 14rem;
+  }
 
   input[type="search"]{
     width: 14rem;
@@ -24,20 +27,31 @@
     }
     &:focus + label,
     &:not(:placeholder-shown) + label {
-      transform: translate(-15px, -15px) scale(0.9);
+      transform: translate(-15px, -15px) scale(0.85);
     }
   }
-  label{
+
+  .input-wrapper label{
     position: absolute;
+    left: 0.2rem;
     background: #f2f5ff;
     margin-right: 5rem;
+    padding-inline: 2px;
     color: var(--font-grey);
     align-self: center;
     transition: 150ms ease;
     user-select: none;
+    white-space: nowrap;
     --webkit-user-select: none;
     pointer-events: none;
   }
+
+  .input-wrapper .icon{
+    position: absolute;
+    right: 0.2rem;
+    top: 0.2rem;
+  }
+
 }
 
 .card-container{
