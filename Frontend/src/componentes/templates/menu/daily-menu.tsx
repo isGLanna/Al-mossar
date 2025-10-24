@@ -144,7 +144,7 @@ export function DailyMenu() {
                 value={newDish.name}
                 onChange={handleNewDishChange}
               />
-              <select name="meal_type" onChange={handleNewDishChange} value={newDish.meal_type || "cafe_manha"}>
+              <select name="meal_type" onChange={handleNewDishChange} value={newDish.meal_type}>
                 <option value="cafe_manha">Café da manhã</option>
                 <option value="almoco">Almoço</option>
                 <option value="cafe_tarde">Café da tarde</option>
@@ -172,10 +172,13 @@ export function DailyMenu() {
             onClick={() =>
               newDish
                 ? setNewDish(null)
-                : setNewDish({ id: 0, name: "", description: "", meal_type: "" })
+                : setNewDish({ id: 0, name: "", description: "", meal_type: "cafe_manha" })
             }
           >
-            <IoMdAddCircleOutline cursor={"pointer"} size={25} />
+            <IoMdAddCircleOutline
+              cursor={"pointer"}
+              size={25}
+              onClick={() =>  newDish ? setNewDish(null)  : setNewDish({ id: 0, name: "", description: "", meal_type: "cafe_manha" })}/>
           </button>
           <FaTrashArrowUp cursor={"pointer"} onClick={() => setDeleted(!deleted)} />
         </footer>
