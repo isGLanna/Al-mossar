@@ -52,7 +52,6 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
     const response = await authenticateRegister(name, surname, email, password, id_enterprise, start_of_contract);
 
-    console.log(response.message)
     // Acesso negado (há credenciais inválidas ou falha na conexão com db)
     if (!response.success) {
       res.status(401).json({ success: response.success, message: response.message });
@@ -69,15 +68,13 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
 // Consulta de usuário via token
 export const tokenLogin = async (req: Request, res: Response): Promise<void> => {
-  const authHeader = req.headers['authorization']
-
   try {
+    const authHeader = req.headers['authorization']
+
     if (!authHeader || typeof authHeader !== 'string'){
       res.status(401).json({ success: false, message: 'Token não fornecido' })
       return
     }
-
-    console.log(authHeader)
 
     const token = authHeader.split(' ')[1]
 

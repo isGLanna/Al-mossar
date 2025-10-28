@@ -97,8 +97,7 @@ export class MenuService {
     token:string,
     day:string,   
     dishes: { name: string, description: string, meal: string}[]) {
-
-    console.log(dishes)
+      
     try {
       const { token: newToken, status: status } = await TokenService.refreshToken(token)
 

@@ -1,6 +1,6 @@
 import { GrFormNext, GrFormPrevious } from "../icons"
 import { TimeUtils } from "../../../../models/TimeUtils"
-import '../calendar.scss'
+import '../style/_calendar.scss'
 
 interface CalendarProps {
   currentMonth: number

@@ -2,7 +2,9 @@ import { useState, useEffect, useRef } from "react"
 import {TfiWrite, FaTrashArrowUp, IoMdAddCircleOutline, FaArrowRightLong} from "./icons"
 import { MenuDish, Dish } from "../../../models/Menu"
 import { Calendar } from "./sub-template/calendar"
-import "./calendar.scss"
+import "./style/menuContainer.scss"
+import "./style/_calendar.scss"
+import "./style/_menu.scss"
 
 export function DailyMenu() {
   const today = new Date()
