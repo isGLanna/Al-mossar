@@ -36,7 +36,6 @@ export async function create ( req: Request, res: Response ): Promise<void> {
   const { token, date, dishes } = req.body
 
   try {
-    console.log(dishes)
     const newMenu = await service.createMenu( token, date, dishes)
 
     res.status(201).json(newMenu)
@@ -49,7 +48,6 @@ export async function update ( req: Request, res: Response ): Promise<void> {
   const { token, date, dishes } = req.body
 
   try {
-    console.log(dishes)
     const updated = await service.updateMenu(token, date, dishes)
 
     res.status(201).json(updated)
