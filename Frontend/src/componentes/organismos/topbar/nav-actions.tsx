@@ -2,7 +2,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { logoutUser } from '../../templates/login/api'
 import { GrLogout, FaCircleUser, IoIosPeople, FaMoneyBillTransfer } from "./icons"
 import { UserStateContext } from '../../../context/user-login-context.tsx'
-import { EmployeePanel } from './panel'
+import { EmployeePanel } from '../panel/employee-panel.tsx'
 import styles from './pseudo-topbar.module.scss'
 import { useState, useEffect, useContext } from 'react'
 import { getUser } from './api'

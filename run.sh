@@ -10,5 +10,5 @@ cd ../BackendGL
 go run . &
 GO_PID=$!
 
-trap "kill $FRON_PID $BACKEND_PID $GO_PID" EXIT
+trap "kill $FRONT_PID $BACKEND_PID $GO_PID" EXIT
 wait

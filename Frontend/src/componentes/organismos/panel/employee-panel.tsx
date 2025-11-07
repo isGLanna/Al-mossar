@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { IoMdPersonAdd } from "react-icons/io"
-import { Employee } from '../../../../models/Employee'
+import { Employee } from '../../../models/Employee'
 import { addEmployeeAPI, deleteEmployeeAPI, getEmployeesAPI, editEmployeeAPI } from './api'
 import { CardContainer } from './sub-templates/card-container'
-import '../../../moleculas/formulario.sass'
+import '../../moleculas/formulario.sass'
 import './panel.scss'
 
 type EmployeePanelProps = {
