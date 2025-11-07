@@ -3,7 +3,7 @@ import { logoutUser } from '../../templates/login/api'
 import { useNavigate } from '@tanstack/react-router'
 import { GrLogout, FaCircleUser, IoIosPeople, FaMoneyBillTransfer, BiSolidPaintRoll, BiFoodMenu, FcAbout, ImHome } from "./icons"
 import { UserStateContext } from '../../../context/user-login-context'
-import { EmployeePanel } from '../topbar/panel/employee-panel'
+import { EmployeePanel } from '../panel/employee-panel'
 import { createEmployee } from '../../../models/EmployeeFactory'
 import { Employee } from '../../../models/Employee'
 import { getPhoto, getUser } from './api'

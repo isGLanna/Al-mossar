@@ -1,0 +1,28 @@
+.days {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.2rem;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  padding: 0.2rem;
+
+  button {
+    aspect-ratio: 4/3;
+    width: 3rem;
+    text-align: center;
+    padding: 0;
+
+    &.selected {
+      background: var(--second-300);
+    }
+  }
+
+  &.__week{
+    display: grid;
+    text-align: center;
+    font-weight: bold;
+    cursor: default;
+  }
+}

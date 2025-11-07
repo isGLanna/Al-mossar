@@ -33,11 +33,6 @@ export function DailyMenu() {
     menuDishRef.current = menuDish
   }
 
-  // Expansão de descrição
-  const handleDescription = (id: number) => {
-    setOpenDescription(openDescription === id ? null : id)
-  }
-
   useEffect(() => {
     fetchMenuForDay(today.getDate())
   }, [currentMonth, currentYear])
@@ -119,7 +114,7 @@ export function DailyMenu() {
                 openDescription === dish.id ? "expanded" : ""
               }`}
               key={dish.id}
-              onClick={() => handleDescription(dish.id)}
+              onClick={() => setOpenDescription(dish.id === openDescription ? null : dish.id)}
             >
               <span>
                 {dish.name}{" "}

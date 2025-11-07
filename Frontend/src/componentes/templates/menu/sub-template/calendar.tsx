@@ -1,6 +1,7 @@
 import { GrFormNext, GrFormPrevious } from "../icons"
 import { TimeUtils } from "../../../../models/TimeUtils"
-import '../style/_calendar.scss'
+import { DaysGrid } from "../../../moleculas/days-grid/days-grid"
+import '../../../moleculas/days-grid/days-grid.scss'
 
 interface CalendarProps {
   currentMonth: number
@@ -49,27 +50,18 @@ export function Calendar({
         </button>
       </header>
 
-      <div className="week">
+      <div className="days __week">
         {week.map((day) => (
           <div key={day}>{day}</div>
         ))}
       </div>
 
-      <div className="days">
-        {daysArray.map((day, index) =>
-          day ? (
-            <button
-              key={day}
-              className={`${day === selectedDay ? "selected" : ""}`}
-              onClick={() => onDaySelect(day)}
-            >
-              {day}
-            </button>
-          ) : (
-            <div key={`empty-${index}`} className="empty" />
-          )
-        )}
-      </div>
+      <DaysGrid
+        daysArray={daysArray}
+        selectedDay={selectedDay}
+        onDaySelect={onDaySelect}
+      />
+      
     </article>
   )
 }

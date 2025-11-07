@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getToken } from '../../templates/login/api'
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://localhost'
+const API_URL = import.meta.env.VITE_API_URL || 'https://localhost:3000'
 
 export const getPhoto = async () => {
   try {

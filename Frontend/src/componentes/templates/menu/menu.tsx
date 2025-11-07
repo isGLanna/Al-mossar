@@ -1,4 +1,4 @@
-import '../../moleculas/cardapio.module.scss'
+import '../../moleculas/cardapio.scss'
 import { NavActions } from '../../organismos/topbar/nav-actions'
 import { DailyMenu } from './daily-menu.tsx'
 

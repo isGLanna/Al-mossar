@@ -13,8 +13,6 @@ export class UserController {
 
       const photo = await User.getUserPhoto(token)
 
-      console.log("Passou aqui")
-
       photo ? res.status(200).json({ success: true, photo }) : res.status(200).json({ success: true, photo: null })
     } catch (error: any) {
       const status = error.status || 500

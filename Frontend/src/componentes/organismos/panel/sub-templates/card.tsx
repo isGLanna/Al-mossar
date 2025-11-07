@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { IoPersonRemoveSharp } from "react-icons/io5"
-import {Employee} from "../../../../../models/Employee.ts";
+import {Employee} from "../../../../models/Employee.ts";
 import './card.scss'
 
 
