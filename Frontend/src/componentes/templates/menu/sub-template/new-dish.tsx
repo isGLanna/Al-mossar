@@ -12,7 +12,7 @@ interface NewDishProps {
   setNewDish(dish: NewDishProps["newDish"] | null): void
 }
 
-export function newDish({newDish, handleNewDishChange, handleSaveNewDish, setNewDish}: NewDishProps) {
+export function NewDish({newDish, handleNewDishChange, handleSaveNewDish, setNewDish}: NewDishProps) {
   return (
     <div className="dish new-dish">
       <div className="flex flex-col gap-2">
@@ -36,7 +36,7 @@ export function newDish({newDish, handleNewDishChange, handleSaveNewDish, setNew
           onChange={handleNewDishChange}
         />
       </div>
-      <div className="flex gap-2 justify-center mt-2">
+      <div className="flex my-3 justify-evenly">
         <button onClick={handleSaveNewDish}>Salvar</button>
         <button onClick={() => setNewDish(null)}>Cancelar</button>
       </div>

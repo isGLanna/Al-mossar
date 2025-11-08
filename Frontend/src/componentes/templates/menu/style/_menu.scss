@@ -30,6 +30,8 @@
   }
 
   .dish {
+    display: grid;
+    grid-template-rows: 1fr auto;
     width: auto;
     padding: 5px;
     max-height: 40px;
@@ -52,6 +54,19 @@
 
       &:hover{
         background: unset;
+      }
+
+      button {
+        background: var(--second-500);
+        color: white;
+        border-radius: 10px;
+        transition: background-color 200ms ease;
+        width: 30%;
+        height: 1.8rem;
+
+        &:hover {
+          background: var(--second-600);
+        }
       }
 
       @keyframes expanded {
@@ -117,22 +132,6 @@
 
     textarea {
       height: 6rem;
-    }
-
-    button {
-      background: var(--second-500);
-      min-width: 4rem;
-      max-width: 6rem;
-      color: #f7f7f7;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 0.8em;
-      transition: background-color 0.3s ease;
-
-      &:hover {
-        background: var(--second-600);
-      }
     }
   }
 

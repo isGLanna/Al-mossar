@@ -1,0 +1,6 @@
+  O propósito deste templete segue algumas regras prédefinidas, entre elas:
+
+- Deve conter o componente `NavActions` no topo da página, que é responsável pela navegação do usuário.
+- Deve conter o componente `DaylyMenu`, responsável pela exibição do conteúdo principal, cardápio e calendário para seleção de dias.
+- Somente o Menu deve conter um rodapé, que pode ser personalizado conforme as informações da empresa. Isto sob a justificativa de que outros 
+devem ser acessíveis a usuários externos, não havendo, portanto, necessidade de um rodapé

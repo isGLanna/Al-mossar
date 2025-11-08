@@ -1,6 +1,7 @@
-import '../../moleculas/cardapio.scss'
 import { NavActions } from '../../organismos/topbar/nav-actions'
 import { DailyMenu } from './daily-menu.tsx'
+import '../../moleculas/menu/menu.scss'
+import '../../atomos/button.scss'
 
 export function Menu() {
   return (
@@ -15,6 +16,8 @@ export function Menu() {
           <DailyMenu />
         </main>
 
+      <footer>
+      </footer>
       </div>
     </div>
   );

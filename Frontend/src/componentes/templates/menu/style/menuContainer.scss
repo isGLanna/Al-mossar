@@ -36,14 +36,6 @@
 }
 
 @media (max-width: 720px) {
-  .calendar,
-  .menu {
-    button {
-      width: clamp(2.3rem, 7dvw, 90px);
-      height: clamp(2.3rem, 7dvw, 45px);
-      padding: 0;
-    }
-  }
 
   .h3 {
     margin-inline: clamp(2px, 2lvw, 14px);

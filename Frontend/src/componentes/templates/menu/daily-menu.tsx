@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react"
 import {TfiWrite, FaTrashArrowUp, IoMdAddCircleOutline, FaArrowRightLong} from "./icons"
 import { MenuDish, Dish } from "../../../models/Menu"
 import { Calendar } from "./sub-template/calendar"
+import { NewDish } from "./sub-template/new-dish"
 import "./style/menuContainer.scss"
 import "./style/_calendar.scss"
 import "./style/_menu.scss"
@@ -133,33 +134,12 @@ export function DailyMenu() {
         )}
 
         {newDish && (
-          <div className="dish new-dish">
-            <div className="flex flex-col gap-2">
-              <input
-                name="name"
-                placeholder="Nome do prato"
-                value={newDish.name}
-                onChange={handleNewDishChange}
-              />
-              <select name="meal_type" onChange={handleNewDishChange} value={newDish.meal_type}>
-                <option value="cafe_manha">Café da manhã</option>
-                <option value="almoco">Almoço</option>
-                <option value="cafe_tarde">Café da tarde</option>
-                <option value="janta">Janta</option>
-              </select>
-
-              <textarea
-                name="description"
-                placeholder="Modo de preparo"
-                value={newDish.description}
-                onChange={handleNewDishChange}
-              />
-            </div>
-            <div className="flex gap-2 justify-center mt-2">
-              <button onClick={handleSaveNewDish}>Salvar</button>
-              <button onClick={() => setNewDish(null)}>Cancelar</button>
-            </div>
-          </div>
+          <NewDish 
+            newDish={newDish} 
+            handleNewDishChange={handleNewDishChange} 
+            handleSaveNewDish={handleSaveNewDish}
+            setNewDish={setNewDish}
+          />
         )}
 
         <footer className="menu-footer">
