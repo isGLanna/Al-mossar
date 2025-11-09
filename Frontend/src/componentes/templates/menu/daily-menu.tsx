@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react"
-import {TfiWrite, FaTrashArrowUp, IoMdAddCircleOutline, FaArrowRightLong} from "./icons"
 import { MenuDish, Dish } from "../../../models/Menu"
 import { Calendar } from "./sub-template/calendar"
-import { NewDish } from "./sub-template/new-dish"
+import { NewDish } from "./sub-template/menu/new-dish"
+import { MenuFooter } from "./sub-template/menu/menu-footer"
+import { DishList } from "./sub-template/menu/dish-list"
 import "./style/menuContainer.scss"
 import "./style/_calendar.scss"
 import "./style/_menu.scss"
@@ -11,7 +12,6 @@ export function DailyMenu() {
   const today = new Date()
   const [dishes, setDishes] = useState<Dish[]>([])
   const menuDishRef = useRef<MenuDish | null>(null)
-  const [openDescription, setOpenDescription] = useState<number | null>(null)
   const [newDish, setNewDish] = useState<Dish | null>(null)
   const [deleted, setDeleted] = useState(false)
 
@@ -93,7 +93,7 @@ export function DailyMenu() {
 
   return (
     <section className="menuContainer">
-      {/* Calendário modularizado */}
+
       <Calendar
         currentMonth={currentMonth}
         currentYear={currentYear}
@@ -108,30 +108,11 @@ export function DailyMenu() {
       <article className="menu">
         <header className="menu-header">Cardápio</header>
 
-        {dishes.length > 0 ? (
-          dishes.map((dish) => (
-            <div
-              className={`dish ${
-                openDescription === dish.id ? "expanded" : ""
-              }`}
-              key={dish.id}
-              onClick={() => setOpenDescription(dish.id === openDescription ? null : dish.id)}
-            >
-              <span>
-                {dish.name}{" "}
-                {deleted && (
-                  <FaArrowRightLong
-                    className="btn-delete"
-                    onClick={() => handleDeleteDish(dish.id)}
-                  />
-                )}
-              </span>
-              <p>{dish.description}</p>
-            </div>
-          ))
-        ) : (
-          <div className="dish">Nenhuma refeição foi encontrada</div>
-        )}
+        <DishList
+          dishes={dishes}
+          deleted={deleted}
+          handleDeleteDish={handleDeleteDish}
+        />
 
         {newDish && (
           <NewDish 
@@ -142,23 +123,14 @@ export function DailyMenu() {
           />
         )}
 
-        <footer className="menu-footer">
-          <TfiWrite cursor={"pointer"} />
-          <button
-            aria-label="Adicionar prato"
-            onClick={() =>
-              newDish
-                ? setNewDish(null)
-                : setNewDish({ id: 0, name: "", description: "", meal_type: "cafe_manha" })
-            }
-          >
-            <IoMdAddCircleOutline
-              cursor={"pointer"}
-              size={25}
-              onClick={() =>  newDish ? setNewDish(null)  : setNewDish({ id: 0, name: "", description: "", meal_type: "cafe_manha" })}/>
-          </button>
-          <FaTrashArrowUp cursor={"pointer"} onClick={() => setDeleted(!deleted)} />
-        </footer>
+        <MenuFooter
+          newDish={newDish}
+          setNewDish={setNewDish}
+          deleted={deleted}
+          setDeleted={setDeleted}
+        />
+
+
       </article>
     </section>
   )

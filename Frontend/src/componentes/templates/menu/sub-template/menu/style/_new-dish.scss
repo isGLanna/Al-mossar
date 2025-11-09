@@ -1,0 +1,62 @@
+.new-dish {
+  max-height: 0;
+  animation: expanded 200ms forwards;
+  overflow: hidden;
+  padding-inline: 5px;
+  transition: height 300ms ease;
+
+  &:hover{
+    background: transparent;
+  }
+
+  button {
+    background: var(--second-500);
+    color: white;
+    border-radius: 10px;
+    transition: background-color 200ms ease;
+    width: 30%;
+    height: 1.8rem;
+
+    &:hover {
+      background: var(--second-600);
+    }
+  }
+
+  &.expand {
+    animation: expanded 300ms forwards;
+  }
+
+  &.rewind {
+    animation: rewinded 300ms forwards;
+  }
+
+  input,
+  textarea,
+  select {
+    outline: none;
+    border: 1px solid #6e839c;
+    border-left-width: 3px;
+    border-right-width: 3px;
+    border-radius: 5px;
+    padding-left: 4px;
+  }
+
+  textarea {
+    height: 6rem;
+  }
+
+  @keyframes expanded {
+    from {
+      max-height: 0;
+    } to {
+      max-height: 16rem;
+    }
+  }
+  @keyframes rewinded {
+    from {
+      max-height: 16rem;
+    } to {
+      max-height: 0;
+    }
+  }
+}
