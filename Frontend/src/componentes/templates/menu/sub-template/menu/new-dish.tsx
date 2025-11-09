@@ -1,4 +1,6 @@
-import '../style/_menu.scss'
+import { CgPlayTrackPrevR } from 'react-icons/cg'
+import './style/_new-dish.scss'
+import { useState } from "react"
 
 interface NewDishProps {
   newDish: {
@@ -13,8 +15,18 @@ interface NewDishProps {
 }
 
 export function NewDish({newDish, handleNewDishChange, handleSaveNewDish, setNewDish}: NewDishProps) {
+  const [expandNewDish, setExpandNewDish] = useState(true)
+
+  // Lidar para fechar o new dish
+  const handleCloseTab = () => {
+    setExpandNewDish(false)
+    setTimeout(() => {
+      setNewDish(null)
+    }, 300)
+  }
+
   return (
-    <div className="dish new-dish">
+    <div className={`new-dish ${expandNewDish ? 'expand' : 'rewind'}`}>
       <div className="flex flex-col gap-2">
         <input
           name="name"
@@ -38,7 +50,7 @@ export function NewDish({newDish, handleNewDishChange, handleSaveNewDish, setNew
       </div>
       <div className="flex my-3 justify-evenly">
         <button onClick={handleSaveNewDish}>Salvar</button>
-        <button onClick={() => setNewDish(null)}>Cancelar</button>
+        <button onClick={handleCloseTab}>Cancelar</button>
       </div>
     </div>
   )

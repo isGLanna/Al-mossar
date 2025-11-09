@@ -9,10 +9,6 @@
   gap: 2rem;
 }
 
-.h3 {
-  margin-inline: 30px;
-}
-
 .calendar,
 .menu {
   max-width: 90%;
@@ -32,13 +28,5 @@
       font-weight: 600;
       font-size: 18px;
     }
-  }
-}
-
-@media (max-width: 720px) {
-
-  .h3 {
-    margin-inline: clamp(2px, 2lvw, 14px);
-    font-size: clamp(1rem, 3dvw, 1.5rem);
   }
 }
