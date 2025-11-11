@@ -48,6 +48,8 @@ export async function update ( req: Request, res: Response ): Promise<void> {
   const { token, date, dishes } = req.body
 
   try {
+    console.log(req.body)
+    console.log(dishes.meal_type)
     const updated = await service.updateMenu(token, date, dishes)
 
     res.status(201).json(updated)
@@ -56,7 +58,7 @@ export async function update ( req: Request, res: Response ): Promise<void> {
   }
 }
 
-export async function deleted(req: Request, res: Response ): Promise<void> {
+export async function deleted (req: Request, res: Response ): Promise<void> {
   const { token, name, date } = req.body
 
   try {

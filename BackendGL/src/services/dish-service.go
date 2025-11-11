@@ -29,12 +29,10 @@ func NewDish(name string, description string, mealType string, calories uint) *m
 }
 
 func CreateDish(token string, dish *models.Dish) error {
-	db := db.DB
-
 	switch dish.MealType {
 	case "cafe_manha", "almoco", "cafe_tarde", "janta":
 	}
-	return db.Create(dish).Error
+	return db.DB.Create(dish).Error
 }
 
 func (s *DishService) UpdateDish(token string, name string, description string, day string, mealType string, calories uint) error {
