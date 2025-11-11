@@ -1,7 +1,8 @@
 import { useState } from "react"
-import { FaArrowRightLong } from "../../icons"
+import { MdDoubleArrow } from "react-icons/md";
 import { Dish } from "../../../../../models/Menu"
 import "../../style/_menu.scss"
+import "./style/dish-list.scss"
 
 interface DishListProps {
   dishes: Dish[]
@@ -11,35 +12,50 @@ interface DishListProps {
 
 export function DishList({ dishes, deleted, handleDeleteDish }: DishListProps) {
   const [openDescription, setOpenDescription] = useState<number | null>(null)
+  let mealTypes = [  
+    { label: "Café da manhã", value: "cafe_manha" },
+    { label: "Almoço", value: "almoco" },
+    { label: "Café da tarde", value: "cafe_tarde" },
+    { label: "Janta", value: "janta" },]
 
   return (
     <div className="dish-list">
-      {dishes.length > 0 ? (
-        dishes.map((dish) => (
-          <div
-            className={`dish ${
-              openDescription === dish.id ? "expanded" : ""
-            }`}
-            key={dish.id}
-            onClick={() => setOpenDescription(dish.id === openDescription ? null : dish.id)}
-          >
-            <span>
-              {dish.name}{" "}
-              {deleted && (
-                <button
-                  className="btn-delete"
-                  onClick={() => handleDeleteDish(dish.id)}
-                >
-                  <FaArrowRightLong className="btn-delete"/>
-                </button>
-              )}
-            </span>
-            <p>{dish.description}</p>
-          </div>
-        ))
-      ) : (
-        <div className="dish">Nenhuma refeição foi encontrada</div>
-      )}
+        {/* Iterar sobre os pratos disponíveis, caso contrário, informar que não há pratos disponíveis*/}
+        {dishes.length > 0 ? (
+
+          mealTypes.map(({ label, value }) => {
+            const filtered = dishes.filter((dish) => dish.meal_type === value)
+            
+            if (!filtered.length) return null
+
+            return (
+              <section className="meal-section">
+                <h4 className="text-lg my-[5px]">{label}</h4>
+
+                  {filtered.map((dish) => (
+                    <div
+                      className={`dish ${openDescription === dish.id ? "expanded" : ""}`}
+                      key={dish.id}
+                      onClick={() => setOpenDescription(dish.id === openDescription ? null : dish.id)}>
+
+                      <span>
+                        {dish.name}{" "}
+                        {deleted && (
+                          <button className="btn-delete" onClick={() => handleDeleteDish(dish.id)}>
+                            <MdDoubleArrow className="btn-delete"/>
+                          </button>
+                        )}
+                      </span>
+                      <p>{dish.description}</p>
+
+                    </div>
+                ))}
+              </section>)
+
+          })
+        ) : (
+          <div className="dish">Nenhuma refeição foi encontrada</div>
+        )}
     </div>
   )
 }

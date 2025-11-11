@@ -1,5 +1,4 @@
-import { CgPlayTrackPrevR } from 'react-icons/cg'
-import './style/_new-dish.scss'
+import './style/new-dish.scss'
 import { useState } from "react"
 
 interface NewDishProps {

@@ -23,12 +23,7 @@ export class MenuService {
         }
       })
 
-      const result: MenuResponse = {
-        cafe_manha: [],
-        almoco: [],
-        cafe_tarde: [],
-        janta: [],
-      }
+      const result: MenuResponse = {  cafe_manha: [], almoco: [], cafe_tarde: [], janta: []  }
 
       if (menu?.dishes) {
         for (const dish of menu.dishes) {
@@ -48,7 +43,7 @@ export class MenuService {
   async createMenu( 
     token:string, 
     day:string, 
-    dishes: { name: string; description: string; meal: string}[]) {
+    dishes: { name: string; description: string; meal_type: string}[]) {
     
     try {
       const { token: newToken, status: status } = await TokenService.refreshToken(token)
@@ -76,10 +71,10 @@ export class MenuService {
       }
 
       const createdDishes = await Dish.bulkCreate(
-        dishes.map(({ name, description, meal }) => ({
+        dishes.map(({ name, description, meal_type }) => ({
           name,
           description,
-          meal_type: meal
+          meal_type: meal_type
         })),
         { returning: true }
       )
@@ -96,7 +91,7 @@ export class MenuService {
   async updateMenu (
     token:string,
     day:string,   
-    dishes: { name: string, description: string, meal: string}[]) {
+    dishes: { name: string, description: string, meal_type: string}[]) {
       
     try {
       const { token: newToken, status: status } = await TokenService.refreshToken(token)
@@ -116,10 +111,10 @@ export class MenuService {
       await menu.setDishes([])
 
       const newDishes = await Dish.bulkCreate(
-        dishes.map(({ name, description, meal }) => ({
+        dishes.map(({ name, description, meal_type }) => ({
           name,
           description,
-          meal_type: meal
+          meal_type: meal_type
         })),
         { returning: true }
       )
