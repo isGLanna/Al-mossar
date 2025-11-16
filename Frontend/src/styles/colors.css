@@ -5,17 +5,25 @@
   --input: #fafafa;
   --form: #fafafa;
 
-  --branding-700: #C27E00;
-  --branding-600: #F09D05;
-  --branding-500: #f6b132;
-  --branding-400: #F0C16A;
-  --branding-300: #EFD39F;
+  --branding-700: hsl(39, 92%, 43%);
+  --branding-600: hsl(39, 88%, 53%);
+  --branding-500: hsl(39, 84%, 63%);
+  --branding-400: hsl(39, 74%, 73%);
+  --branding-300: hsl(39, 64%, 83%);
 
   --second-700: #324E86;
   --second-600: #4F72B5;
   --second-500: #768FBF;
   --second-400: #9EAECC;
   --second-300: #C2CBDB;
+
+  --green-600: #4FB572;
+  --green-500: #76BF8F;
+  --green-400: #9ECCAC;
+
+  --red-600: #B54F4F;
+  --red-500: #BF7676;
+  --red-400: #CC9E9E;
 
   --second-700-a: #324E8680;
   --second-500-a: #768FBF80;

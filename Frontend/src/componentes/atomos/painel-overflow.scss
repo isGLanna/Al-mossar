@@ -1,0 +1,40 @@
+.panelOverlay {
+  position: fixed;
+  top: 65px;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 65px);
+  background: #768FBF60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  
+  &.fadeIn {
+    animation: fadeIn 200ms ease-in forwards;
+    pointer-events: all;
+  }
+
+  &.fadeOut {
+    animation: fadeOut 200ms ease-in forwards;
+    pointer-events: none;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

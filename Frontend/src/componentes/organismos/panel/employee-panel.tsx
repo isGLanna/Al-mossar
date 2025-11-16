@@ -4,6 +4,7 @@ import { Employee } from '../../../models/Employee'
 import { addEmployeeAPI, deleteEmployeeAPI, getEmployeesAPI, editEmployeeAPI } from './api'
 import { CardContainer } from './sub-templates/card-container'
 import '../../moleculas/formulario.sass'
+import '../../atomos/painel-overflow.scss'
 import './panel.scss'
 
 type EmployeePanelProps = {
@@ -122,7 +123,7 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
 
         <CardContainer employees={employees} handleEditChange={handleEditChange} handleDelete={handleDelete}/>
 
-        {employee.canEditEmployeePanel() && (<form className='add-form' onSubmit={(e) => { e.preventDefault(); handleSubmit() }}>
+        {employee.canEditEmployeePanel() && (<form className="add-form open" onSubmit={(e) => { e.preventDefault(); handleSubmit() }}>
             {addEmployee && (
               <>
                 <div className="form-group">

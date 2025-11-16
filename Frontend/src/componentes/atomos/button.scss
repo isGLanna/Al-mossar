@@ -1,4 +1,6 @@
 button{
+  display: grid;
+  place-items: center;
   border-radius: 10px;
   text-align: center;
   padding-inline: 10px;

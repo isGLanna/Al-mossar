@@ -1,0 +1,79 @@
+.chat-container{
+  position: fixed;
+  bottom: 3.5rem;
+  right: 3.5rem;
+  background: var(--menuContainers);
+  width: 24rem;
+  aspect-ratio: 6/8;
+  border-radius: 10px;
+  border-left: 3px solid var(--second-500);
+  border-right: 3px solid var(--second-500);
+  border-top: 1px solid var(--second-500);
+  border-bottom: 1px solid var(--second-500);
+  box-shadow: var(--box-shadow);
+  transition: width 200ms ease, max-height 200ms ease;
+  overflow: hidden;
+
+  & header{
+    display: flex;
+    position: absolute;
+    width: 100%;
+    justify-content: space-between;
+    background: var(--second-300-a);
+    backdrop-filter: blur(3px);
+    padding: 5px;
+    color: var(--second-700);
+  }
+
+  section {
+    display: grid;
+    grid-template-columns: auto;
+    gap: 5px;
+    padding: 5px;
+
+    .message {
+      background: var(--second-300-a);
+      padding-inline: 5px;
+      border-radius: 10px;
+
+      .message-content {
+        display: grid;
+        grid-template-areas:
+          "sender-name timestamp"
+          "message-text message-text";
+
+        .timestamp, .sender-name {
+          font-size: .85rem;
+        }
+
+        .sender-name{}
+        .timestamp{
+          justify-self: end;
+        }
+        .message-text{}
+
+      }
+    }
+  }
+}
+
+.avatar-container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 3px;
+
+  .avatar {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+  }
+
+  &.my{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    .avatar {
+      justify-self: center;
+    }
+  }
+}
