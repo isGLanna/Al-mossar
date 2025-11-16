@@ -45,10 +45,10 @@ export const EmployeeCard = memo(({ emp, index, selectedCard, setSelectedCard }:
       className={`card ${selectedCard == index ? "active" : ""}`}
       onClick={() => index == selectedCard ? setSelectedCard(-1) : setSelectedCard(index)}
     >
+
       <div className="image-container area-a image">
         {emp.photo ? (
           <img src={emp.photo} alt={`${emp.name} ${emp.surname}`} />
-
         ) : (
           <div className="label">
             {emp.name && emp.surname ? `${emp.name.charAt(0)}${emp.surname.charAt(0)}`.toUpperCase() : ''}
@@ -85,6 +85,7 @@ export const EmployeeCard = memo(({ emp, index, selectedCard, setSelectedCard }:
         <span>{getSalary()}</span>
         <span>{emp.salary?.updated_at ? getFormattedDate(emp.salary.updated_at, true) : ''}</span>
       </div>
+
     </div>
   )
 })
