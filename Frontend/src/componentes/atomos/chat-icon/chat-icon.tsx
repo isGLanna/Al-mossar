@@ -13,7 +13,7 @@ export function ChatIcon() {
   if (login && !client) {
     return (
       <>
-        <button className="chat-icon" onClick={() => setIsOpenChat(prev => !prev)}>
+        <button className={`chat-icon ${isOpenChat ? "minimize-icon" : "maximize-icon"}`} onClick={() => setIsOpenChat(prev => !prev)}>
           <BsChatRightTextFill size={25}/>
 
           {newMessages > 0 && (
