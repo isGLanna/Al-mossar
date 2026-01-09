@@ -11,7 +11,7 @@ interface DishListProps {
 }
 
 export function DishList({ dishes, deleted, handleDeleteDish }: DishListProps) {
-  const [openDescription, setOpenDescription] = useState<number | null>(null)
+  const [openDescription, setOpenDescription] = useState<number[]>([])
   let mealTypes = [  
     { label: "Café da manhã", value: "cafe_manha" },
     { label: "Almoço", value: "almoco" },
@@ -34,9 +34,9 @@ export function DishList({ dishes, deleted, handleDeleteDish }: DishListProps) {
 
                   {filtered.map((dish) => (
                     <div
-                      className={`dish ${openDescription === dish.id ? "expanded" : ""}`}
+                      className={`dish ${openDescription?.includes(dish.id) ? "expanded" : ""}`}
                       key={dish.id}
-                      onClick={() => setOpenDescription(dish.id === openDescription ? null : dish.id)}>
+                      onClick={() => setOpenDescription(prev => prev.includes(dish.id) ? prev.filter(id => id !== dish.id) : [...prev, dish.id])}>
 
                       <span>
                         {dish.name}{" "}

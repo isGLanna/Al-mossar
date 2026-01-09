@@ -1,0 +1,23 @@
+.tooltip
+  background: #00000080
+  padding: 3px 6px
+  border-radius: 5px
+  font-size: 11px
+  color: white
+  white-space: nowrap
+  font-weight: 400
+  pointer-events: none
+  animation: 200ms ease openTooltip forwards
+
+.tooltip-arrow
+  fill: #00000080
+
+
+@keyframes openTooltip
+  from
+    opacity: 0
+    transform: translateX(-5px)  translateY(-5px)
+  to
+    opacity: 1
+    transform: translateX(0px) translateY(-5px)
+

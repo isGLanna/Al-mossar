@@ -2,11 +2,11 @@
   position: fixed;
   display: flex;
   flex-direction: column;
+  background: var(--menuContainers);
+  max-height: 32rem;
+  max-width: 24rem;
   bottom: calc(2.5rem - 1rem);
   right: calc(2.5rem - 1rem);
-  background: var(--menuContainers);
-  height: 32rem;
-  width: 24rem;
   aspect-ratio: 6/8;
   border-radius: 10px;
   border-left: 3px solid var(--second-500);
@@ -15,7 +15,21 @@
   border-bottom: 1px solid var(--second-500);
   box-shadow: var(--box-shadow);
   transition: width 200ms ease, max-height 200ms ease;
+  caret-color: grey;
   overflow: hidden;
+
+  &.minimize-container {
+    scale: 1;
+    height: 0;
+    width: 0;
+    transition: 200ms;
+  }
+  &.maximize-container {
+    height: 32rem;
+    width: 24rem;
+    scale: 1;
+    transition: 200ms;
+  }
 }
 
 
@@ -55,15 +69,15 @@
     .message-content {
       display: flex;
       flex-direction: column;
-      width:90%;
-      font-size: 14px;
+      width:96%;
+      font-size: 13px;
 
       .message-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
         width: 100%;
-        font-size: 12px;
+        font-size: 13px;
       }
     }
   }
@@ -86,9 +100,9 @@
     display: flex;
     flex: 1;
     height: 1.5rem;
+    transform: translateY(3px);
     width: 100%;
     padding-inline: 10px;
-    line-height: 22px;
     resize: none;
     outline: none;
   }
@@ -102,6 +116,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 2rem;
+    transform: translateX(1px);
     cursor: pointer;
 
     svg {
