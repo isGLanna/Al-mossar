@@ -4,6 +4,7 @@ import { HiMiniMinus } from "react-icons/hi2";
 import { Avatar } from "../../atomos/avatar/avatar"
 import { AiOutlineSend } from "react-icons/ai";
 import "./chat.scss"
+import { InfoTooltip } from '../../atomos/tooltip/tooltip';
 
 interface ChatProps {
   isOpen: boolean
@@ -38,9 +39,13 @@ export function Chat({ isOpen, setIsOpen }: ChatProps) {
   ]
 
   return (
-    <div className="chat-container">
+    <div className={`chat-container ${isOpen ? "maximize-container" : "minimize-container"}`}>
       <header className="chat-header">
-        <button> <IoIosPeople size={30} /> </button>
+        <InfoTooltip text="Em breve..."> 
+          <button>  
+            <IoIosPeople size={30} /> 
+          </button>
+        </InfoTooltip>
         <button onClick={() => setIsOpen(false)}> <HiMiniMinus size={30} /> </button>
       </header>
 
@@ -62,9 +67,9 @@ export function Chat({ isOpen, setIsOpen }: ChatProps) {
       </section>
 
       <section className="message-sender">
-        <form className="flex flex-row h-0 w-full">
+        <form className="flex flex- w-full">
           <textarea name="message" id="message-field" className="message-input" spellCheck={false}></textarea>
-          <button className="sender"> <AiOutlineSend size={20} color="white"/> </button>
+          <button className="sender translate-x-4"> <AiOutlineSend size={20} color="white"/> </button>
         </form>
       </section>
     </div>

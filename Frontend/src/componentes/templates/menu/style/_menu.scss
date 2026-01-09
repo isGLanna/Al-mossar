@@ -37,12 +37,12 @@
     max-height: 40px;
     overflow: hidden;
     scrollbar-gutter: stable;
-    transition: max-height 250ms;
+    transition: max-height 250ms ease-in-out;
     text-align: center;
     cursor: pointer;
 
     &.expanded {
-      max-height: 12rem;
+      max-height: 200px;
       overflow-y: auto;
     }
 

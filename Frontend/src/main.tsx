@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client'
 import { routeTree } from './routeTree.gen'
 import { UserStateProvider } from './context/user-login-context'
 import './styles/global.css'
+import { Theme } from "@radix-ui/themes";
 
 const route = createRouter({ routeTree })
 
@@ -16,7 +17,9 @@ declare module '@tanstack/react-router' {
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <UserStateProvider>
-      <RouterProvider router={route} />
+      <Theme>
+        <RouterProvider router={route} />
+      </Theme>
     </UserStateProvider>
   </StrictMode>
 )
