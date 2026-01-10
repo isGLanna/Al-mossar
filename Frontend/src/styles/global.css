@@ -1,6 +1,5 @@
 @import "./colors.css";
 @import "tailwindcss";
-@import "@radix-ui/themes/styles.css";
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -32,7 +31,7 @@ body {
   height: calc(100dvh - 70px);
   margin: 0;
   background:
-    url("../assets/bg.webp") center / cover no-repeat fixed,
+    url("../assets//bg.webp") center / cover no-repeat fixed,
     #e6e7eb;
 }
 
