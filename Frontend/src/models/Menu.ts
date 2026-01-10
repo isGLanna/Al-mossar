@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getToken, setNewToken } from '../componentes/templates/login/api'
+import { getToken, setNewToken } from '../components/templates/login/api'
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://localhost:3000'
 

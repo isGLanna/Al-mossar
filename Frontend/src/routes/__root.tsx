@@ -1,4 +1,4 @@
-import { RootLayout } from '../componentes/templates'
+import { RootLayout } from '../components/templates'
 import { Outlet, createRootRoute } from '@tanstack/react-router'
 
 export const Route = createRootRoute({
