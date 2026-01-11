@@ -18,7 +18,17 @@ export function Calendar({
   onMonthChange,
   onDaySelect
 }: CalendarProps) {
-  const week = ["D", "S", "T", "Q", "Q", "S", "S"]
+
+  const week = [
+    { label: "D", id: "sun" },
+    { label: "S", id: "mon" },
+    { label: "T", id: "tue" },
+    { label: "Q", id: "wed" },
+    { label: "Q", id: "thu" },
+    { label: "S", id: "fri" },
+    { label: "S", id: "sat" }
+  ]
+
 
   const daysArray = TimeUtils.getDaysArray(currentYear, currentMonth)
 
@@ -52,7 +62,7 @@ export function Calendar({
 
       <div className="days __week">
         {week.map((day) => (
-          <div key={day}>{day}</div>
+          <div key={day.id}>{day.label}</div>
         ))}
       </div>
 

@@ -29,7 +29,7 @@ export function DishList({ dishes, deleted, handleDeleteDish }: DishListProps) {
             if (!filtered.length) return null
 
             return (
-              <section className="meal-section">
+              <section className="meal-section" key={value}>
                 <h4 className="text-lg my-[5px]">{label}</h4>
 
                   {filtered.map((dish) => (
