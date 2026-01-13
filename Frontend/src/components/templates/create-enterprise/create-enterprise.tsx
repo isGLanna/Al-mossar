@@ -1,7 +1,7 @@
 import { useNavigate } from '@tanstack/react-router'
 import { IoAddCircleSharp, IoRemove } from "react-icons/io5"
 import { useState } from 'react'
-import '../../molecules/formulario.sass'
+import '../../molecules/formulario.scss'
 import { registerEnterprise } from './api'
 
 export function CreateEnterprise() {

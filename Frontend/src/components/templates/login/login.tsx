@@ -3,7 +3,7 @@ import { loginUser, getUserByToken } from './api';
 import { useState, useEffect, useContext } from 'react'
 import { UserStateContext } from '../../../context/user-login-context'
 import Logo from './sub-templates/logo'
-import '../../molecules/formulario.sass'
+import '../../molecules/formulario.scss'
 import '../../atoms/checkbox.sass'
 import '../../atoms/spinner.sass'
 
@@ -154,7 +154,7 @@ export function Login() {
             disabled={isLoading}
             className={isLoading ? 'loading' : ''}
             />
-          {isLoading && (<div className='spinner fixed mt-[15px]'></div>)}
+          {isLoading && (<div className='spinner fixed mt-[5px]'></div>)}
           {( emptyField.email || emptyField.password ) && <span>Credenciais inválidas</span>}
         </div>
 

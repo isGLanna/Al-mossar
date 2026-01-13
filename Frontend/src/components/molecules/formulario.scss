@@ -1,0 +1,183 @@
+@use '../atoms/vibrar.animation';
+
+.container {
+  display: flex;
+  position: absolute;
+  padding-block: 60px;
+  max-width: 100dvw;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+}
+
+.form-container {
+  position: relative;
+  display: flex;
+  max-width: 30rem;
+  flex-direction: column;
+  padding: 20px 40px;
+  background: var(--form);
+  box-shadow: var(--box-shadow);
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  user-select: none;
+
+  .title-form__register {
+    color: #545446;
+    margin-bottom: 10px;
+}
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-block: 15px;
+  position: relative;
+
+  label {
+    position: absolute;
+    background: var(--form);
+    height: 16px;
+    font-size: 16px;
+    padding-inline: 5px;
+    font-weight: normal;
+    transform: translateY(calc(-100% + 2px));
+    white-space: nowrap;
+}
+
+  span {
+    color: #df3920;
+}
+
+  input {
+    width: 18rem;
+    height: 40px;
+    background: var(--form);
+    color: var(--texto);
+    border: 2px solid var(--branding-600);
+    border-radius: 2cap;
+    padding-inline: 15px;
+    transition: 200ms ease;
+    font-weight: 400;
+    outline: none;
+
+    &:hover,
+    &:focus-visible {
+      background: #f0f0f0;
+  }
+
+    &.empty-input {
+      border: 2px solid #c03520;
+      animation: vibrar 800ms ease;
+
+      &::placeholder {
+        color: #c03520;
+    }
+  }
+}
+
+  input[type="submit"] {
+    background: var(--branding-600);
+    max-width: 8.5rem;
+    border: none;
+    color: white;
+    transition: background 200ms ease, max-width 400ms ease;
+    font-weight: 700;
+    padding: 0;
+
+    &.loading {
+      max-width: 40px;
+  }
+
+    &:hover {
+      background: var(--branding-700);
+  }
+}
+
+  input[type="password"],
+  input[type="text"] {
+    color: var(--texto);
+}
+
+  input[type="number"] {
+    appearance: textfield;
+
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+  }
+}
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+}
+
+  input[type="date"]::before {
+    content: "📅";
+    position: absolute;
+    right: 9px; // Gambiarra. Não é possível adicionar estilo no calendário
+    font-size: 18px;
+    pointer-events: none;
+}
+
+  .input-with-remove {
+    position: relative;
+    display: flex;
+
+    .remove-icon {
+      position: absolute;
+      height: 100%;
+      right: 10px;
+      color: #c00;
+      cursor: pointer;
+      font-size: 1.2rem;
+  }
+}
+
+  input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 100px #f0f0f0 inset;
+    -webkit-text-fill-color: var(--texto);
+    caret-color: var(--texto);
+}
+
+  select {
+    width: 18rem;
+    height: 2.5rem;
+    border: 2px solid var(--branding-600);
+    border-radius: 2cap;
+    font-weight: 400;
+    text-align: center;
+    padding-left: 15px;
+
+    &:focus-visible {
+      background: #e9e9e9;
+      outline: none;
+  }
+}
+}
+
+.requiredField::before {
+  content: "*";
+  display: flex;
+  position: absolute;
+  height: 100%;
+  align-items: center;
+  color: #cf4526;
+  left: calc(100% - 20px);
+}
+
+.btn-add-employee {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #349024;
+  margin-bottom: 10px;
+  border-radius: 25px;
+  transition: 200ms;
+
+  &:hover {
+    color: #276d1a;
+}
+}

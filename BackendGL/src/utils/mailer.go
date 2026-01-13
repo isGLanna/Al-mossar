@@ -33,25 +33,17 @@ func (m *Mailer) SendMail(to, subject, body string) error {
 		m.From, to, subject,
 	)
 
-	fmt.Println("Aqui passou")
-
 	msg := []byte(headers + body)
 
 	addr := fmt.Sprintf("%s:%s", m.Host, m.Port)
 	auth := smtp.PlainAuth("", m.Username, m.Password, m.Host)
 
-	fmt.Println("Aqui Também passou")
 
 	// Enviar o e-mail
 	if err := smtp.SendMail(addr, auth, m.From, []string{to}, msg); err != nil {
 		fmt.Println("Erro no envio:", err)
 		return err
 	}
-
-	fmt.Println("Aqui nada de erro")
-
-	fmt.Println("Aqui pode ser depois daqui")
-	fmt.Println("Aqui se continuar tudo certo ok")
 
 	return nil
 }

@@ -1,5 +1,6 @@
 package controllers
 
+/*
 import (
 	"BackendGL/src/services"
 	"net/http"
@@ -24,3 +25,5 @@ func (ctrl *InflationController) CheckFoodInflation(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"status": "sucesso", "message": "Consulta realizada com sucesso"})
 }
+
+*/

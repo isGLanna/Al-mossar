@@ -63,7 +63,6 @@ func (s *PasswordRecoveryService) SendRecoveryEmail(email string, account_type s
 	body := fmt.Sprintf(`
 		<html>
 		<body style="font-size: 14px; font-family: Arial, sans-serif; padding: 20px;">
-				<p>Olá, %s!</p>
 				<p>Seu código de recuperação de senha está abaixo. Ele tem duração de 3 minutos até expirar, caso não envie a tempo, solicite o reenvio de um novo código:</p>
 
 				<div style="text-align: center; margin: 30px 0;">
@@ -83,7 +82,7 @@ func (s *PasswordRecoveryService) SendRecoveryEmail(email string, account_type s
 				<p>Favor não responder este e-mail.</p>
 		</body>
 		</html>
-	`, name, code)
+	`, code)
 
-	return s.Mailer.SendMail("giordanoal2003@gmail.com", subject, body)
+	return s.Mailer.SendMail(email, subject, body)
 }
