@@ -1,6 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
-import '../../molecules/formulario.sass'
+import '../../molecules/formulario.scss'
 import { registerUser } from './api'
 
 export function CreateAccount() {

@@ -49,7 +49,7 @@ export const getPermission = async () => {
 
 export const getUser = async (): Promise<{ email: string, name: string, surname: string, role: string } | null> => {
   try {
-    const result = await axios.get(`http://localhost:4001/api/user-info`, {
+    const result = await axios.get(`https://localhost:4001/api/user-info`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
 

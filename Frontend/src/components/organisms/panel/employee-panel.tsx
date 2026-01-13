@@ -3,7 +3,7 @@ import { IoMdPersonAdd } from "react-icons/io"
 import { Employee } from '../../../models/Employee'
 import { addEmployeeAPI, deleteEmployeeAPI, getEmployeesAPI, editEmployeeAPI } from './api'
 import { CardContainer } from './sub-templates/card-container'
-import '../../molecules/formulario.sass'
+import '../../molecules/formulario.scss'
 import '../../atoms/painel-overflow.scss'
 import './panel.scss'
 

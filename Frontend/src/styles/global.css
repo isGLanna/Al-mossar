@@ -35,6 +35,11 @@ body {
     #e6e7eb;
 }
 
+label{
+  font-size: 14px;
+  line-height: 1.2;
+}
+
 h1 {
   font-size: 32px;
   line-height: 1.1;
