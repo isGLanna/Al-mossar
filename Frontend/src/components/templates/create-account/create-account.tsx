@@ -1,19 +1,19 @@
 import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import '../../molecules/formulario.sass'
-import {registerUser} from './api'
+import { registerUser } from './api'
 
 export function CreateAccount() {
   const navigate = useNavigate()
 
   type User = {
-    name: string;
-    surname: string;
-    email: string;
-    password: string;
-    confirmed_password: string;
-    start_of_contract: string;
-    id_enterprise: number;
+    name: string
+    surname: string
+    email: string
+    password: string
+    confirmed_password: string
+    start_of_contract: string
+    id_enterprise: number
   }
 
   const [user, setUser] = useState<User>({
@@ -26,22 +26,25 @@ export function CreateAccount() {
     id_enterprise: 0
   })
 
-  // Entradas obrigatórias para barrar cadastro
   const [emptyField, setEmptyField] = useState<Record<string, boolean>>({
     name: false,
     surname: false,
     email: false,
-    password: false
+    password: false,
+    confirmed_password: false,
+    id_enterprise: false
   })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const {name, value} = e.target
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target
 
-    setUser({
-      ...user,
-      [name]: value,
-    })
-    
+    setUser(prev => ({
+      ...prev,
+      [name]: name === 'id_enterprise' ? Number(value) : value
+    }))
+
     setEmptyField(prev => ({
       ...prev,
       [name]: false
@@ -49,14 +52,13 @@ export function CreateAccount() {
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    if (user.password !== user.confirmed_password){
+    if (user.password !== user.confirmed_password) {
       alert('As senhas estão diferentes')
       return
     }
 
-    // atribui true para *field.atribute* vazio
     const fields = {
       name: !user.name.trim(),
       surname: !user.surname.trim(),
@@ -65,37 +67,33 @@ export function CreateAccount() {
       confirmed_password: !user.confirmed_password.trim(),
       id_enterprise: user.id_enterprise === 0
     }
-  
+
     setEmptyField(fields)
-  
+
+    if (Object.values(fields).some(Boolean)) return
+
     try {
-      // Verifica condição campo *field.attribute* é vazio?
-      if(Object.values(fields).some(value => value)) {
-        return
-      } 
-        
       const response = await registerUser(user)
 
       if (response.success) {
-        navigate({to: '/'})
+        navigate({ to: '/' })
       } else {
         alert(response.message || 'Falha inesperada')
       }
     } catch (error) {
-      alert(error);
+      alert(error)
     }
-  };
+  }
 
   return (
-    <div className="container" style={{display:'flex', alignItems:'center', justifyContent:'center'}}>
-      <main className="formulario">
+    <div className="container">
+      <form className="form-container" onSubmit={handleSubmit}>
+        <h1 className="title-form__register">Criar Conta</h1>
 
-        <form className="form-container" onSubmit={handleSubmit}>
-          <h2 className='mb-[15px]'>Criar Conta</h2>
-  
-          <div className="form-group">
-            <label className='requiredField'>Nome</label>
-            
+        {/* Nome */}
+        <div className="form-group">
+          <label>Nome</label>
+          <div className="input-wrapper requiredField">
             <input
               className={emptyField.name ? 'empty-input' : ''}
               type="text"
@@ -106,36 +104,43 @@ export function CreateAccount() {
               onChange={handleChange}
             />
           </div>
-  
-          <div className="form-group">
-            <label className='requiredField'>Sobrenome</label>
+        </div>
+
+        {/* Sobrenome */}
+        <div className="form-group">
+          <label>Sobrenome</label>
+          <div className="input-wrapper requiredField">
             <input
               className={emptyField.surname ? 'empty-input' : ''}
               type="text"
               name="surname"
               maxLength={48}
               placeholder="Digite seu sobrenome"
-              style={{}}
               value={user.surname}
               onChange={handleChange}
             />
           </div>
-  
-          <div className="form-group">
-            <label className='requiredField'>Email</label>
+        </div>
+
+        {/* Email */}
+        <div className="form-group">
+          <label>Email</label>
+          <div className="input-wrapper requiredField">
             <input
               className={emptyField.email ? 'empty-input' : ''}
               type="email"
               name="email"
               placeholder="Digite seu email"
-              style={{}}
               value={user.email}
               onChange={handleChange}
             />
           </div>
-  
-          <div className="form-group">
-            <label className='requiredField'>Senha</label>
+        </div>
+
+        {/* Senha */}
+        <div className="form-group">
+          <label>Senha</label>
+          <div className="input-wrapper requiredField">
             <input
               className={emptyField.password ? 'empty-input' : ''}
               type="password"
@@ -143,14 +148,16 @@ export function CreateAccount() {
               minLength={4}
               maxLength={16}
               placeholder="Digite sua senha"
-              style={{}}
               value={user.password}
               onChange={handleChange}
             />
           </div>
+        </div>
 
-          <div className="form-group">
-            <label className='requiredField'>Repita sua senha</label>
+        {/* Confirmar senha */}
+        <div className="form-group">
+          <label>Repita sua senha</label>
+          <div className="input-wrapper requiredField">
             <input
               className={emptyField.confirmed_password ? 'empty-input' : ''}
               type="password"
@@ -158,14 +165,16 @@ export function CreateAccount() {
               minLength={4}
               maxLength={16}
               placeholder="Digite sua senha"
-              style={{}}
               value={user.confirmed_password}
               onChange={handleChange}
             />
           </div>
-  
-          <div className="form-group">
-            <label className='requiredField'>Identificador da empresa</label>
+        </div>
+
+        {/* ID Empresa */}
+        <div className="form-group">
+          <label>Identificador da empresa</label>
+          <div className="input-wrapper requiredField">
             <input
               className={emptyField.id_enterprise ? 'empty-input' : ''}
               type="number"
@@ -174,27 +183,26 @@ export function CreateAccount() {
               onChange={handleChange}
             />
           </div>
-  
-          <div className="form-group">
-            <label>Início do contrato</label>
+        </div>
+
+        {/* Data */}
+        <div className="form-group">
+          <label>Início do contrato</label>
+          <div className="input-wrapper">
             <input
               type="date"
               name="start_of_contract"
               value={user.start_of_contract}
-              style={{}}
               onChange={handleChange}
             />
           </div>
-  
-          <div className="form-group">
-            <input
-              type="submit"
-              value="Criar conta"
-            />
+        </div>
 
-          </div>
-        </form>
-      </main>
+        {/* Submit */}
+        <div className="form-group">
+          <input type="submit" value="Criar conta" />
+        </div>
+      </form>
     </div>
-  );  
+  )
 }
