@@ -36,18 +36,18 @@ body {
 }
 
 h1 {
-  font-size: 2.8em;
+  font-size: 32px;
   line-height: 1.1;
-  font-weight: bold;
+  font-weight: 600;
 }
 h2 {
-  font-size: 2.2em;
+  font-size: 28px;
   font-weight: 600;
 }
 
 h3 {
-  font-size: 1.6em;
-  font-weight: 500;
+  font-size: 24px;
+  font-weight: 600;
 }
 
 button {

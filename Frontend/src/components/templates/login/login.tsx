@@ -93,10 +93,9 @@ export function Login() {
       }
       setLogin(true)
       navigate({ to: '/menu'})
-    } catch (err) {
+    } catch (err: unknown) {
       setcredentials(credentials => ({
         ...credentials, email: '', password: ''}))
-      
     } finally {
       setIsLoading(false)
     }
@@ -108,69 +107,64 @@ export function Login() {
 
   return (
     <div className="container" style={{position:'fixed'}}>
-
-      <main className="formulario" style={{ marginTop:'0px' }}> {/* Formulário sendo centralizado na marra*/}
+      <form className="form-container" onSubmit={handleSubmit}>
         <Logo />
-        
-        <form className="form-container" onSubmit={handleSubmit}>
-          <div className='form-group'>
-            <label>Email</label>
+        <div className='form-group'>
+          <label>Email</label>
+          <input
+            className={emptyField.email ? 'empty-input' : ''}
+            type="email"
+            name="email"
+            placeholder="Digite seu email"
+            autoComplete='current-password'
+            value={credentials.email}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className='form-group'>
+          <label>Senha</label>
+          <input
+            className={emptyField.password ? 'empty-input' : ''}
+            type="password"
+            name="password"
+            placeholder="Digite sua senha"
+            value={credentials.password}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className='checkbox'>
+          <label style={{fontWeight:'400'}}>
             <input
-              className={emptyField.email ? 'empty-input' : ''}
-              type="email"
-              name="email"
-              placeholder="Digite seu email"
-              autoComplete='current-password'
-              value={credentials.email}
+              type="checkbox"
+              name="remember"
+              checked={credentials.remember}
               onChange={handleChange}
+              style={{padding:'0px'}}
             />
-          </div>
+            Manter conectado
+          </label>
+        </div>
 
-          <div className='form-group'>
-            <label>Senha</label>
-            <input
-              className={emptyField.password ? 'empty-input' : ''}
-              type="password"
-              name="password"
-              placeholder="Digite sua senha"
-              value={credentials.password}
-              onChange={handleChange}
+        <div className='form-group'>
+          <input
+            type="submit"
+            value={isLoading ? '' : 'Entrar'}
+            disabled={isLoading}
+            className={isLoading ? 'loading' : ''}
             />
-          </div>
+          {isLoading && (<div className='spinner fixed mt-[15px]'></div>)}
+          {( emptyField.email || emptyField.password ) && <span>Credenciais inválidas</span>}
+        </div>
 
-          <div className='checkbox'>
-            <label style={{fontWeight:'400'}}>
-              <input
-                type="checkbox"
-                name="remember"
-                checked={credentials.remember}
-                onChange={handleChange}
-                style={{padding:'0px'}}
-              />
-              Manter conectado
-            </label>
-          </div>
+        <a><Link to="/create-account">Criar conta</Link></a>
 
-          <div className='form-group'>
-            <input
-              type="submit"
-              value={isLoading ? '' : 'Entrar'}
-              disabled={isLoading}
-              className={isLoading ? 'loading' : ''}
-              />
-            {isLoading && (<div className='spinner fixed mt-[15px]'></div>)}
-            {( emptyField.email || emptyField.password ) && <span>Credenciais inválidas</span>}
-          </div>
+        <a><Link to="/create-enterprise">Cadastrar corporação</Link></a>
 
-          <div>
-            <Link to="/create-account">Criar conta</Link>
-          </div>
+        <a><Link to="/forgot-password">Recuperar senha</Link></a>
+      </form>
 
-          <div>
-            <Link to="/create-enterprise">Cadastrar corporação</Link>
-          </div>
-        </form>
-      </main>
     </div>
   );
   }

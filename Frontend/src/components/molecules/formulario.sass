@@ -2,42 +2,44 @@
   
 .container
   display: flex
-  position: relative
-  height: 100%
-  max-width: 100vw
+  position: absolute
+  padding-block: 60px
+  max-width: 100dvw
   align-items: center
   justify-content: center
   overflow-y: auto
 
-.formulario
+.form-container
   position: relative
-  height: auto
-  width: auto
   display: flex
   flex-direction: column
-  margin-block: 80px
-  padding: 2rem
+  padding: 20px 40px
   background: var(--form)
   box-shadow: var(--box-shadow)
   align-items: center
+  justify-content: center
   border-radius: 5px
   user-select: none
-  -webkit-user-select: none
 
-.form-container 
-  display: flex
-  flex-direction: column
-  align-items: center
+  .title-form__register
+    color: #545446
+    margin-bottom: 10px
 
 .form-group
   display: flex
   flex-direction: column
   align-items: center
-  margin-bottom: 8px
+  margin-block: 15px
   position: relative
 
   label
-    font-weight: 600
+    position: absolute
+    background: var(--form)
+    height: 20px
+    padding-inline: 5px
+    font-weight: normal
+    transform: translateY(calc(-100% + 2px))
+    white-space: nowrap
 
   span
     color: #df3920
@@ -47,7 +49,6 @@
     height: 2.6rem
     background: var(--form)
     color: var(--texto)
-    margin-block: 10px
     border: 2px solid var(--branding-600)
     border-radius: 2cap
     padding-inline: 15px
@@ -55,17 +56,15 @@
     font-weight: 400
     outline: none
 
-    &:hover
-      background: #e9e9e9
-
+    &:hover,
     &:focus-visible
-      background: #e9e9e9
+      background: #f0f0f0
 
     &.empty-input
       border: 2px solid #c03520
       animation: vibrar 800ms ease
 
-      &::placeholder 
+      &::placeholder
         color: #c03520
 
   input[type="submit"]
@@ -75,17 +74,17 @@
     color: white
     transition: background 200ms ease, max-width 400ms ease
     font-weight: 700
-    
+
     &.loading
       max-width: 2.6rem
 
     &:hover
       background: var(--branding-700)
-  
+
   input[type="password"],
   input[type="text"]
     color: var(--texto)
-  
+
   input[type="number"]
     appearance: textfield
 
@@ -94,8 +93,6 @@
       margin: 0
 
   input[type="date"]::-webkit-calendar-picker-indicator
-    user-select: none
-    -webkit-user-select: none
     cursor: pointer
 
   input[type="date"]::before
@@ -108,32 +105,23 @@
   .input-with-remove
     position: relative
     display: flex
-    flex-direction: column
-    align-items: center
 
     .remove-icon
       position: absolute
-      right: 5px
-      top: 20px
+      height: 100%
+      right: 10px
       color: #c00
       cursor: pointer
       font-size: 1.2rem
 
   input:-webkit-autofill
-    -webkit-box-shadow: 0 0 0px 1000px #d6d9dc inset
+    -webkit-box-shadow: 0 0 0 100px #d6d9dc inset
     -webkit-text-fill-color: var(--texto)
     caret-color: var(--texto)
-  
-  input:-moz-autofill
-    box-shadow: 0 0 0px 1000px #d6d9dc inset
-    -moz-text-fill-color: var(--texto)
-    caret-color: var(--texto)
 
-  
   select
     width: 18rem
     height: 2.5rem
-    margin: 10px 25px 25px 25px
     border: 2px solid var(--branding-600)
     border-radius: 2cap
     font-weight: 400
@@ -146,10 +134,11 @@
 
 .requiredField::before
   content: "*"
+  display: flex
   position: absolute
+  height: 100%
+  align-items: center
   color: #cf4526
-  font-size: 20px
-  top: 41px
   left: calc(100% - 20px)
 
 
@@ -160,8 +149,5 @@
   margin-bottom: 10px
   border-radius: 25px
   transition: 200ms
-  transition: opacity 0.2s ease
-
-
   &:hover
     color: #276d1a
