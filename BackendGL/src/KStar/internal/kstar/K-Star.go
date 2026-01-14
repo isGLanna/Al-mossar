@@ -1,7 +1,7 @@
 package kstar
 
 import (
-	"BackendGL/src/kstar/src/internal/domain"
+	"BackendGL/src/kstar/internal/domain"
 )
 
 type KStar struct {

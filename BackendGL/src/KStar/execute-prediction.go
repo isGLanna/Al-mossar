@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"BackendGL/src/kstar/src/internal/domain"
-	"BackendGL/src/kstar/src/internal/kstar"
+	"BackendGL/src/kstar/internal/domain"
+	"BackendGL/src/kstar/internal/kstar"
 )
 
 func executePrediction() {

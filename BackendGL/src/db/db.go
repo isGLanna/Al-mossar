@@ -49,7 +49,7 @@ func InitDB() {
 		&models.EmployeeImage{},
 		&models.Client{},
 		&models.ClientImage{},
-		&models.PasswordRecoveryCode{},
+		&models.PasswordRecoveryCodes{},
 		&models.Salary{}); err != nil {
 		log.Fatal("Failed to migrate database:", err)
 	}
