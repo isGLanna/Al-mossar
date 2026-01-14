@@ -31,7 +31,7 @@ func (s *PasswordRecoveryService) SendRecoveryEmail(email string, account_type s
 	expiration := time.Now().Add(2 * time.Minute)
 
 	// Salvar o código no banco de dados
-	recovery := models.PasswordRecoveryCode{
+	recovery := models.PasswordRecoveryCodes{
 		Email:     email,
 		Code:      code,
 		ExpiresAt: expiration,
@@ -87,7 +87,7 @@ func (s *PasswordRecoveryService) checkCodeRecovery(email string, code int) (boo
 	var exists bool
 
 	if err := db.DB.Raw(
-		"SELECT exists(select 1 from password_recovery where email = $1)", email).Scan(&exists).Error; err != nil {
+		"SELECT exists(select 1 from password_recovery_codes where email = $1)", email).Scan(&exists).Error; err != nil {
 		return false, err
 	}
 
@@ -101,7 +101,7 @@ func (s *PasswordRecoveryService) newPassword(email string, code int, password s
 		return fmt.Errorf("Digite senhas iguais")
 	}
 
-	var recovery models.PasswordRecoveryCode
+	var recovery models.PasswordRecoveryCodes
 	if err := db.DB.Where("email = ? AND code = ?", email, code).First(&recovery).Error; err != nil {
 		return fmt.Errorf("Código inválido")
 	}
