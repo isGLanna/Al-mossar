@@ -162,7 +162,7 @@ export function Login() {
 
         <a><Link to="/create-enterprise">Cadastrar corporação</Link></a>
 
-        <a><Link to="/forgot-password">Recuperar senha</Link></a>
+        <a><Link to="/password-recovery">Recuperar senha</Link></a>
       </form>
 
     </div>

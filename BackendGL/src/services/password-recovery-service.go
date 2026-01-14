@@ -20,19 +20,15 @@ func NewPasswordRecoveryService(mailer *utils.Mailer) *PasswordRecoveryService {
 }
 
 func generateCode() string {
-	n, err := rand.Int(rand.Reader, big.NewInt(90000))
+	value, _ := rand.Int(rand.Reader, big.NewInt(90000))
 
-	if err != nil {
-		return ""
-	}
-
-	code := 10000 + n.Int64()
+	code := 10000 + value.Int64()
 	return strconv.FormatInt(code, 10)
 }
 
 func (s *PasswordRecoveryService) SendRecoveryEmail(email string, account_type string) error {
 	code := generateCode()
-	expiration := time.Now().Add(3 * time.Minute)
+	expiration := time.Now().Add(2 * time.Minute)
 
 	// Salvar o código no banco de dados
 	recovery := models.PasswordRecoveryCode{
@@ -85,4 +81,30 @@ func (s *PasswordRecoveryService) SendRecoveryEmail(email string, account_type s
 	`, code)
 
 	return s.Mailer.SendMail(email, subject, body)
+}
+
+func (s *PasswordRecoveryService) checkCodeRecovery(email string, code int) (bool, error) {
+	var exists bool
+
+	if err := db.DB.Raw(
+		"SELECT exists(select 1 from password_recovery where email = $1)", email).Scan(&exists).Error; err != nil {
+		return false, err
+	}
+
+	return exists, nil
+}
+
+// Lógica para redefinir senha, verificando todas as variáveis da chamada de recuperação
+func (s *PasswordRecoveryService) newPassword(email string, code int, password string, passwordConfirmation string) error {
+
+	if password != passwordConfirmation {
+		return fmt.Errorf("Digite senhas iguais")
+	}
+
+	var recovery models.PasswordRecoveryCode
+	if err := db.DB.Where("email = ? AND code = ?", email, code).First(&recovery).Error; err != nil {
+		return fmt.Errorf("Código inválido")
+	}
+
+	return nil
 }
