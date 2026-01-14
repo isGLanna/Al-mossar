@@ -9,21 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PasswordRecoveryRouteImport } from './routes/password-recovery'
 import { Route as MenuRouteImport } from './routes/menu'
-import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CreateEnterpriseRouteImport } from './routes/create-enterprise'
 import { Route as CreateAccountRouteImport } from './routes/create-account'
 import { Route as IndexRouteImport } from './routes/index'
 
+const PasswordRecoveryRoute = PasswordRecoveryRouteImport.update({
+  id: '/password-recovery',
+  path: '/password-recovery',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MenuRoute = MenuRouteImport.update({
   id: '/menu',
   path: '/menu',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
-  id: '/forgot-password',
-  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -52,16 +52,16 @@ export interface FileRoutesByFullPath {
   '/create-account': typeof CreateAccountRoute
   '/create-enterprise': typeof CreateEnterpriseRoute
   '/dashboard': typeof DashboardRoute
-  '/forgot-password': typeof ForgotPasswordRoute
   '/menu': typeof MenuRoute
+  '/password-recovery': typeof PasswordRecoveryRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/create-account': typeof CreateAccountRoute
   '/create-enterprise': typeof CreateEnterpriseRoute
   '/dashboard': typeof DashboardRoute
-  '/forgot-password': typeof ForgotPasswordRoute
   '/menu': typeof MenuRoute
+  '/password-recovery': typeof PasswordRecoveryRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -69,8 +69,8 @@ export interface FileRoutesById {
   '/create-account': typeof CreateAccountRoute
   '/create-enterprise': typeof CreateEnterpriseRoute
   '/dashboard': typeof DashboardRoute
-  '/forgot-password': typeof ForgotPasswordRoute
   '/menu': typeof MenuRoute
+  '/password-recovery': typeof PasswordRecoveryRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -79,24 +79,24 @@ export interface FileRouteTypes {
     | '/create-account'
     | '/create-enterprise'
     | '/dashboard'
-    | '/forgot-password'
     | '/menu'
+    | '/password-recovery'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/create-account'
     | '/create-enterprise'
     | '/dashboard'
-    | '/forgot-password'
     | '/menu'
+    | '/password-recovery'
   id:
     | '__root__'
     | '/'
     | '/create-account'
     | '/create-enterprise'
     | '/dashboard'
-    | '/forgot-password'
     | '/menu'
+    | '/password-recovery'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -104,24 +104,24 @@ export interface RootRouteChildren {
   CreateAccountRoute: typeof CreateAccountRoute
   CreateEnterpriseRoute: typeof CreateEnterpriseRoute
   DashboardRoute: typeof DashboardRoute
-  ForgotPasswordRoute: typeof ForgotPasswordRoute
   MenuRoute: typeof MenuRoute
+  PasswordRecoveryRoute: typeof PasswordRecoveryRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/password-recovery': {
+      id: '/password-recovery'
+      path: '/password-recovery'
+      fullPath: '/password-recovery'
+      preLoaderRoute: typeof PasswordRecoveryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/menu': {
       id: '/menu'
       path: '/menu'
       fullPath: '/menu'
       preLoaderRoute: typeof MenuRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/forgot-password': {
-      id: '/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/forgot-password'
-      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -160,8 +160,8 @@ const rootRouteChildren: RootRouteChildren = {
   CreateAccountRoute: CreateAccountRoute,
   CreateEnterpriseRoute: CreateEnterpriseRoute,
   DashboardRoute: DashboardRoute,
-  ForgotPasswordRoute: ForgotPasswordRoute,
   MenuRoute: MenuRoute,
+  PasswordRecoveryRoute: PasswordRecoveryRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
