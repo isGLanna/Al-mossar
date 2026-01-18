@@ -38,3 +38,26 @@ func (ctrl *PasswordRecoveryController) SendRecoveryEmail(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Recovery email sent"})
 }
+
+func (ctrl *PasswordRecoveryController) CheckCodeRecoveryController(c *gin.Context) {
+	var req struct {
+		Email string `json:"email" binding:"required,email"`
+		Code  string `json:"code" binding:"required,len=5"`
+	}
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	valid, err := ctrl.Service.CheckCodeRecovery(req.Email, req.Code)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if !valid {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid or expired code"})
+	}
+}

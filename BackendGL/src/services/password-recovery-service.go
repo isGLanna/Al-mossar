@@ -83,28 +83,34 @@ func (s *PasswordRecoveryService) SendRecoveryEmail(email string, account_type s
 	return s.Mailer.SendMail(email, subject, body)
 }
 
-func (s *PasswordRecoveryService) checkCodeRecovery(email string, code int) (bool, error) {
-	var exists bool
+func (s *PasswordRecoveryService) CheckCodeRecovery(email string, code string) (bool, error) {
+	var valid bool
 
 	if err := db.DB.Raw(
-		"SELECT exists(select 1 from password_recovery_codes where email = $1)", email).Scan(&exists).Error; err != nil {
+		"SELECT exists(select 1 from password_recovery_codes where email = $1)", email).Scan(&valid).Error; err != nil {
 		return false, err
 	}
 
-	return exists, nil
+	return valid, nil
 }
 
 // Lógica para redefinir senha, verificando todas as variáveis da chamada de recuperação
-func (s *PasswordRecoveryService) newPassword(email string, code int, password string, passwordConfirmation string) error {
+func (s *PasswordRecoveryService) ResetPassword(email string, code int, password string, passwordConfirmation string) error {
 
 	if password != passwordConfirmation {
-		return fmt.Errorf("Digite senhas iguais")
+		return fmt.Errorf("Write the same password in both fields")
 	}
 
 	var recovery models.PasswordRecoveryCodes
 	if err := db.DB.Where("email = ? AND code = ?", email, code).First(&recovery).Error; err != nil {
-		return fmt.Errorf("Código inválido")
+		return fmt.Errorf("Invalid code")
 	}
+
+	if time.Now().After(recovery.ExpiresAt) {
+		return fmt.Errorf("Code expired")
+	}
+
+	hashedPassword, _ := utils.HashPassword(password)
 
 	return nil
 }

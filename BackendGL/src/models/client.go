@@ -1,7 +1,9 @@
 package models
 
+import "github.com/google/uuid"
+
 type Client struct {
-	ID           uint       `gorm:"primaryKey" json:"id"`
+	ID           uuid.UUID  `gorm:"type:uuid;primaryKey;default:gen_random_uuid()" json:"id"`
 	Email        string     `gorm:"unique;not null" json:"email"`
 	CPF          string     `gorm:"size:11;unique;not null" json:"cpf"`
 	Name         string     `gorm:"size:25" json:"name"`
@@ -13,10 +15,9 @@ type Client struct {
 }
 
 type ClientImage struct {
-	ID       uint   `gorm:"primaryKey" json:"id"`
-	IdClient uint   `gorm:"not null" json:"client_id"`
-	Client   Client `gorm:"foreignKey:IdClient; references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"client"`
-	Image    []byte `gorm:"type:bytea" json:"image"`
+	IdClient uuid.UUID `gorm:"type:uuid;primaryKey;not null" json:"client_id"`
+	Client   Client    `gorm:"foreignKey:IdClient;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"client"`
+	Image    []byte    `gorm:"type:bytea" json:"image"`
 }
 
 type UserResponse struct {
@@ -28,4 +29,8 @@ type UserResponse struct {
 
 func (Client) TableName() string {
 	return "client"
+}
+
+func (ClientImage) TableName() string {
+	return "client_image"
 }

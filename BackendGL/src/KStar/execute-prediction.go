@@ -1,12 +1,12 @@
-package main
+package kstar
 
 import (
 	"encoding/csv"
 	"fmt"
 	"os"
 
-	"BackendGL/src/kstar/internal/domain"
-	"BackendGL/src/kstar/internal/kstar"
+	"BackendGL/src/kstar/core/domain"
+	"BackendGL/src/kstar/core/kstar"
 )
 
 func executePrediction() {
