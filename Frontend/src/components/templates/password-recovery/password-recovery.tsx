@@ -7,7 +7,7 @@ import { useState } from 'react'
 
 export function PasswordRecovery() {
   const [email, setEmail] = useState<string>('')
-  const [code, setCode] = useState<number>(0)
+  const [code, setCode] = useState<string>('')
   const [nextStep, setNextStep] = useState<number>(1)
   const navigate = useNavigate()
 
@@ -23,7 +23,7 @@ export function PasswordRecovery() {
           case 1:
             return <ForgotPassword email={email} setEmail={setEmail} setCode={setCode} handleNextStep={handleNextStep}/>
           case 2:
-            return <VerifyRecoveryCode email={email} code={code} handleNextStep={handleNextStep}/>
+            return <VerifyRecoveryCode email={email} code={code} setCode={setCode} handleNextStep={handleNextStep}/>
           case 3:
             return <ResetPassword email={email} code={code} handleNextStep={handleNextStep}/>
           case 4:

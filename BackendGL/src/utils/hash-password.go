@@ -1,7 +1,11 @@
 package utils
 
-func HashPassword(password string) (string, error) {
-	bytes, err := bycript.GenerateFromPassword(password, bycript.DefaultCost)
+import (
+	"golang.org/x/crypto/bcrypt"
+)
 
-	return bytes
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+
+	return string(bytes), err
 }

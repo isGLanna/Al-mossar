@@ -22,6 +22,7 @@ Enterprise.init(
     sequelize,
     modelName: 'Enterprise',
     tableName: 'enterprise',
+    timestamps: false,
   },
 )
 

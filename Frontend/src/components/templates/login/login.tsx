@@ -110,9 +110,10 @@ export function Login() {
       <form className="form-container" onSubmit={handleSubmit}>
         <Logo />
         <div className='form-group'>
-          <label>Email</label>
+          <label htmlFor='email'>Email</label>
           <input
             className={emptyField.email ? 'empty-input' : ''}
+            id='email'
             type="email"
             name="email"
             placeholder="Digite seu email"
@@ -123,9 +124,10 @@ export function Login() {
         </div>
 
         <div className='form-group'>
-          <label>Senha</label>
+          <label htmlFor='password'>Senha</label>
           <input
             className={emptyField.password ? 'empty-input' : ''}
+            id='password'
             type="password"
             name="password"
             placeholder="Digite sua senha"
@@ -158,11 +160,11 @@ export function Login() {
           {( emptyField.email || emptyField.password ) && <span>Credenciais inválidas</span>}
         </div>
 
-        <a><Link to="/create-account">Criar conta</Link></a>
+        <Link to="/create-account">Criar conta</Link>
 
-        <a><Link to="/create-enterprise">Cadastrar corporação</Link></a>
+        <Link to="/create-enterprise">Cadastrar corporação</Link>
 
-        <a><Link to="/password-recovery">Recuperar senha</Link></a>
+        <Link to="/password-recovery">Recuperar senha</Link>
       </form>
 
     </div>

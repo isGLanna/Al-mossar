@@ -35,7 +35,7 @@ body {
     #e6e7eb;
 }
 
-label{
+label, p {
   font-size: 14px;
   line-height: 1.2;
 }

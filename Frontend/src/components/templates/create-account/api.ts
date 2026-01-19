@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://localhost'
+const API_URL = import.meta.env.VITE_API_URL || 'https://localhost:3000'
 
 // Formato de entrada
 type UserRegisterData = {
