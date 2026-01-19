@@ -26,7 +26,7 @@
   .title-form__register {
     color: #545446;
     margin-bottom: 10px;
-}
+  }
 }
 
 .form-group {
@@ -36,7 +36,7 @@
   margin-block: 15px;
   position: relative;
 
-  label {
+  label, p {
     position: absolute;
     background: var(--form);
     height: 16px;
@@ -45,11 +45,11 @@
     font-weight: normal;
     transform: translateY(calc(-100% + 2px));
     white-space: nowrap;
-}
+  }
 
   span {
     color: #df3920;
-}
+  }
 
   input {
     width: 18rem;
@@ -80,21 +80,25 @@
 
   input[type="submit"] {
     background: var(--branding-600);
-    max-width: 8.5rem;
+    width: 9rem;
     border: none;
     color: white;
     transition: background 200ms ease, max-width 400ms ease;
     font-weight: 700;
-    padding: 0;
+    padding: 0 14px;
+
+    &:focus-visible {
+      outline: auto;
+    } 
 
     &.loading {
       max-width: 40px;
-  }
+    }
 
     &:hover {
       background: var(--branding-700);
+    }
   }
-}
 
   input[type="password"],
   input[type="text"] {

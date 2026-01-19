@@ -13,5 +13,6 @@ func RegisterPasswordRecoveryRoutes(r *gin.RouterGroup, mailer *utils.Mailer) {
 	controller := controllers.NewPasswordController(service)
 
 	r.POST("/password-recovery", controller.SendRecoveryEmail)
-	//r.POST("/password-reset", controller.ResetPassword)
+	r.POST("/check-code-recovery", controller.CheckCodeRecoveryController)
+	r.POST("/password-reset", controller.ResetPasswordController)
 }

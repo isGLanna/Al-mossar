@@ -6,12 +6,13 @@ export async function addEmployee(req: Request, res: Response): Promise<void> {
   const { email, role, token } = req.body
 
   try {
-    if (!email || !role || !token) 
+    if (!email || !role || !token) {
       res.status(400).json({ error: 'Email, cargo e token são obrigatórios.' })
-
+      return
+    }
+      
     await EmployeeService.addEmployee(email, role, token)
     res.status(201).json({ success: true })
-    return 
   } catch (error: any) {
     const status = error.status || 500
     const message = error.message || "Falha inexperada ao adicionar novo empregado."

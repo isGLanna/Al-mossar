@@ -17,7 +17,7 @@ func NewPasswordController(service *services.PasswordRecoveryService) *PasswordR
 	return &PasswordRecoveryController{Service: service}
 }
 
-// ==============================
+// ==========================	METHODS ============================
 
 func (ctrl *PasswordRecoveryController) SendRecoveryEmail(c *gin.Context) {
 	var r struct {
@@ -59,5 +59,32 @@ func (ctrl *PasswordRecoveryController) CheckCodeRecoveryController(c *gin.Conte
 
 	if !valid {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid or expired code"})
+		return
 	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Code is valid"})
+}
+
+func (ctrl *PasswordRecoveryController) ResetPasswordController(c *gin.Context) {
+	var req struct {
+		Email                string `json:"email" binding:"required,email"`
+		Code                 string `json:"code" binding:"required,len=5"`
+		AccountType          string `json:"account_type" binding:"required,oneof=employee client"`
+		Password             string `json:"password" binding:"required,min=4,max=16"`
+		PasswordConfirmation string `json:"confirmPassword" binding:"required,min=4,max=16,eqfield=Password"`
+	}
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err := ctrl.Service.ResetPassword(req.Email, req.Code, req.AccountType, req.Password)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Password reset successfully"})
 }

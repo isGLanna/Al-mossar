@@ -39,6 +39,22 @@ export class TimeUtils {
     ]
   }
 
+  // Retorna um temporizador com minutos e segundos para acabar o prazo recebido em minutos a partir do horário atual e atingindo mínimo de 00:00
+  static scheduler(minutes: number): string {
+    const targetTime = new Date().getTime() + minutes * 60000
+    const now = new Date().getTime()
+    const diff = targetTime - now
+
+    if (diff <= 0) {
+      return '00:00'
+    }
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+    const secs = Math.floor((diff % (1000 * 60)) / 1000)
+    const formattedMins = mins.toString().padStart(2, '0')
+    const formattedSecs = secs.toString().padStart(2, '0')
+    return `${formattedMins}:${formattedSecs}`
+  }
+
   // Retorna mês anterior
   static getPrevMonth(year: number, month: number): { year:number, month:number } {
     return month === 0 ? { year: year - 1, month: 11} : { year, month: month - 1}
@@ -47,6 +63,4 @@ export class TimeUtils {
   static getNextMonth(year: number, month: number): { year:number, month:number } {
     return month === 11 ? { year: year + 1, month: 0 } : { year, month: month + 1}
   }
-
-
 }
