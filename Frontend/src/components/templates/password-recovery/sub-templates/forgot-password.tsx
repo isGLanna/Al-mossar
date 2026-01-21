@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import Timer from '../../../atoms/timer/timer'
+import "../../../atoms/spinner.sass"
 
 interface ForgotPasswordProps{
   email: string
@@ -8,9 +10,15 @@ interface ForgotPasswordProps{
 }
 
 export default function ForgotPassword({email, setEmail, setCode, handleNextStep}: ForgotPasswordProps) {
+  const [ loading, setLoading ] = useState<boolean>(false)
+  const [ emptyField, setEmptyField ] = useState<boolean>(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setLoading(prev => !prev)
+    setEmptyField(prev => !(email.trim().length !== 0))
+
+    if (emptyField) return
 
     try {
       const response = await fetch('http://localhost:4001/api/password-recovery', {
@@ -24,6 +32,8 @@ export default function ForgotPassword({email, setEmail, setCode, handleNextStep
       
     } catch (err: unknown) {
       alert(err)
+    } finally {
+      setLoading(prev => !prev)
     }
   }
 
@@ -35,22 +45,22 @@ export default function ForgotPassword({email, setEmail, setCode, handleNextStep
       </p>
       
       <form className="form-group" onSubmit={handleSubmit}>
-        <label htmlFor='email-field'>Email</label>
+        <label className={emptyField ? 'empty-input' : ''} htmlFor='email-field'>Email</label>
         <div className="input-wrapper">
           <input
-            id='email-field'
-            type="email"
-            name="email"
-            value={email}
+            className={emptyField ? 'empty-input' : ''}
+            id='email-field'    name="email"    type="email"    value={email}
             placeholder="Digite seu email"
             autoComplete="email"
-            onChange={e => setEmail(e.target.value)}
-            required
+            onChange={e => {
+              setEmail(e.target.value) 
+              setEmptyField(false)}}
           />
         </div>
+
         <div className="form-group">
-          <input
-            type="submit" value={'Enviar código'}/>
+          <input className={loading ? 'loading' : ''} type="submit" value={loading ? '' : 'Enviar e-mail'} disabled={loading} />
+          {loading && (<div className='spinner fixed mt-[5px]'></div>)}
         </div>
       </form>
 

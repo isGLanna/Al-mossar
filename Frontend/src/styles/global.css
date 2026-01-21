@@ -15,6 +15,7 @@
   -moz-osx-font-smoothing: grayscale;
 
   --box-shadow: -2px -2px 6px #ffffffa0, 2px 2px 6px #00000050;
+  overflow: hidden;
 }
 
 a {

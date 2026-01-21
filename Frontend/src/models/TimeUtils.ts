@@ -39,20 +39,15 @@ export class TimeUtils {
     ]
   }
 
-  // Retorna um temporizador com minutos e segundos para acabar o prazo recebido em minutos a partir do horário atual e atingindo mínimo de 00:00
-  static scheduler(minutes: number): string {
-    const targetTime = new Date().getTime() + minutes * 60000
-    const now = new Date().getTime()
-    const diff = targetTime - now
-
-    if (diff <= 0) {
+  static formatRemainingTime(seconds: number): string {
+    if (seconds <= 0) {
       return '00:00'
     }
-    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-    const secs = Math.floor((diff % (1000 * 60)) / 1000)
-    const formattedMins = mins.toString().padStart(2, '0')
-    const formattedSecs = secs.toString().padStart(2, '0')
-    return `${formattedMins}:${formattedSecs}`
+
+    const minutes = Math.floor(seconds / 60)
+    seconds = seconds % 60
+
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
   }
 
   // Retorna mês anterior

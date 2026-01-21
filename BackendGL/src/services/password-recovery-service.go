@@ -112,7 +112,7 @@ func (s *PasswordRecoveryService) ResetPassword(email string, code string, accou
 
 	resetDeadline := recovery.ExpiresAt.Add(25 * time.Minute)
 
-	if time.Now().UTC().After(resetDeadline) {
+	if time.Now().After(resetDeadline) {
 		return fmt.Errorf("O código expirou. Tente novamente.")
 	}
 
