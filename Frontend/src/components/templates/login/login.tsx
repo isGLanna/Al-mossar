@@ -11,19 +11,19 @@ export function Login() {
   const navigate = useNavigate()
   const {setLogin} = useContext(UserStateContext)
   const [checkingToken, setCheckingToken] = useState(true)
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   type credentials = {
     email: string;
     password: string;
     remember: boolean;
-  };
+  }
 
   const [credentials, setcredentials] = useState<credentials>({
     email: '',
     password: '',
     remember: false,
-  });
+  })
 
   const [ emptyField, setEmptyField ] = useState<{ email: boolean; password: boolean}>({
     email: false,
@@ -67,7 +67,6 @@ export function Login() {
     autoLogin()
   }, [navigate])
 
-  // Lidar com entrada do usuário, caso exista campo vazio, negar acesso
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -78,15 +77,13 @@ export function Login() {
 
     setEmptyField(fields)
 
-    // Verifica condição campo *field.attribute* é vazio?
     if(fields.email || fields.password) return
 
-    setIsLoading(true)
+    setLoading(true)
   
     try {
       const response = await loginUser(credentials);
 
-      // Se o login for bem-sucedido, armazena o usuário e redireciona
       if (!response.success || !response.employee) {
         setEmptyField({ email: true, password: true })
         throw new Error(response.message || 'Erro ao fazer login')
@@ -97,7 +94,7 @@ export function Login() {
       setcredentials(credentials => ({
         ...credentials, email: '', password: ''}))
     } finally {
-      setIsLoading(false)
+      setLoading(false)
     }
   }
 
@@ -113,11 +110,9 @@ export function Login() {
           <label htmlFor='email'>Email</label>
           <input
             className={emptyField.email ? 'empty-input' : ''}
-            id='email'
-            type="email"
-            name="email"
+            id='email'    name="email"    type="email"
+            autoComplete='email'
             placeholder="Digite seu email"
-            autoComplete='current-password'
             value={credentials.email}
             onChange={handleChange}
           />
@@ -127,9 +122,7 @@ export function Login() {
           <label htmlFor='password'>Senha</label>
           <input
             className={emptyField.password ? 'empty-input' : ''}
-            id='password'
-            type="password"
-            name="password"
+            id='password'   name="password"   type="password"
             placeholder="Digite sua senha"
             value={credentials.password}
             onChange={handleChange}
@@ -139,8 +132,7 @@ export function Login() {
         <div className='checkbox'>
           <label style={{fontWeight:'400'}}>
             <input
-              type="checkbox"
-              name="remember"
+              name="remember"   type="checkbox"
               checked={credentials.remember}
               onChange={handleChange}
               style={{padding:'0px'}}
@@ -152,11 +144,11 @@ export function Login() {
         <div className='form-group'>
           <input
             type="submit"
-            value={isLoading ? '' : 'Entrar'}
-            disabled={isLoading}
-            className={isLoading ? 'loading' : ''}
+            value={loading ? '' : 'Entrar'}
+            disabled={loading}
+            className={loading ? 'loading' : ''}
             />
-          {isLoading && (<div className='spinner fixed mt-[5px]'></div>)}
+          {loading && (<div className='spinner fixed mt-[5px]'></div>)}
           {( emptyField.email || emptyField.password ) && <span>Credenciais inválidas</span>}
         </div>
 

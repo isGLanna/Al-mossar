@@ -56,14 +56,15 @@ export default function ResetPassword({email, code, handleNextStep}: ResetPasswo
   return (
     <section className="form-container">
       <h2 className="title-form__register">Recuperar senha</h2>
+      <p className="wrapper">Após a verificação do código, o seu código irá expirar em 30 minutos por segurança.</p>
       <form className="form-group" onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="password"> Senha </label>
-          <input type="password" name="password" id="password" value={password} onChange={handleChange}/>
+          <input type="password" name="password" id="password" value={password} min={4} max={16} onChange={handleChange}/>
         </div>
         <div className="form-group">
           <label htmlFor="confirmPassword"> Confirmar senha </label>
-          <input type="password" name="confirmPassword" id="confirmPassword" value={confirmPassword} onChange={handleChange}/>
+          <input type="password" name="confirmPassword" id="confirmPassword" value={confirmPassword} min={4} max={16} onChange={handleChange}/>
         </div>
         
         <input type="submit" value="Alterar senha" />

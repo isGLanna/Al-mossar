@@ -1,5 +1,4 @@
-import { TimeUtils } from "../../../../models/TimeUtils"
-import { useState } from "react"
+import Timer from '../../../atoms/timer/timer'
 
 interface VerifyRecoveryCodeProps {
   email: string,
@@ -9,7 +8,6 @@ interface VerifyRecoveryCodeProps {
 }
 
 export default function VerifyRecoveryCode({email, code, setCode, handleNextStep}: VerifyRecoveryCodeProps) {
-  const [scheduler, setScheduler] = useState<string>(TimeUtils.scheduler(3))
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -34,8 +32,10 @@ export default function VerifyRecoveryCode({email, code, setCode, handleNextStep
 
   return (
     <section className="form-container">
-      <h2>Preencher código</h2>
-      <section className="scheduler">{scheduler}</section>
+      <h2  className="title-form__register">Preencher código</h2>
+      <p className="text-wrap">Insira o código enviado no seu e-mail. Caso não seja enviado a tempo, solicite novamente.</p>
+      <Timer className='my-[15px] py-[5px] px-[36px] text-[var(--branding-600)] font-bold text-[18px] rounded-[5px] border-2 border-[var(--branding-600)]' seconds={300} />
+
       <form className="form-group" onSubmit={handleSubmit}>
         <label>Código</label>
         <div className="input-wrapper">
@@ -47,6 +47,7 @@ export default function VerifyRecoveryCode({email, code, setCode, handleNextStep
             onChange={e => setCode(e.target.value)}
             />
         </div>
+
         <div className="form-group">
           <input
             type="submit" value="Enviar código" />
