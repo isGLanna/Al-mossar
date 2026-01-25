@@ -1,7 +1,14 @@
-import { memo } from 'react'
+import { memo, useCallback } from 'react'
 import { IoPersonRemoveSharp } from "react-icons/io5"
 import {Employee} from "../../../../models/Employee.ts";
 import './card.scss'
+import { GrFormNext } from "react-icons/gr"
+import { GrFormPrevious } from "react-icons/gr"
+import { TfiWrite } from "react-icons/tfi";
+import { FaTrashArrowUp } from "react-icons/fa6";
+import { IoMdAddCircleOutline } from "react-icons/io";
+import { FaArrowRightLong } from "react-icons/fa6"
+
 
 
 type EmployeeCardProps = {
@@ -9,9 +16,11 @@ type EmployeeCardProps = {
   index: number
   selectedCard: number
   setSelectedCard: (index: number) => void
+  handleEditChange: (email: string, field: keyof Employee, value: string) => void
+  handleDelete: (email: string) => void
 }
 
-export const EmployeeCard = memo(({ emp, index, selectedCard, setSelectedCard }: EmployeeCardProps) => {
+export const EmployeeCard = memo(({ emp, index, selectedCard, setSelectedCard, handleEditChange, handleDelete }: EmployeeCardProps) => {
 
   const getFormattedDate = (rawDate: Date, hours: boolean)=> {
     const date = new Date(rawDate)
@@ -39,12 +48,20 @@ export const EmployeeCard = memo(({ emp, index, selectedCard, setSelectedCard }:
     return `R$ ${amount}`
   }
 
+  const handleCardClick = useCallback(() => {
+    const selection = window.getSelection()
+
+    if (selection && selection.toString().length > 0) return
+
+    index === selectedCard ? setSelectedCard(-1) : setSelectedCard(index)
+  }, [index, selectedCard, setSelectedCard])
+
   return (
     <div
-      key={emp.email}
       className={`card ${selectedCard == index ? "active" : ""}`}
-      onClick={() => index == selectedCard ? setSelectedCard(-1) : setSelectedCard(index)}
-    >
+      key={emp.email}
+      
+      onClick={handleCardClick}>
 
       <div className="image-container area-a image">
         {emp.photo ? (
@@ -65,18 +82,18 @@ export const EmployeeCard = memo(({ emp, index, selectedCard, setSelectedCard }:
         <span>Contato</span>
         <span>Endereço</span>
       </div>
-      <div className='card__content justify-center area-e'>
+      <article className='card__content justify-center area-e'>
         <span>{emp.email}</span>
         <span>{emp.telefone}</span>
         <span>{emp.endereco}</span>
-      </div>
+      </article>
 
-      <div className='card__content justify-center area-f'>
+      <article className='card__content justify-center area-f'>
         <span>Contrato</span>
         <span>Salário</span>
         <span>Última alteração</span>
-      </div>
-      <div className='card__content justify-center area-g'>
+      </article>
+      <article className='card__content justify-center area-g'>
         <span>
           {emp.start_of_contract ? getFormattedDate(emp.start_of_contract, false) : '--/--'}
           {' até '}
@@ -84,8 +101,21 @@ export const EmployeeCard = memo(({ emp, index, selectedCard, setSelectedCard }:
         </span>
         <span>{getSalary()}</span>
         <span>{emp.salary?.updated_at ? getFormattedDate(emp.salary.updated_at, true) : ''}</span>
-      </div>
 
+      </article>
+      <div
+        className={`area-h flex flex-col justify-between transition-opacity w-6
+          ${selectedCard === index ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+        <button
+          className="w-6 h-6 rounded-full flex items-center justify-center">
+        </button>
+
+        <button
+          className="btn-delete w-6 h-6 rounded-full flex items-center justify-center"
+                    onClick={() => handleDelete(emp.email)}>
+          <FaTrashArrowUp size={16} />
+        </button>
+      </div>
     </div>
   )
 })

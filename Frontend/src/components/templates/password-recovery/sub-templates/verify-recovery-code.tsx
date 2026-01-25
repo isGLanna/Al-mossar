@@ -4,10 +4,10 @@ interface VerifyRecoveryCodeProps {
   email: string,
   code: string,
   setCode: (code: string) => void
-  handleNextStep: () => void
+  handleStep: (number: number) => void
 }
 
-export default function VerifyRecoveryCode({email, code, setCode, handleNextStep}: VerifyRecoveryCodeProps) {
+export default function VerifyRecoveryCode({email, code, setCode, handleStep}: VerifyRecoveryCodeProps) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -23,7 +23,7 @@ export default function VerifyRecoveryCode({email, code, setCode, handleNextStep
 
       if (!response.ok) throw new Error(data.error)
         
-      handleNextStep()
+      handleStep(1)
         
     } catch (err: unknown) {
       alert(err)
@@ -37,12 +37,11 @@ export default function VerifyRecoveryCode({email, code, setCode, handleNextStep
       <Timer className='my-[15px] py-[5px] px-[36px] text-[var(--branding-600)] font-bold text-[18px] rounded-[5px] border-2 border-[var(--branding-600)]' seconds={300} />
 
       <form className="form-group" onSubmit={handleSubmit}>
-        <label>Código</label>
+        <label htmlFor='code'>Código</label>
         <div className="input-wrapper">
           <input 
             className="text-center" 
-            type="text" 
-            name="code" 
+            id="code"   name="code"   type="text" 
             value={code} maxLength={5}
             onChange={e => setCode(e.target.value)}
             />
@@ -52,6 +51,7 @@ export default function VerifyRecoveryCode({email, code, setCode, handleNextStep
           <input
             type="submit" value="Enviar código" />
         </div>
+        <a onClick={() => handleStep(-1)}>Enviar e-mail novamente</a>
       </form>
     </section>
   )

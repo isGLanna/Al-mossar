@@ -3,16 +3,10 @@ import { useState } from 'react'
 interface ResetPasswordProps {
   email: string,
   code: string,
-  handleNextStep: () => void
+  handleStep: (number: number) => void
 }
 
-type ResetPasswordResponse = {
-  valid: boolean
-  message?: string
-}
-
-
-export default function ResetPassword({email, code, handleNextStep}: ResetPasswordProps) {
+export default function ResetPassword({email, code, handleStep}: ResetPasswordProps) {
   const url = import.meta.env.VITE_API_GO || 'https://localhost:4001'
   const [ formData, setFormData ] = useState<{ password: string; confirmPassword: string }>({
     password: '',
@@ -43,11 +37,9 @@ export default function ResetPassword({email, code, handleNextStep}: ResetPasswo
 
       if (!response.ok) throw new Error(data.error)
 
-      if (!data.valid) {
-        throw new Error(data.message || 'Código inválido')
-      }
+      if (!data.valid) throw new Error(data.message || 'Código inválido')
 
-      handleNextStep()
+      handleStep(1)
     } catch (err: unknown) {
       alert(err)
     }
@@ -57,14 +49,20 @@ export default function ResetPassword({email, code, handleNextStep}: ResetPasswo
     <section className="form-container">
       <h2 className="title-form__register">Recuperar senha</h2>
       <p className="wrapper">Após a verificação do código, o seu código irá expirar em 30 minutos por segurança.</p>
+      
       <form className="form-group" onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="password"> Senha </label>
-          <input type="password" name="password" id="password" value={password} min={4} max={16} onChange={handleChange}/>
+          <input type="password" name="password" id="password"
+           value={password}
+           min={4} max={16} onChange={handleChange}/>
         </div>
+        
         <div className="form-group">
           <label htmlFor="confirmPassword"> Confirmar senha </label>
-          <input type="password" name="confirmPassword" id="confirmPassword" value={confirmPassword} min={4} max={16} onChange={handleChange}/>
+          <input type="password" name="confirmPassword" id="confirmPassword"
+           value={confirmPassword} 
+           min={4} max={16} onChange={handleChange}/>
         </div>
         
         <input type="submit" value="Alterar senha" />

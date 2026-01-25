@@ -2,6 +2,7 @@ import axios from 'axios';
 import { getToken } from '../../templates/login/api'
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://localhost:3000'
+const API_URL_GO = import.meta.env.VITE_API_GO || 'http://localhost:4001'
 
 export const getPhoto = async () => {
   try {
@@ -28,7 +29,7 @@ export const getPhoto = async () => {
 
 export const getPermission = async () => {
   try {
-    const response = await axios.get(`${API_URL}/employee/permission`, {
+    const response = await axios.get(`${API_URL_GO}/employee/permission`, {
       headers: { Authorization: `${getToken()}` }})
     
     return response.data
@@ -49,7 +50,7 @@ export const getPermission = async () => {
 
 export const getUser = async (): Promise<{ email: string, name: string, surname: string, role: string } | null> => {
   try {
-    const result = await axios.get(`https://localhost:4001/api/user-info`, {
+    const result = await axios.get(`${API_URL_GO}/api/user-info`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
 

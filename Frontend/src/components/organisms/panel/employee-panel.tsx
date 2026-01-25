@@ -13,26 +13,28 @@ type EmployeePanelProps = {
   onClose: () => void
 }
 
+type UserFormState = {
+  email: string
+  role: string
+}
+
 export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps) {
   const [visible, setVisible] = useState(isOpen)
   const [addEmployee, setAddEmployee] = useState(false)
-  const [email, setEmail] = useState('')
-  const [role, setRole] = useState('')
   const [employees, setEmployees] = useState<Employee[]>([])
   const [editedEmployees, setEditedEmployees] = useState<{ [email: string]: Partial<Employee> }>({})
-  const roles = ['Gerente', 'Cozinheiro', 'Auxiliar de cozinha', 'Garçom', 'Limpeza', 'Outros']
+  const roles = ['Gerente', 'Cozinheiro', 'Auxiliar de cozinha', 'Garçom', 'Limpeza', 'Outros', 'Indefinido']
+  const [ user, setUser ] = useState<UserFormState>({ email: '',   role: ''})
 
   // Delay para transição de saída
   useEffect(() => {
-
     if (isOpen) {
       setVisible(true)
       fetchEmployees()
     } else {
-      // Ao fechar, salvar alterações antes de fechar
       saveAllChanges()
-      const timeout = setTimeout(() => setVisible(false), 200)
-      return () => clearTimeout(timeout)
+      const timeout = setInterval(() => setVisible(false), 200)
+      return () => clearInterval(timeout)
     }
   }, [isOpen])
 
@@ -45,12 +47,11 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
 
   // Cria novo usuário
   const handleSubmit = async () => {
-    if (!email || !role) return
+    if (!user.email || !user.role) return
     
     try {
-      await addEmployeeAPI({ email, role })
-      setEmail('')
-      setRole('')
+      await addEmployeeAPI({ email: user.email, role: user.role })
+      setUser({ email: '', role: '' })
       setAddEmployee(false)
       fetchEmployees()
     } catch (error) {
@@ -90,7 +91,6 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
     const updates = Object.entries(editedEmployees)
     for (const [email, data] of updates) {
 
-      // Procura email que sofreu evento
       const original = employees.find(e => e.email === email)
       if (!original) continue
   
@@ -117,21 +117,22 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
   return (
     <section className={`panelOverlay ${isOpen ? 'fadeIn' : 'fadeOut'}`} onClick={handlePanelClose}>
       <div className='panel' onClick={(e) => e.stopPropagation()}>
-        <header className='header'>
+        <header className='mb-[10px]'>
           <h2 className='bg-text-blue-950'>Gestão de Funcionários</h2>
         </header>
 
         <CardContainer employees={employees} handleEditChange={handleEditChange} handleDelete={handleDelete}/>
 
-        {employee.canEditEmployeePanel() && (<form className="add-form open" onSubmit={(e) => { e.preventDefault(); handleSubmit() }}>
+        {employee.canEditEmployeePanel() && (
+          <form className="add-form open" onSubmit={(e) => { e.preventDefault(); handleSubmit() }}>
             {addEmployee && (
               <>
                 <div className="form-group">
                   <input
                     type="email"
                     placeholder="Email do funcionário"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={user.email}
+                    onChange={(e) => setUser(prev => ({...prev, email: e.target.value}))}
                     style={{ margin: '25px 0px 0px 0px', border: '2px solid #aaa' }}
                     required
                   />
@@ -140,8 +141,8 @@ export function EmployeePanel({ isOpen, employee, onClose }: EmployeePanelProps)
                 <div className="form-group">
                   <select
                     name="role"
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
+                    value={user.role}
+                    onChange={(e) => setUser(prev => ({...prev, role: e.target.value }))}
                     style={{ margin: '25px 0px 0px 0px', border: '2px solid #aaa' }}
                     required
                   >

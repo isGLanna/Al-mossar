@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { MdDoubleArrow } from "react-icons/md";
 import { Dish } from "../../../../../models/Menu"
 import "./style/_menu.scss"
@@ -12,11 +12,24 @@ interface DishListProps {
 
 export function DishList({ dishes, deleted, handleDeleteDish }: DishListProps) {
   const [openDescription, setOpenDescription] = useState<number[]>([])
-  let mealTypes = [  
+  const mealTypes = useMemo(() => [  
     { label: "Café da manhã", value: "cafe_manha" },
     { label: "Almoço", value: "almoco" },
     { label: "Café da tarde", value: "cafe_tarde" },
-    { label: "Janta", value: "janta" },]
+    { label: "Janta", value: "janta" }
+  ], [])
+
+  const dishesByMealType = useMemo(() => {
+    const map: Record<string, Dish[]> = {
+      cafe_manha: [],
+      almoco: [],
+      cafe_tarde: [],
+      janta: []
+    }
+
+    dishes.forEach(dish => map[dish.meal_type]?.push(dish))
+    return map
+  }, [dishes])
 
   return (
     <div className="dish-list">
@@ -24,7 +37,7 @@ export function DishList({ dishes, deleted, handleDeleteDish }: DishListProps) {
         {dishes.length > 0 ? (
 
           mealTypes.map(({ label, value }) => {
-            const filtered = dishes.filter((dish) => dish.meal_type === value)
+            const filtered = dishesByMealType[value]
             
             if (!filtered.length) return null
 

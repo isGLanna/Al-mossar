@@ -6,10 +6,10 @@ interface ForgotPasswordProps{
   email: string
   setEmail: (email: string) => void
   setCode: (code: string) => void
-  handleNextStep: () => void
+  handleStep: (number: number) => void
 }
 
-export default function ForgotPassword({email, setEmail, setCode, handleNextStep}: ForgotPasswordProps) {
+export default function ForgotPassword({email, setEmail, setCode, handleStep}: ForgotPasswordProps) {
   const [ loading, setLoading ] = useState<boolean>(false)
   const [ emptyField, setEmptyField ] = useState<boolean>(false)
 
@@ -28,7 +28,7 @@ export default function ForgotPassword({email, setEmail, setCode, handleNextStep
       })
 
       if (!response.ok) throw new Error('Erro ao enviar o código de recuperação')
-      handleNextStep()
+      handleStep(1)
       
     } catch (err: unknown) {
       alert(err)
