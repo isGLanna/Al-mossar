@@ -58,7 +58,7 @@ export function Sidebar({ isOpen }: SidebarProps) {
         <nav>
           <ul>
             <div className='profile-container'>
-              {photo ? 
+              {photo === undefined ? 
                 (<img src={photo} alt="" />) : 
                 (<FaCircleUser className='img' size={50} />)}
               <div className='profile-content'>

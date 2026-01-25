@@ -5,8 +5,8 @@ import { EmployeeCard} from "./card.tsx"
 import './card.scss'
 
 type CardContainerProps = {
-  handleEditChange?: (email: string, field: keyof Employee, value: string) => void
-  handleDelete?: (email: string) => void
+  handleEditChange: (email: string, field: keyof Employee, value: string) => void
+  handleDelete: (email: string) => void
   employees: Employee[]
 }
 
@@ -51,8 +51,10 @@ export function CardContainer({ handleEditChange, handleDelete, employees }: Car
             emp={emp}
             index={index}
             selectedCard={selectedCard}
-            setSelectedCard={setSelectedCard}>
-          </EmployeeCard>
+            setSelectedCard={setSelectedCard}
+            handleEditChange={handleEditChange}
+            handleDelete={handleDelete}
+          />
         ))}
       </section>
     </>

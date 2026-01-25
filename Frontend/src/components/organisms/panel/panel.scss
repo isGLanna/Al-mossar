@@ -1,8 +1,9 @@
 .panel {
   width: auto;
   width: 65rem;
+  height: 90;
   max-width: 96dvw;
-  max-height: 85dvh;
+  max-height: 90dvh;
   text-align: center;
   color: var(--font-dark);
   height: auto;
@@ -10,12 +11,6 @@
   border-radius: 10px;
   border: 2px solid var(--background-color);
   overflow: scroll;
-
-  .header{
-    font-size: 14px;
-    margin-bottom: 15px;
-    
-  }
 }
 
 .remove-button,

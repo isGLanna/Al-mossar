@@ -1,6 +1,7 @@
 import { GrFormNext, GrFormPrevious } from "../../style/icons"
 import { TimeUtils } from "../../../../../models/TimeUtils"
 import { DaysGrid } from "../../../../molecules/days-grid/days-grid"
+import { useMemo } from 'react'
 import "./_calendar.scss"
 
 interface CalendarProps {
@@ -30,7 +31,7 @@ export function Calendar({
   ]
 
 
-  const daysArray = TimeUtils.getDaysArray(currentYear, currentMonth)
+  const daysArray = useMemo(() => TimeUtils.getDaysArray(currentYear, currentMonth), [currentMonth, currentYear])
 
   const getMonthName = (month: number) => {
     return new Date(0, month).toLocaleString("default", { month: "long" })

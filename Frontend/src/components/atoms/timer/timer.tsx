@@ -10,12 +10,12 @@ export default function Timer({seconds, className}: TimerProps) {
   const [ remainingTime, setRemainingTime ] = useState<number>(seconds)
 
   useEffect(() => {
-    const interval = setTimeout(() => {
+    const interval = setInterval(() => {
       setRemainingTime(prev => prev - 1)
     }, 1000)
 
-    return () => clearTimeout(interval)
-  }, [remainingTime])
+    return () => clearInterval(interval)
+  }, [])
   
   return (
     <div className={className}>{TimeUtils.formatRemainingTime(remainingTime)}</div>

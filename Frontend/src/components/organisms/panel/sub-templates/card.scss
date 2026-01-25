@@ -75,10 +75,10 @@
     grid-template-columns: 14rem 10rem;
     grid-template-rows: 2.5rem 3rem 1fr 1fr;
     grid-template-areas:
-      "a ."
-      "b c"
-      "d e"
-      "f g";
+      "a . h"
+      "b c h"
+      "d e h"
+      "f g h";
     background-color: white;
     height: 18rem;
     width: 14rem;
@@ -129,8 +129,6 @@
       object-fit: cover;
     }
 
-
-
     .area-a { grid-area: a; }
     .area-b { grid-area: b; }
     .area-c { grid-area: c; overflow: hidden; opacity: 0; transition: opacity 200ms }
@@ -138,6 +136,7 @@
     .area-e { grid-area: e; overflow: hidden; opacity: 0; transition: opacity 200ms }
     .area-f { grid-area: f; }
     .area-g { grid-area: g; overflow: hidden; opacity: 0; transition: opacity 200ms }
+    .area-h { grid-area: h; }
 
     &.active {
       grid-template-columns: 8rem 16rem;
@@ -156,6 +155,29 @@
         opacity: 1;
       }
     }
+
+    .btn-delete{
+      &:hover{
+        &::after {
+          content: "";
+          position: absolute;
+          aspect-ratio: 1 / 1;
+          background: #c52121;
+          border-radius: 100%;
+          animation: pulse 1.2s infinite;
+        }
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  from {
+    opacity: 0.6;
+    width: 0px;
+  } to {
+    opacity: 0;
+    width: 40px;
   }
 }
 

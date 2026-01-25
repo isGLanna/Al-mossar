@@ -11,8 +11,8 @@ export function PasswordRecovery() {
   const [nextStep, setNextStep] = useState<number>(1)
   const navigate = useNavigate()
 
-  const handleNextStep = () => {
-    setNextStep(prevStep => prevStep + 1)
+  const handleStep = (number: number) => {
+    setNextStep(prevStep => prevStep + number)
   }
 
 
@@ -21,11 +21,11 @@ export function PasswordRecovery() {
       {(() => {
         switch (nextStep) {
           case 1:
-            return <ForgotPassword email={email} setEmail={setEmail} setCode={setCode} handleNextStep={handleNextStep}/>
+            return <ForgotPassword email={email} setEmail={setEmail} setCode={setCode} handleStep={handleStep}/>
           case 2:
-            return <VerifyRecoveryCode email={email} code={code} setCode={setCode} handleNextStep={handleNextStep}/>
+            return <VerifyRecoveryCode email={email} code={code} setCode={setCode} handleStep={handleStep}/>
           case 3:
-            return <ResetPassword email={email} code={code} handleNextStep={handleNextStep}/>
+            return <ResetPassword email={email} code={code} handleStep={handleStep}/>
           case 4:
             navigate({ to: '/' })
             break

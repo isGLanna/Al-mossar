@@ -22,7 +22,7 @@ a {
   font-weight: 700;
   color: var(--branding-600);
   text-decoration: inherit;
-  transition: 200ms ease
+  transition: 100ms linear
 }
 a:hover {
   color: var(--branding-700);
