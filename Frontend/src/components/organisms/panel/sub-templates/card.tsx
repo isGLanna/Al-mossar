@@ -14,7 +14,7 @@ import { FaArrowRightLong } from "react-icons/fa6"
 type EmployeeCardProps = {
   emp: Employee
   index: number
-  selectedCard: number
+  selectedCard: number | null
   setSelectedCard: (index: number) => void
   handleEditChange: (email: string, field: keyof Employee, value: string) => void
   handleDelete: (email: string) => void

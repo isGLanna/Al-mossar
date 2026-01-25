@@ -10,8 +10,7 @@ export function Menu() {
 
         <DailyMenu />
 
-      <footer>
-      </footer>
+        <footer/>
       </div>
     </div>
   );

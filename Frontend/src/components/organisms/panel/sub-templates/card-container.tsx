@@ -1,6 +1,6 @@
 import { Employee } from '../../../../models/Employee.ts'
 import { MdPersonSearch } from "react-icons/md"
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { EmployeeCard} from "./card.tsx"
 import './card.scss'
 
@@ -12,12 +12,13 @@ type CardContainerProps = {
 
 export function CardContainer({ handleEditChange, handleDelete, employees }: CardContainerProps) {
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedCard, setSelectedCard] = useState<number>(-1)
+  const [selectedCard, setSelectedCard] = useState<number | null>(null)
 
-  const filteredEmployees = employees.filter(emp => {
-    const fullName = `${emp.name} ${emp.surname}`.toLowerCase()
-    return fullName.includes(searchTerm.toLowerCase())
-  })
+  const filteredEmployees = useMemo(() => {
+    return employees.filter(emp => {
+      const fullName = `${emp.name} ${emp.surname}`.toLowerCase()
+      return fullName.includes(searchTerm.toLowerCase())
+  })}, [employees, searchTerm])
 
   return(
     <>
