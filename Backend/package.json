@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index",
-    "build": "tsc",
+    "build": "esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js --format=esm --packages=external",
     "start": "node dist/index.js",
-    "genenrate-migration": "tsx database/generate-migration.ts",
+    "generate-migration": "tsx database/generate-migration.ts",
     "migrate": "tsx database/migrate.ts"
   },
   "keywords": [],
