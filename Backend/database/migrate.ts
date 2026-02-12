@@ -46,7 +46,7 @@ await transaction(async (client) => {
     } catch(error) {
       console.error(`Failed to apply migration: ${migration.name}`)
       console.error('Rolling back all migrations...')
-      console.error(error)
+      throw error
     }
     await client.query(`
       INSERT INTO _migrations (name)
