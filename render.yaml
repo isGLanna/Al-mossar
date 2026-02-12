@@ -1,0 +1,21 @@
+version: "1"
+
+services:
+  - type: web
+    name: Almossar Backend
+    runtime: node
+    plan: free
+    region: virginia
+    repo: https://github.com/King-witcher/Al-mossar
+    envVars:
+      - key: POSTGRES_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+    healthCheckPath: /api/health
+    buildFilter:
+      paths:
+        - Backend/**
+
+    buildCommand: cd Backend && ./build-prod.sh
+    startCommand: cd Backend && npm start
