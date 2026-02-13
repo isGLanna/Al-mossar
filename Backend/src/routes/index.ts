@@ -17,4 +17,8 @@ router.use(employeeRouter)
 
 router.use(userRouter)
 
+router.get('/health', (req, res) => {
+  res.status(200).json({ success: true, message: 'API is healthy!' })
+})
+
 export default router
