@@ -59,7 +59,7 @@ export class MenuController {
     }
   }
 
-  async deleted (req: Request, res: Response ) {
+  async delete (req: Request, res: Response ) {
   const { token, name, date } = req.body
 
   try {

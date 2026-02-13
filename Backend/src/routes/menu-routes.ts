@@ -1,11 +1,14 @@
 import { Router } from 'express'
-import { get, create, update, deleted } from '../controllers/menu-controller'
+import { MenuService } from '../services/menu-service'
+import { MenuController } from '../controllers/menu-controller'
 
 const menuRouter = Router()
+const service = new MenuService()
+const controller = new MenuController(service)
 
-menuRouter.get('/menu', get)
-menuRouter.post('/menu', create)
-menuRouter.put('/menu', update)
-menuRouter.delete('/menu', deleted)
+menuRouter.get('/menu', (req, res) => { controller.get})
+menuRouter.post('/menu', (req, res) => { controller.create})
+menuRouter.put('/menu', (req, res) => { controller.update})
+menuRouter.delete('/menu', (req, res) => { controller.delete})
 
 export default menuRouter
