@@ -9,11 +9,9 @@ const sequelize = new Sequelize(
     host: process.env.DB_HOST || 'localhost',
     port: Number(process.env.DB_PORT) || 5432,
     dialect: 'postgres',
-    logging: process.env.NODE_ENV === 'development' ? console.log : false
   }
 );
 
-// O resto do seu código permanece o mesmo
 try {
   await sequelize.authenticate();
   console.log('Conexão com o banco de dados estabelecida com sucesso.');
