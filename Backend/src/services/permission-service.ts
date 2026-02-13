@@ -23,9 +23,9 @@ export async function checkPermission(token: string): Promise<string[]> {
     // Consulta permissões associadas ao cargo
     const permissions = await sequelize.query<{ description: string }>(
       `SELECT p.name 
-       FROM permissions as  p
-       JOIN role_permissions rp ON p.id = rp.id
-       WHERE rp.role = :role`,
+      FROM permissions as  p
+      JOIN role_permissions rp ON p.id = rp.id
+      WHERE rp.role = :role`,
       {
         replacements: { role },
         type: QueryTypes.SELECT,
