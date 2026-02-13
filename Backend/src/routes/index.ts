@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import menuRouter from './menu-routes'
-import authRouter from './login-register-routes'
+import authRouter from './register-routes'
 import userRouter from './user-routes'
 import employeeRouter from './employee-routes'
 
