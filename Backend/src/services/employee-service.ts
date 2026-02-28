@@ -6,7 +6,7 @@ import { AppError } from '../utils/app-error';
 
 export class EmployeeService {
 
-  async addEmployee(email: string, role: string, enterprise_id: number) {
+  async create(email: string, role: string, enterprise_id: number) {
     const existing = await Employee.findOne({ where: { email, enterprise_id } })
     
     if (existing) throw new AppError('Funcionário já cadastrado nesta empresa.', 409)

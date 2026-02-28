@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { email, z } from 'zod'
 
 export const createEnterpriseSchema = z.object({
   name: z.string().min(3, "Nome deve conter mínimo de 3 caracteres").max(32, "Nome deve conter máximo de 32 caracteres."),
@@ -22,6 +22,12 @@ export const registerUserSchema = z.object({
 export const loginSchema = z.object({
   email: z.string().email("E-mail inválido"),
   password: z.string().min(4).max(32)
+})
+
+export const authorizeEmployee = z.object({
+  email: z.string().email("E-mail inválido"),
+  role: z.enum(['administrador', 'gerente', 'nutricionista', 'cozinheiro', 'auxiliar de cozinha']),
+  enterprise_id: z.int()
 })
 
 export type CreateEnterpriseInput = z.infer<typeof createEnterpriseSchema>
