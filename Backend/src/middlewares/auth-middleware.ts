@@ -8,7 +8,7 @@ export interface AuthPayload {
   id: number
   email: string
   role: string
-  enterprise_id: number
+  enterpriseId: number
 }
 
 declare global {

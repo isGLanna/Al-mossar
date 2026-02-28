@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import {EmployeeService} from '../services/employee-service'
 import { authorizeEmployee } from '../validations/auth.schemas'
-import { employeeSchema, editEmployee } from '../validations/employee.schemas'
+import { editEmployeeSchema } from '../validations/employee.schemas'
 
 
 export class EmployeeController {
@@ -13,18 +13,16 @@ export class EmployeeController {
       const { email, role, enterprise_id } = authorizeEmployee.parse(req.body)
       await this.employeeService.create(email, role, enterprise_id)
       res.status(201).json({ success: true })
-    } catch (error: any) {
-      const status = error.status || 500
-      const message = error.message || "Falha inexperada ao adicionar novo empregado."
-
-      res.status(status).json({ error: message })
+    } catch (error) {
+      next(error)
     }
   }
 
   async listEmployees(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const enterprise_id = req.user!.enterprise_id
-      const employees = await this.employeeService.getEmployees(enterprise_id)
+      const enterpriseId = Number(req.params.enterpriseId)
+
+      const employees = await this.employeeService.getEmployees(enterpriseId)
 
       res.status(200).json(employees)
     } catch (error) {
@@ -32,33 +30,30 @@ export class EmployeeController {
     }
   }
 
-  async deleteEmployee(req: Request, res: Response): Promise<void> {
-    const { id, enterprise_id } = req.query
+  async deleteEmployee(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const id = Number(req.params.id)
+      const enterpriseId = Number(req.params.enterpriseId)
 
-      await this.employeeService.deleteEmployee(id, enterprise_id)
-      res.status(204).json({ success: true, message: ''})
+      await this.employeeService.deleteEmployee(id, enterpriseId)
+      res.status(204).send()
 
-      return 
-    } catch (error: any) {
-      const status = error.status || 500
-      const message = error.message || 'Erro interno ao remover empregado.'
-      res.status(status).json({ success: false, message: message })
-      return
+    } catch (error) {
+      next(error)
     }
   }
 
-  async editEmployee(req: Request, res: Response): Promise<void> {
-    const { id, enterprise_id, name, surname, role } = req.body
-
+  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      await this.employeeService.editEmployee(id, enterprise_id, { name, surname, role })
-      res.status(200).json({ success: true, message: '' })
+      const id = Number(req.params.id)
+      const enterpriseId = Number(req.params.enterpriseId)
+      const updates = editEmployeeSchema.parse(req.body)
 
-    } catch (error: any) {
-      const status = error.status || 500
-      const message = error.message || 'Erro interno ao editar funcionário.'
+      await this.employeeService.update(id, enterpriseId, updates)
+      res.status(200).send()
 
-      res.status(status).json({ success: false, message })
+    } catch (error) {
+      next(error)
     }
   }
 }

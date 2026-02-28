@@ -58,7 +58,7 @@ export class EmployeeService {
     if (deletedCount === 0) throw new AppError('Funcionário não encontrado', 404)
   }
 
-  async editEmployee(id: number, enterprise_id: number, updates: Partial<Employee>) {
+  async update(id: number, enterprise_id: number, updates: Partial<Employee>) {
     const [updateCount, updatedRows] = await Employee.update(updates, {
       where: { id, enterprise_id },
       returning: true
