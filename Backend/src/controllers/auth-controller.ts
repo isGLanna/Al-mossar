@@ -1,9 +1,8 @@
 import { Request, Response } from 'express'
-import { authenticateUser } from '../services/authenticator'
+import { authenticateUser } from '../services/auth-service'
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-// Logar usuários
 export const login = async (req: Request, res: Response): Promise<void> => {
   console.log("Teste")
 

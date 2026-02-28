@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
 import {EmployeeService} from '../services/employee-service'
 
-// Adiciona funcionário
 export async function addEmployee(req: Request, res: Response): Promise<void> {
   const { email, role, token } = req.body
 
@@ -21,7 +20,6 @@ export async function addEmployee(req: Request, res: Response): Promise<void> {
   }
 }
 
-// Busca todos os funcionários de uma empresa
 export async function getEmployees(req: Request, res: Response): Promise<void> {
   const authHeader  = req.headers.authorization
   const token = authHeader?.substring(7)
@@ -41,7 +39,6 @@ export async function getEmployees(req: Request, res: Response): Promise<void> {
   }
 }
 
-// Exclui funcionário
 export async function deleteEmployee(req: Request, res: Response): Promise<void> {
   const { email, token} = req.query
 
@@ -61,7 +58,6 @@ export async function deleteEmployee(req: Request, res: Response): Promise<void>
   }
 }
 
-// Edita funcionário
 export async function editEmployee(req: Request, res: Response): Promise<void> {
   const { token, email, name, surname, role } = req.body
 

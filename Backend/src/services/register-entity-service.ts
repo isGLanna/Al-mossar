@@ -1,6 +1,6 @@
 import { Enterprise } from '../repositories/enterprise'
 import { Employee } from '../repositories/user/employee'
-import { CreateEnterpriseInput, RegisterUserInput } from '../types/auth.schemas'
+import { CreateEnterpriseInput, RegisterUserInput } from '../validations/auth.schemas'
 import { AppError } from '../utils/app-error'
 import bcrypt from 'bcrypt'
 

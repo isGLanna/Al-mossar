@@ -18,7 +18,7 @@ Dish.belongsToMany(Menu, {
 })
 
 Menu.belongsTo(Enterprise, {
-  foreignKey: 'id_enterprise',
+  foreignKey: 'enterprise_id',
   targetKey: 'id',
   as: 'enterprise',
 })

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { RegisterEntityService } from '../services/register-entity-service'
-import { createEnterpriseSchema, registerUserSchema } from '../types/auth.schemas'
+import { createEnterpriseSchema, registerUserSchema } from '../validations/auth.schemas'
 import { AppError } from '../utils/app-error'
 import { ZodError } from 'zod'
 

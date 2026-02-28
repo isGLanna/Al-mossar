@@ -1,67 +1,38 @@
 import { Employee } from '../repositories/user/employee'
 import { Salary } from '../repositories/salary'
 import { getUserPhoto } from './user-photo'
-import { refreshToken } from './authenticator'
 import { TokenService } from './token-service'
+import { AppError } from '../utils/app-error';
 
 export class EmployeeService {
 
-  static async addEmployee(email: string, role: string, token: string) {
-    const id_enterprise = await TokenService.queryEnterpriseId(token)
+  async addEmployee(email: string, role: string, enterprise_id: number) {
+    const existing = await Employee.findOne({ where: { email, enterprise_id } })
+    
+    if (existing) throw new AppError('Funcionário já cadastrado nesta empresa.', 409)
 
-    const existing = await Employee.findOne({ where: { email, id_enterprise } })
-    if (existing) {
-      throw new Error('Funcionário já cadastrado nesta empresa.')
-    }
-
-    role = role.toLowerCase()
-
-    const newEmployee = await Employee.create({
+    return await Employee.create({
       email,
       role,
-      id_enterprise,
+      enterprise_id,
       name: '',
       surname: '',
       password: '',
     })
-
-    return newEmployee
   }
 
-  static async getEmployees(token: string) {
-    try {
-      const id_enterprise = await TokenService.queryEnterpriseId(token)
-
-      const user = await Employee.findOne({
-        where: { token, id_enterprise },
-        attributes: ['id'],
-      })
-
-      if (!user) {
-        return { success: false, message: 'Empresa não encontrada ou token inválido.' }
-      }
-
+  async getEmployees(enterprise_id: number) {
       const employees = await Employee.findAll({
-        where: { id_enterprise },
-        attributes: [
-          'id',
-          'email',
-          'name',
-          'surname',
-          'start_of_contract',
-          'end_of_contract',
-          'role',
-          'telephone',
-          'address'
-        ],
-        include: [
-          {
-            model: Salary,
-            as: 'salary',
-            attributes: ['amount', 'updated_at'],
-          },
-        ],
+        where: { enterprise_id },
+        attributes: ['id', 'email', 'name', 'surname', 'role', 'telephone'],
+        include: {
+          model: Salary,
+          as: 'salary',
+          attributes: ['salary', 'updated_at']
+        }
       })
+
+      if (!employees.length) throw new AppError('Nenhum funcionário encontrado.', 404)
 
       const employeesWithPhotos = await Promise.all(
         employees.map(async (employee) => {
@@ -76,39 +47,24 @@ export class EmployeeService {
         })
       )
 
-      if (!employees || employees.length === 0) {
-        return { success: false, message: 'Empresa não encontrada ou token inválido.' }
-      }
-
-      const newToken = await refreshToken(token)
-      if (!newToken.success) {
-        return { success: false, status: 401 }
-      }
-
-      return { success: true, token: newToken.token, employees: employeesWithPhotos }
-
-    } catch (error: any) {
-      return { success: false, message: error.message || 'Employee not found' }
-    }
+      return { success: true, employees: employeesWithPhotos }
   }
 
-  static async deleteEmployee(email: string, token: string) {
-    const id_enterprise = await TokenService.queryEnterpriseId(token)
-    await Employee.destroy({
-      where: { email, id_enterprise }
+  async deleteEmployee(id: number, enterprise_id: number) {
+    const deletedCount = await Employee.destroy({
+      where: {id, enterprise_id}
     })
+
+    if (deletedCount === 0) throw new AppError('Funcionário não encontrado', 404)
   }
 
-  static async editEmployee(
-    email: string,
-    token: string,
-    updates: Partial<Pick<Employee, 'name' | 'surname' | 'role'>>
-  ) {
-    const id_enterprise = await TokenService.queryEnterpriseId(token)
-    await Employee.update(updates, {
-      where: { email, id_enterprise }
+  async editEmployee(id: number, enterprise_id: number, updates: Partial<Employee>) {
+    const [updateCount, updatedRows] = await Employee.update(updates, {
+      where: { id, enterprise_id },
+      returning: true
     })
 
-    return await Employee.findOne({ where: { email, id_enterprise } })
+    if (updateCount === 0) throw new AppError('Funcionário não encontrado', 404)
+    return updatedRows[0]
   }
 }

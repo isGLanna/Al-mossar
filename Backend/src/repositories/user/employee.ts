@@ -9,7 +9,7 @@ export class Employee extends Model{
   declare password?: string
   declare name?: string
   declare surname?: string
-  declare id_enterprise?: number
+  declare enterprise_id?: number
   declare start_of_contract?: string
   declare end_of_contract?: string
   declare role?: string
@@ -42,7 +42,7 @@ Employee.init(
         type: DataTypes.STRING,
         allowNull: false,
     },
-    id_enterprise: {
+    enterprise_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
@@ -83,5 +83,5 @@ Employee.init(
   }
 )
 
-Employee.belongsTo(Enterprise, {foreignKey: 'id_enterprise', as: 'enterprise'})
-Enterprise.hasMany(Employee, { foreignKey: 'id_enterprise', as: 'employees' });
+Employee.belongsTo(Enterprise, {foreignKey: 'enterprise_id', as: 'enterprise'})
+Enterprise.hasMany(Employee, { foreignKey: 'enterprise_id', as: 'employees' });

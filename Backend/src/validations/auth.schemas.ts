@@ -6,7 +6,7 @@ export const createEnterpriseSchema = z.object({
   password: z.string().min(4).max(32),
   employees: z.array(z.object({
     email: z.string().email("E-mail inválido"),
-    role: z.enum(['Administrador', 'Cozinheiro', 'Auxiliar de cozinha'])
+    role: z.enum(['Administrador', 'Gerente', 'Cozinheiro', 'Auxiliar de cozinha'])
   }))
 })
 
@@ -17,6 +17,11 @@ export const registerUserSchema = z.object({
   password: z.string().min(4).max(16),
   id_enterprise: z.number().int().positive(),
   start_of_contract: z.coerce.date()
+})
+
+export const loginSchema = z.object({
+  email: z.string().email("E-mail inválido"),
+  password: z.string().min(4).max(32)
 })
 
 export type CreateEnterpriseInput = z.infer<typeof createEnterpriseSchema>

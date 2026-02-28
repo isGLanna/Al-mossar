@@ -25,7 +25,7 @@ export const Client = sequelize.define('Client',
     token: {
       type: DataTypes.STRING
     },
-    id_enterprise: {
+    enterprise_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
