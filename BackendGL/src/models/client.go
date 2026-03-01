@@ -26,11 +26,3 @@ type UserResponse struct {
 	Surname string `json:"surname,omitempty"`
 	Role    string `json:"role"`
 }
-
-func (Client) TableName() string {
-	return "client"
-}
-
-func (ClientImage) TableName() string {
-	return "client_image"
-}

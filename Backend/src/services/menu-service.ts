@@ -1,7 +1,7 @@
 import { Menu, Dish } from '../repositories/menu'
 import { TokenService } from './token-service'
-import pool from '../repositories/database'
-import { AppError } from '../utils/app-error';
+import pool from '../database/database'
+import { TransactionalService } from '../database/transactional-service'
 
 type MenuResponse = {
   cafe_manha: Dish[];
@@ -10,7 +10,7 @@ type MenuResponse = {
   janta: Dish[];
 }
 
-export class MenuService {
+export class MenuService extends TransactionalService {
 
   async getMenuByDate(token: string, day: string): Promise<MenuResponse> {
     try {
@@ -42,13 +42,11 @@ export class MenuService {
     }
   }
 
-  async create(
-    enterpriseId: number, day: string, dishes: { name: string; description: string; mealType: string}[]) {
-
-    try {
-      pool.query('BEGIN')
-
-      const menuResult = await pool.query(
+  async create(enterpriseId: number, day: string, dishes: { name: string; description: string; mealType: string}[]) {
+    const client = await pool.connect()
+    
+    return this.transaction(async (client) => {
+      const menuResult = await client.query(
         `SELECT id
         FROM menus
         WHERE enterprise_id = ? AND day = ?`, [enterpriseId, day]
@@ -58,7 +56,7 @@ export class MenuService {
 
       // Cria relação entre enterprise e menu do dia
       if (!menuResult.rowCount) {
-        const insertMenu = await pool.query(
+        const insertMenu = await client.query(
           `INSERT INTO menus(enterprise_id, day) VALUES ($1, $2) RETURNING id`, [enterpriseId, day]
         )
         menuId = insertMenu.rows[0].id
@@ -68,18 +66,12 @@ export class MenuService {
       }
 
       for (const { name, description, mealType } of dishes) {
-        await pool.query(
+        await client.query(
           `INSERT INTO dishes(name, description, meal_type, menu_id)
           VALUES ($1, $2, $3, $4)`, [name, description, mealType, menuId]
         )
       }
-      await pool.query('COMMIT')
-
-      return
-    } catch(error) {
-      await pool.query('ROLLBACK')
-      throw error
-    }
+    })
   }
 
   async update( enterpriseId: number, day: string, dishes: { name: string, description: string, mealType: string}[]) {
@@ -105,21 +97,18 @@ export class MenuService {
     return
   }
 
-  async delete(
-    token:string,
-    name: string, 
-    day: string) {
+  async delete(enterpriseId: number, name: string, day: string) {
+    const client = await pool.connect()
+
+    return this.transaction(async (client) => {
+      const menu = await client.query(`
+        DELETE FROM dishes
+        WHERE enterprise_id = $1 AND name = $2 AND day = $3
+        RETURNS COUNT(dish)`)
+    })
     try {
-      const { token: newToken, status: status } = await TokenService.refreshToken(token)
-
-      if (status !== 201 || !newToken) {
-        return { status: status, message: 'Token inválido ou expirado' }
-      }
-      
-      const id_enterprise = await TokenService.queryEnterpriseId(newToken)
-
       const menu = await Menu.findOne({
-        where: { id_enterprise, day },
+        where: { enterpriseId, day },
         include: {
           model: Dish,
           as: 'dishes',
@@ -133,15 +122,11 @@ export class MenuService {
       if (!dishToDelete) throw new Error('Prato não encontrado no menu');
 
       if (menu.dishes.length === 1) {
-        // Só 1 prato? Deleta o menu inteiro
         await menu.setDishes([]);
         await menu.destroy();
       } else {
-        // Mais de 1 prato? Apenas remove o prato
         await menu.removeDish(dishToDelete.id);
       }
-
-      return { status: 200, token: newToken}
     } catch (error) {
       return { error, success: false };
     }

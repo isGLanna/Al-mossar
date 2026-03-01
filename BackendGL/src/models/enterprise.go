@@ -34,14 +34,10 @@ func (ThemeColor) TableName() string {
 type FoodExpense struct {
 	ID           uint       `gorm:"primaryKey" json:"id"`
 	EnterpriseID uint       `gorm:"not null" json:"enterprise_id"`
-	Enterprise   Enterprise `gorm:"foreingnKey:EnterpriseID;references:ID;constraint:OnUpdate:CASCADE" json:"enterprise"`
+	Enterprise   Enterprise `gorm:"foreignKey:EnterpriseID;references:ID;constraint:OnUpdate:CASCADE" json:"enterprise"`
 	Amoung       float64    `gorm:"type:numeric(10,2); not null" json:"amount"`
 	ExpenseDate  time.Time  `gorm:"not null; default:CURRENT_DATE" json:"expense_date"`
 	CreatedAt    time.Time  `gorm:"autoCreateTime" json:"created_at"`
-}
-
-func (FoodExpense) TableName() string {
-	return "food_expense"
 }
 
 // =================== TOTAL EXPENSE ===================
@@ -54,8 +50,4 @@ type TotalExpense struct {
 	Amount       float64    `gorm:"type:numeric(10,2); not null" json:"amount"`
 	ExpenseData  time.Time  `gorm:"not null; default:CURRENT_DATE" json:"expense_date"`
 	CreatedAt    time.Time  `gorm:"autoCreateTime" json:"created_at"`
-}
-
-func (TotalExpense) TableName() string {
-	return "total_expense"
 }

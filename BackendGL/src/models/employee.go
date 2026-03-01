@@ -27,10 +27,6 @@ type EmployeeImage struct {
 	Image      []byte   `gorm:"type:bytea" json:"image"`
 }
 
-func (Employee) TableName() string {
-	return "employee"
-}
-
 // =================== SALARY ===================
 
 type Salary struct {
@@ -40,8 +36,4 @@ type Salary struct {
 	Amount        float64   `gorm:"type:numeric(10,2);not null" json:"amount"`
 	EffectiveDate time.Time `gorm:"autoCreateTime" json:"effective_date"`
 	UpdatedAt     time.Time `gorm:"autoUpdateTime" json:"updated_at"`
-}
-
-func (Salary) TableName() string {
-	return "salary"
 }
