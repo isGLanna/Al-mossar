@@ -10,8 +10,8 @@ export class EmployeeController {
   // Apenas registra o e-mail dos usuários que podem se cadastrar na empresa
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { email, role, enterprise_id } = authorizeEmployee.parse(req.body)
-      await this.employeeService.create(email, role, enterprise_id)
+      const { email, role, enterpriseId } = authorizeEmployee.parse(req.body)
+      await this.employeeService.create(email, role, enterpriseId)
       res.status(201).json({ success: true })
     } catch (error) {
       next(error)

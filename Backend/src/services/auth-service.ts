@@ -29,7 +29,7 @@ export class AuthService {
         name: employee.name,
         surname: employee.surname,
         role: employee.role,
-        enterprise_id: employee.enterprise_id
+        enterpriseId: employee.enterprise_id
       },
       token
     }

@@ -45,14 +45,14 @@ export class RegisterEntityService{
   }
 
   async registerUser(data: RegisterUserInput) {
-    const { name, surname, email, password, id_enterprise, start_of_contract } = data
+    const { name, surname, email, password, enterpriseId, start_of_contract } = data
 
-    const enterprise = await Enterprise.findByPk(id_enterprise);
+    const enterprise = await Enterprise.findByPk(enterpriseId);
     if (!enterprise) {
       throw new AppError('Empresa não encontrada.', 404);
     }
 
-    const employee = await Employee.findOne({ where: { email, id_enterprise } });
+    const employee = await Employee.findOne({ where: { email, enterpriseId } });
     
     if (!employee) {
       throw new AppError('E-mail não autorizado para cadastro nesta empresa.', 403);
@@ -75,20 +75,20 @@ export class RegisterEntityService{
   async getProfileByToken(token: string) {
     const employee = await Employee.findOne({
       where: {token},
-      attributes: ['name', 'surname', 'role', 'id_enterprise']
+      attributes: ['name', 'surname', 'role', 'enterprise_id']
     })
 
     if(!employee) throw new AppError("Employee not found.", 401)
 
       const employees = await Employee.findAll({
-        where: {id_enterprise: employee.id_enterprise},
+        where: {enterpriseId: employee.enterprise_id},
         attributes: ['name', 'surname', 'role']
       })
 
     return {
       name: employee.name,
       surname: employee.surname,
-      idEnterprise: employee.id_enterprise,
+      enterpriseId: employee.enterprise_id,
       role: employee.role,
       token,
       employees

@@ -15,7 +15,7 @@ export const registerUserSchema = z.object({
   surname: z.string().min(1).max(48, "Limite de caracteres excedido: 48"),
   email: z.string().email(),
   password: z.string().min(4).max(16),
-  id_enterprise: z.number().int().positive(),
+  enterpriseId: z.number().int().positive(),
   start_of_contract: z.coerce.date()
 })
 
@@ -27,7 +27,7 @@ export const loginSchema = z.object({
 export const authorizeEmployee = z.object({
   email: z.string().email("E-mail inválido"),
   role: z.enum(['administrador', 'gerente', 'nutricionista', 'cozinheiro', 'auxiliar de cozinha']),
-  enterprise_id: z.int()
+  enterpriseId: z.int()
 })
 
 export type CreateEnterpriseInput = z.infer<typeof createEnterpriseSchema>

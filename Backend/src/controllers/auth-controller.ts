@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
-import { authenticateUser } from '../services/auth-service'
+import { AuthService } from '../services/auth-service'
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const login = async (req: Request, res: Response): Promise<void> => {
-  console.log("Teste")
+  const authService = new AuthService()
 
   try{
     const { email, password } = req.body
@@ -14,7 +14,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return
     }
 
-    const authResult  = await authenticateUser(email, password)
+    const authResult  = await authService.login(email, password)
 
     await sleep(1500)
     
@@ -23,14 +23,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return
     }
 
-    if (authResult.success === false) {
-      res.status(401).json({ success: false, message: authResult.message })
-      return
-    }
+    const {success, user: {name, surname, role, enterpriseId}, token } = authResult
 
-    const {name, surname, idEnterprise, role, token } = authResult
-
-    res.json({ success: true, email, name, surname, idEnterprise, role, token})
+    res.json({ success: true, email, name, surname, enterpriseId, role, token})
 
   } catch (error) {
     console.log('Erro:', error)
