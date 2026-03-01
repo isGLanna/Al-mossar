@@ -36,6 +36,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
 
 export const authorizeRoles = (...allowedRoles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
+    allowedRoles.push('*')
     if (!req.user || !allowedRoles.includes(req.user.role)) {
       throw new AppError('Acesso negado: não possui permissão.', 403)
     }

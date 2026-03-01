@@ -1,5 +1,7 @@
 import { Menu, Dish } from '../repositories/menu'
 import { TokenService } from './token-service'
+import pool from '../repositories/database'
+import { AppError } from '../utils/app-error';
 
 type MenuResponse = {
   cafe_manha: Dish[];
@@ -40,95 +42,70 @@ export class MenuService {
     }
   }
 
-  async createMenu( 
-    token:string, 
-    day:string, 
-    dishes: { name: string; description: string; meal_type: string}[]) {
-    
+  async create(
+    enterpriseId: number, day: string, dishes: { name: string; description: string; mealType: string}[]) {
+
     try {
-      const { token: newToken, status: status } = await TokenService.refreshToken(token)
+      pool.query('BEGIN')
 
-      if (status !== 201 || !newToken) {
-        return { status: status, message: 'Token inválido ou expirado' }
-      }
+      const menuResult = await pool.query(
+        `SELECT id
+        FROM menus
+        WHERE enterprise_id = ? AND day = ?`, [enterpriseId, day]
+      )
 
-      const id_enterprise = await TokenService.queryEnterpriseId(newToken)
+      let menuId: number
 
-      // Verifica se já existe um menu para o dia e empresa para evitar duplicidade
-      let menu = await Menu.findOne({
-        where: { id_enterprise, day },
-        include: {
-          model: Dish,
-          as: 'dishes',
-        }
-      })
-
-
-      if (!menu) {
-        menu = await Menu.create({ id_enterprise, day });
+      // Cria relação entre enterprise e menu do dia
+      if (!menuResult.rowCount) {
+        const insertMenu = await pool.query(
+          `INSERT INTO menus(enterprise_id, day) VALUES ($1, $2) RETURNING id`, [enterpriseId, day]
+        )
+        menuId = insertMenu.rows[0].id
       } else {
-        await this.updateMenu(newToken, day, dishes)
+        await this.update(enterpriseId, day, dishes)
+        return
       }
 
-      const createdDishes = await Dish.bulkCreate(
-        dishes.map(({ name, description, meal_type }) => ({
-          name,
-          description,
-          meal_type: meal_type
-        })),
-        { returning: true }
-      )
-
-      await menu.setDishes(createdDishes)
-
-      return { status: 200, token: newToken}
-    } catch (error) {
-      console.error('Erro ao criar menu:', error)
-      return { error, success: false}
-    }
-  }
-
-  async updateMenu (
-    token:string,
-    day:string,   
-    dishes: { name: string, description: string, meal_type: string}[]) {
-      
-    try {
-      const { token: newToken, status: status } = await TokenService.refreshToken(token)
-
-      if (status !== 201 || !newToken) {
-        return { status: status, message: 'Token inválido ou expirado' }
+      for (const { name, description, mealType } of dishes) {
+        await pool.query(
+          `INSERT INTO dishes(name, description, meal_type, menu_id)
+          VALUES ($1, $2, $3, $4)`, [name, description, mealType, menuId]
+        )
       }
-      
-      const id_enterprise = await TokenService.queryEnterpriseId(newToken)
-      // Consulta menu igual
-      const menu = await Menu.findOne({
-        where: { id_enterprise, day}
-      })
+      await pool.query('COMMIT')
 
-      if (!menu) throw new Error('Menu não encontrado.')
-
-      await menu.setDishes([])
-
-      const newDishes = await Dish.bulkCreate(
-        dishes.map(({ name, description, meal_type }) => ({
-          name,
-          description,
-          meal_type: meal_type
-        })),
-        { returning: true }
-      )
-
-      await menu.setDishes(newDishes)
-        
-      return { status: 200, token: newToken}
-    } catch (error) {
-      console.error('Erro ao atualizar menu:', error)
+      return
+    } catch(error) {
+      await pool.query('ROLLBACK')
       throw error
     }
   }
 
-  async deleteMenu(
+  async update( enterpriseId: number, day: string, dishes: { name: string, description: string, mealType: string}[]) {
+    const menu = await Menu.findOne({
+      where: { enterpriseId, day}
+    })
+
+    if (!menu) throw new Error('Menu não encontrado.')
+
+    await menu.setDishes([])
+
+    const newDishes = await Dish.bulkCreate(
+      dishes.map(({ name, description, mealType }) => ({
+        name,
+        description,
+        meal_type: mealType
+      })),
+      { returning: true }
+    )
+
+    await menu.setDishes(newDishes)
+      
+    return
+  }
+
+  async delete(
     token:string,
     name: string, 
     day: string) {
@@ -167,6 +144,17 @@ export class MenuService {
       return { status: 200, token: newToken}
     } catch (error) {
       return { error, success: false };
+    }
+  }
+  
+  async deleteBeforeThat(day: string) {
+    const today = new Date()
+    const targetDate = new Date(day)
+
+    if (targetDate < today) {
+      await pool.query(
+        `DELETE FROM menus
+        WHERE day < ?`, [day])
     }
   }
 }

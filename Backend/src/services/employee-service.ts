@@ -1,7 +1,6 @@
 import { Employee } from '../repositories/user/employee'
 import { Salary } from '../repositories/salary'
 import { getUserPhoto } from './user-photo'
-import { TokenService } from './token-service'
 import { AppError } from '../utils/app-error';
 
 export class EmployeeService {
@@ -22,32 +21,32 @@ export class EmployeeService {
   }
 
   async getEmployees(enterprise_id: number) {
-      const employees = await Employee.findAll({
-        where: { enterprise_id },
-        attributes: ['id', 'email', 'name', 'surname', 'role', 'telephone'],
-        include: {
-          model: Salary,
-          as: 'salary',
-          attributes: ['salary', 'updated_at']
+    const employees = await Employee.findAll({
+      where: { enterprise_id },
+      attributes: ['id', 'email', 'name', 'surname', 'role', 'telephone'],
+      include: {
+        model: Salary,
+        as: 'salary',
+        attributes: ['salary', 'updated_at']
+      }
+    })
+
+    if (!employees.length) throw new AppError('Nenhum funcionário encontrado.', 404)
+
+    const employeesWithPhotos = await Promise.all(
+      employees.map(async (employee) => {
+        const employeeData = employee.toJSON()
+        const photoResult = await getUserPhoto(employeeData.id, 'employee')
+
+        return {
+          ...employeeData,
+          photo: photoResult.exists ? photoResult.photo : null,
+          hasPhoto: photoResult.exists
         }
       })
+    )
 
-      if (!employees.length) throw new AppError('Nenhum funcionário encontrado.', 404)
-
-      const employeesWithPhotos = await Promise.all(
-        employees.map(async (employee) => {
-          const employeeData = employee.toJSON()
-          const photoResult = await getUserPhoto(employeeData.id, 'employee')
-
-          return {
-            ...employeeData,
-            photo: photoResult.exists ? photoResult.photo : null,
-            hasPhoto: photoResult.exists
-          }
-        })
-      )
-
-      return { success: true, employees: employeesWithPhotos }
+    return { success: true, employees: employeesWithPhotos }
   }
 
   async deleteEmployee(id: number, enterprise_id: number) {
