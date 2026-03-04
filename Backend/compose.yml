@@ -10,3 +10,23 @@ services:
       - "5432:5432"
     volumes:
       - ${POSTGRES_DATA}:/var/lib/postgresql
+
+  backend:
+    build: .
+    restart: always
+    container_name: almossar-backend
+    enviromnment:
+      JWT_SECRET: ${JWT_SECRET}
+      DB_NAME: almossar
+      DB_USER: user
+      DB_PASS: let-me-IN
+      DB_PORT: 5432
+      NODE: 22
+    ports:
+      - "3001:3001"
+
+    depends_on:
+      - postgres
+    command: yarn dev
+
+

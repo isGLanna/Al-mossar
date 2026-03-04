@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS food_expense (
 CREATE TABLE IF NOT EXISTS total_expense (
     id SERIAL PRIMARY KEY,
     enterprise_id INTEGER NOT NULL,
-    category VARCHAR(50) NOT NULL CHECK (category IN ('aluguel', 'luz', 'água', 'gas')),
+    category VARCHAR(50) NOT NULL CHECK (category IN ('aluguel', 'luz', 'agua', 'gas')),
     amount NUMERIC(10, 2) NOT NULL,
     expense_date DATE NOT NULL DEFAULT CURRENT_DATE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -55,10 +55,10 @@ CREATE TABLE IF NOT EXISTS employee (
 );
 
 CREATE TABLE IF NOT EXISTS employee_image (
-  id SERIAL PRIMARY KEY,
-  employee_id INT UNIQUE NOT NULL,
-  image BYTEA NOT NULL,
-  FOREIGN KEY (employee_id) REFERENCES employee(id) ON DELETE CASCADE
+    id SERIAL PRIMARY KEY,
+    employee_id INT UNIQUE NOT NULL,
+    image BYTEA NOT NULL,
+    FOREIGN KEY (employee_id) REFERENCES employee(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS password_recovery_codes (
@@ -77,22 +77,6 @@ CREATE TABLE IF NOT EXISTS salary (
     effective_date DATE NOT NULL DEFAULT CURRENT_DATE,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
--- Tabela de permissões dos funcionários
-CREATE TABLE IF NOT EXISTS role (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(20) NOT NULL UNIQUE
-);
-
--- 2. Tabela de permissões vinculadas a cada role
-CREATE TABLE IF NOT EXISTS role_permissions (
-    id SERIAL PRIMARY KEY,
-    role_id INT NOT NULL,
-    permission VARCHAR(50) NOT NULL,
-    CONSTRAINT fk_role_permissions_role FOREIGN KEY (role_id)
-        REFERENCES role(id) ON DELETE CASCADE
-);
-
 
 -- 3. Pratos
 
@@ -143,8 +127,8 @@ CREATE TABLE IF NOT EXISTS client (
 
 
 CREATE TABLE IF NOT EXISTS client_image (
-  id SERIAL PRIMARY KEY,
-  client_id INT UNIQUE NOT NULL,
-  image BYTEA NOT NULL,
-  FOREIGN KEY (client_id) REFERENCES client(id) ON DELETE CASCADE
+    id SERIAL PRIMARY KEY,
+    client_id INT UNIQUE NOT NULL,
+    image BYTEA NOT NULL,
+    FOREIGN KEY (client_id) REFERENCES client(id) ON DELETE CASCADE
 );
