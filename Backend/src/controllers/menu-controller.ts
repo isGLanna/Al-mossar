@@ -1,23 +1,23 @@
 import { Request, Response } from 'express'
 import { MenuService } from '../services/menu-service'
-// import { z } from 'zod';
+import { AppError } from '../utils/app-error'
 
 export class MenuController {
   constructor(private service: MenuService) {}
 
-  async create ( req: Request, res: Response ) {
-      const { token, date, dishes } = req.body
+  async createMenu ( req: Request, res: Response ) {
+    const { enterpriseId, day, dishes } = req.body
 
-      try {
-        const newMenu = await this.service.createMenu( token, date, dishes)
+    try {
+      await this.service.create(enterpriseId, day, dishes)
 
-        res.status(201).json(newMenu)
-      } catch (error) {
-        res.status(500).json({ error: 'Erro ao criar cardápio', success: false})
+      res.status(201).json()
+    } catch (error: AppError | unknown) {
+      AppError.sendErrorResponse(res, error as AppError)
     }
   }
 
-  async get(req: Request, res: Response) {
+  async getMenu(req: Request, res: Response) {
     const { token, day } = req.query
 
     try {
@@ -39,32 +39,34 @@ export class MenuController {
 
       res.status(200).json({ dishes: formattedDishes, success: true })
 
-    } catch (error) {
-      res.status(500).json({ message: error, success: false })
+    } catch (error: AppError | unknown) {
+      AppError.sendErrorResponse(res, error as AppError)
     }
   }
 
-  async update (req: Request, res: Response) {
-    const { token, date, dishes } = req.body
+  async updateMenu (req: Request, res: Response) {
+    const { date, dishes, meal_type } = req.body
 
     try {
-      console.log(req.body)
-      console.log(dishes.meal_type)
-      const updated = await this.service.updateMenu(token, date, dishes)
 
-      res.status(201).json(updated)
-    } catch (error) {
-      res.status(500).json({ error: 'Erro ao atualizar cardápio' })
+      const updated = await this.service.update(date, dishes, meal_type)
+
+      res.status(200).json(updated)
+    } catch (error: AppError | unknown) {
+      AppError.sendErrorResponse(res, error as AppError)
     }
   }
 
-  async delete (req: Request, res: Response ) {
+  async deleteMenu (req: Request, res: Response ) {
     const { token, name, date } = req.body
     try {
-      const result = await this.service.deleteMenu(token, name, date)
+      const result = await this.service.delete(token, name, date)
       res.status(200).json(result)
-    } catch (error) {
-      res.status(500).json({ error: 'Erro ao deletar cardápio'})
+    } catch (error: AppError | unknown) {
+      AppError.sendErrorResponse(res, error as AppError)
     }
+  }
+
+  async deleteBeforeThat (req: Request, res: Response) { 
   }
 }

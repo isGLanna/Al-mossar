@@ -44,7 +44,7 @@ export class MenuService {
   }
 
   @transactional
-  async create(enterpriseId: number, day: string, dishes: { name: string; description: string; mealType: string}[], client: Pool) {
+  async create(enterpriseId: number, day: string, dishes: { id: number; mealType: string}[], client: Pool) {
     const menuResult = await client.query(
       `SELECT id
         FROM menus
@@ -64,15 +64,15 @@ export class MenuService {
       return
     }
 
-    for (const { name, description, mealType } of dishes) {
+    for (const { id, mealType } of dishes) {
       await client.query(
-        `INSERT INTO dishes(name, description, meal_type, menu_id)
-        VALUES ($1, $2, $3, $4)`, [name, description, mealType, menuId]
+        `INSERT INTO dishes(id, name, meal_type, menu_id)
+        VALUES ($1, $2, $3, $4, $5)`, [id, name, description, mealType, menuId]
       )
     }
   }
 
-  async update( enterpriseId: number, day: string, dishes: { name: string, description: string, mealType: string}[]) {
+  async update( enterpriseId: number, day: string, dishes: { id: number; mealType: string}[]) {
       const menu = await Menu.findOne({
         where: { enterpriseId, day}
       })

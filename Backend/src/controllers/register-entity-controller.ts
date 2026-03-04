@@ -16,8 +16,8 @@ export class RegisterEntity {
       const result = await this.service.createEnterprise(data)
 
       return res.status(201).json(result)
-    } catch (error) {
-      return this.handleError(res, error);
+    } catch (error: AppError | unknown) {
+      AppError.sendErrorResponse(res, error as AppError)
     }
   }
 
@@ -28,8 +28,8 @@ export class RegisterEntity {
       const result = await this.service.registerUser(data);
 
       return res.status(201).json(result)
-    } catch (error) {
-      return this.handleError(res, error)
+    } catch (error: AppError | unknown) {
+      AppError.sendErrorResponse(res, error as AppError)
     }
   };
 
@@ -44,19 +44,8 @@ export class RegisterEntity {
       const profile = await this.service.getProfileByToken(token)
 
       return res.status(200).json(profile)
-    } catch (error) {
-      return this.handleError(res, error)
+    } catch (error: AppError | unknown) {
+      AppError.sendErrorResponse(res, error as AppError)
     }
-  }
-
-  private handleError(res: Response, error: unknown) {
-    if (error instanceof ZodError) return res.status(400).json({error: "Erro de validação"})
-    
-
-    if (error instanceof AppError) return res.status(error.statusCode).json({error: error.message})
-
-    // Armazenar erros futuramente
-    console.error("Internal Server Error:", error)
-    return res.status(500).json({error: "Erro interno do servidor."})
   }
 }

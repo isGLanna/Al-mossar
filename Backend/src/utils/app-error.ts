@@ -1,4 +1,5 @@
 import pool from '../database/database'
+import { Response } from 'express'
 
 export class AppError {
   public readonly message: string
@@ -24,5 +25,9 @@ export class AppError {
         attempt++
       }
     }
+  }
+
+  static sendErrorResponse(res: Response, error: AppError) {
+    res.status(error.statusCode).json({ success: false, message: error.message})
   }
 }
