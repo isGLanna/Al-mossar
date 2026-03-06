@@ -10,7 +10,8 @@ type MenuResponse = {
   cafe_tarde: Dish[];
   janta: Dish[];
 }
-
+/* Alterar toda a lógica do código:
+  - Menu deve ser responsável apenas por linkar pratos ao dia*/
 export class MenuService {
 
   async getMenuByDate(token: string, day: string): Promise<MenuResponse> {
