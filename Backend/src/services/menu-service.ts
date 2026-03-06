@@ -67,8 +67,8 @@ export class MenuService {
 
     for (const { id, mealType } of dishes) {
       await client.query(
-        `INSERT INTO dishes(id, name, meal_type, menu_id)
-        VALUES ($1, $2, $3, $4, $5)`, [id, name, description, mealType, menuId]
+        `INSERT INTO dishes(id, menu_id, menu_id)
+        VALUES ($1, $2, $3, $4, $5)`, [id, mealType, menuId]
       )
     }
   }
@@ -82,16 +82,7 @@ export class MenuService {
 
       await menu.setDishes([])
 
-      const newDishes = await Dish.bulkCreate(
-        dishes.map(({ name, description, mealType }) => ({
-          name,
-          description,
-          meal_type: mealType
-        })),
-        { returning: true }
-      )
-
-      await menu.setDishes(newDishes)
+      // Alocar os pratos para os tipos de refeição
   }
 
   async delete(enterpriseId: number, name: string, day: string) {
