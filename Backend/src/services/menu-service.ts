@@ -45,44 +45,39 @@ export class MenuService {
   }
 
   @transactional
-  async create(enterpriseId: number, day: string, dishes: { id: number; mealType: string}[], client: Pool) {
+  async create(enterpriseId: number, days: string[], dishes: { dishId: number; mealType: string}[], client: Pool) {
     const menuResult = await client.query(
       `SELECT id
-        FROM menus
-      WHERE enterprise_id = $1 AND day <= $2`, [enterpriseId, day]
+      FROM menu
+        JOIN menu_dish md ON menu.id = md.id_menu
+      WHERE enterprise_id = $1
+        AND day = $2
+        AND md.meal_type = $3`, [enterpriseId, days, dishes[0].mealType]
     )
 
-    let menuId: number
-
-    // Cria relação entre enterprise e menu do dia
-    if (!menuResult.rowCount) {
-      const insertMenu = await client.query(
-        `INSERT INTO menus(enterprise_id, day) VALUES ($1, $2) RETURNING id`, [enterpriseId, day]
-      )
-      menuId = insertMenu.rows[0].id
-    } else {
-      await this.update(enterpriseId, day, dishes)
+    if (menuResult.rowCount) {
+      await this.update(enterpriseId, days, dishes)
       return
     }
 
-    for (const { id, mealType } of dishes) {
-      await client.query(
-        `INSERT INTO dishes(id, menu_id, menu_id)
-        VALUES ($1, $2, $3, $4, $5)`, [id, mealType, menuId]
-      )
-    }
+
+    await Promise.all(days.map(async day => {
+      let menuId = await client.query(`INSERT INTO menu(enterprise_id, day) VALUES ($1, $2) RETURNING id`, [enterpriseId, day])
+
+      await Promise.all(dishes.map(async ({ dishId, mealType}) => {
+          await client.query(`
+            INSERT INTO menu_dish(id_menu, id_dish, meal_type)
+            VALUES ($1, $2, $3)`, [menuId.rows[0].id, dishId, mealType])
+        }))
+    }))
   }
 
-  async update( enterpriseId: number, day: string, dishes: { id: number; mealType: string}[]) {
+  async update( enterpriseId: number, day: string[], dishes: { dishId: number; mealType: string}[]) {
       const menu = await Menu.findOne({
         where: { enterpriseId, day}
       })
 
       if (!menu) throw new Error('Menu não encontrado.')
-
-      await menu.setDishes([])
-
-      // Alocar os pratos para os tipos de refeição
   }
 
   async delete(enterpriseId: number, name: string, day: string) {

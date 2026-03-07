@@ -3,10 +3,12 @@ import { Response } from 'express'
 
 export class AppError {
   public readonly message: string
+  public readonly error: any
   public readonly statusCode: number
   
-  constructor(message: string, statusCode = 500) {
+  constructor(message: string, error: any, statusCode = 500) {
     this.message = message
+    this.error = error
     this.statusCode = statusCode
     this.saveError()
   }
@@ -17,8 +19,8 @@ export class AppError {
     while (attempt < 3) {
       try {
         await pool.query(`
-          INSERT INTO errors(message, status_code, created_at)
-          VALUES ($1, $2, $3)`, [this.message, this.statusCode, new Date()])
+          INSERT INTO errors(message, log_error, status_code, created_at)
+          VALUES ($1, $2, $3, $4)`, [this.message, this.error, this.statusCode, new Date()])
 
         break
       } catch(error){

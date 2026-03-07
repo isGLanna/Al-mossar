@@ -78,36 +78,49 @@ CREATE TABLE IF NOT EXISTS salary (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 3. Pratos
-
 CREATE TABLE IF NOT EXISTS dish (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
-    meal_type VARCHAR(20) NOT NULL CHECK (meal_type IN ('cafe_manha', 'almoco', 'cafe_tarde', 'janta'))
+    enterprise_id INT NOT NULL,
+
+    CONSTRAINT fk_dish_enterprise
+        FOREIGN KEY (enterprise_id)
+        REFERENCES enterprise(id)
+        ON DELETE CASCADE
 );
-
-
--- 4. Cardápios por dia
--- Cada empresa pode ter um menu por dia para cada refeição
 
 CREATE TABLE IF NOT EXISTS menu (
     id SERIAL PRIMARY KEY,
     day DATE NOT NULL,
-    id_enterprise INT NOT NULL,
-    FOREIGN KEY (id_enterprise) REFERENCES enterprise(id) ON DELETE CASCADE
+    enterprise_id INT NOT NULL,
+    
+    CONSTRAINT fk_menu_enterprise
+        FOREIGN KEY (enterprise_id)
+        REFERENCES enterprise(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT unique_menu_day_enterprise
+        UNIQUE (day, enterprise_id)
 );
-
-
--- 5. Ligação entre cardápios e pratos
 
 CREATE TABLE IF NOT EXISTS menu_dish (
     id SERIAL PRIMARY KEY,
     id_menu INT NOT NULL,
     id_dish INT NOT NULL,
-    FOREIGN KEY (id_menu) REFERENCES menu(id) ON DELETE CASCADE,
-    FOREIGN KEY (id_dish) REFERENCES dish(id) ON DELETE CASCADE,
-    UNIQUE (id_menu, id_dish)
+    meal_type VARCHAR(20) CHECK (
+        meal_type IN ('cafe_manha', 'almoco', 'cafe_tarde', 'janta')
+    ),
+
+    CONSTRAINT fk_menu_dish_menu
+        FOREIGN KEY (id_menu)
+        REFERENCES menu(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_menu_dish_dish
+        FOREIGN KEY (id_dish)
+        REFERENCES dish(id)
+        ON DELETE CASCADE
 );
 
 
@@ -119,7 +132,7 @@ CREATE TABLE IF NOT EXISTS client (
     email VARCHAR(50),
     name VARCHAR(25),
     surname VARCHAR(75),
-    balance NUMERIC(10, 2),
+    balance INT,
     token TEXT,
     id_enterprise INT NOT NULL,
     FOREIGN KEY (id_enterprise) REFERENCES enterprise(id)
@@ -132,3 +145,19 @@ CREATE TABLE IF NOT EXISTS client_image (
     image BYTEA NOT NULL,
     FOREIGN KEY (client_id) REFERENCES client(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS payment (
+    id SERIAL PRIMARY KEY,
+    payer VARCHAR(75) NOT NULL,
+    method VARCHAR(20) NOT NULL CHECK(
+        method IN ('credit', 'debit', 'pix')
+    )
+    created_at TIMESTAMP
+)
+
+CREATE TABLE IF NOT EXISTS errors (
+    id serial PRIMARY KEY,
+    messate VARCHAR(100),
+    status_code INT,
+    log_error TEXT
+)
