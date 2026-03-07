@@ -30,4 +30,20 @@ export class DishService {
 
     }
   }
+
+  async delete(enterpriseId: number, id: number) {
+    try{
+      const client = await new Pool()
+
+      const deleteRelation = await client.query(`
+        DELETE FROM dish
+        WHERE enterpriseId = $1
+          AND id = $2`, [enterpriseId, id])
+
+      if(deleteRelation.rowCount === 0)
+        throw new AppError('Prato não encontrado', 404)
+    } catch (error: AppError | any) {
+      throw new AppError(error?.message || 'Falha ao remover prato', error, error.status || 500 )
+    }
+  }
 }

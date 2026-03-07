@@ -1,43 +1,38 @@
 import { Menu, Dish } from '../repositories/menu'
-import { TokenService } from './token-service'
 import  { Pool } from 'pg'
 import { transactional } from '../decorators/transactional'
 import { AppError } from '../utils/app-error'
 
-type MenuResponse = {
-  cafe_manha: Dish[];
-  almoco: Dish[];
-  cafe_tarde: Dish[];
-  janta: Dish[];
-}
 /* Alterar toda a lógica do código:
   - Menu deve ser responsável apenas por linkar pratos ao dia*/
+type MenuDish = {
+  id: number
+  name: string
+  description: string
+  meal_type: 'cafe_manha' | 'almoco' | 'cafe_tarde' | 'janta'
+}
 export class MenuService {
 
-  async getMenuByDate(token: string, day: string): Promise<MenuResponse> {
+  async getMenuByDate(enterpriseId: number, day: string) {
     try {
-      // Consulta id da empresa do funcionário logado
-      const id_enterprise = await TokenService.queryEnterpriseId(token)
+      const client = await new Pool()
+      const menu = await client.query(`
+        SELECT d.id, d.name, d.description, md.meal_type
+        FROM menu m
+          JOIN menu_dish md ON md.id_menu = m.id
+          JOIN dish d ON md.id_dish = d.id
+        WHERE m.enterprise_id = $1
+          AND m.day = $2`, [enterpriseId, day])
 
-      const menu = await Menu.findOne({
-        where: {id_enterprise, day},
-        include: {
-          model: Dish,
-          as: 'dishes',
-        }
-      })
+      const listOfDishes: MenuDish= { cafe_manha: [], almoco: [], cafe_tarde: [], janta: []  }
 
-      const result: MenuResponse = {  cafe_manha: [], almoco: [], cafe_tarde: [], janta: []  }
-
-      if (menu?.dishes) {
-        for (const dish of menu.dishes) {
-          if (dish.meal_type && result[dish.meal_type] !== undefined) {
-            result[dish.meal_type].push(dish)
-          }
+      for (const dish of menu.rows) {
+        if (dish.meal_type && listOfDishes[dish.meal_type] !== undefined) {
+          listOfDishes[dish.meal_type].push(dish)
         }
       }
 
-      return result
+      return listOfDishes
     } catch (error) {
       console.log(error)
       throw error
@@ -55,11 +50,8 @@ export class MenuService {
         AND md.meal_type = $3`, [enterpriseId, days, dishes[0].mealType]
     )
 
-    if (menuResult.rowCount) {
-      await this.update(enterpriseId, days, dishes)
-      return
-    }
-
+    if (menuResult.rowCount)
+      throw new AppError('Cardápio para esse dia e tipo de refeição já existe',400)
 
     await Promise.all(days.map(async day => {
       let menuId = await client.query(`INSERT INTO menu(enterprise_id, day) VALUES ($1, $2) RETURNING id`, [enterpriseId, day])
@@ -72,43 +64,39 @@ export class MenuService {
     }))
   }
 
-  async update( enterpriseId: number, day: string[], dishes: { dishId: number; mealType: string}[]) {
-      const menu = await Menu.findOne({
-        where: { enterpriseId, day}
-      })
+  // Método para remover relacionamentos entre menu e pratos
+  async removeMenuDishes(enterpriseId: number, day: string[], dishesId: number[]) {
+    try {
+      const client = await new Pool()
 
-      if (!menu) throw new Error('Menu não encontrado.')
+      await Promise.all(dishesId.map(id => {
+        client.query(
+        `DELETE FROM menu_dish md
+        USING dish
+        WHERE md.id_dish = $1
+          AND menu.enterprise_id = $2`,
+          [enterpriseId, id]
+      )}))
+    }
   }
 
-  async delete(enterpriseId: number, name: string, day: string) {
-    const client = await new Pool()
-
-    const deleteRelation = await client.query(`
-      DELETE FROM menu_dish md
-      USING menu m, dish d
-      WHERE md.id_menu = m.id
-        AND md.id_dish = d.id
-        AND m.enterprise_id = $1
-        AND d.name = $2
-        AND m.day = $3
-      RETURNING m.id`, [enterpriseId, name, day])
-
-    if(deleteRelation.rowCount === 0)
-      throw new AppError('Prato ou cardápio não encontrado', 404)
-  }
-
-  async deleteBeforeThat(day: string) {
+  async deleteBeforeThat(enterpriseId: number, day: string) {
     const today = new Date()
     const targetDate = new Date(day)
-    const client = await new Pool()
+    try {
+      const client = await new Pool()
 
-    if (targetDate > today) return
+      if (targetDate > today) return
 
-    const deleteResult = await client.query(
-      `DELETE FROM menus
-      WHERE day < $1`, [day])
+      const deleteResult = await client.query(
+        `DELETE FROM menu
+        WHERE enterprise_id = $1
+          AND day < $2`, [enterpriseId, day])
 
-    if(deleteResult.rowCount === 0)
-      throw new AppError('Nenhum cardápio deletado', 404)
+      if(deleteResult.rowCount === 0)
+        throw new AppError('Nenhum cardápio removido', 404)
+    }catch(error: AppError | any) {
+      throw new AppError(error?.message || 'Falha ao remover cardápios', error, error.status)
+    }
   }
 }
