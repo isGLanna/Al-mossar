@@ -1,32 +1,69 @@
 import { Menu, Dish } from '../repositories/menu'
-import  { Pool } from 'pg'
+import  { Pool, PoolClient } from 'pg'
 import { transactional } from '../decorators/transactional'
 import { AppError } from '../utils/app-error'
 
-/* Alterar toda a lógica do código:
-  - Menu deve ser responsável apenas por linkar pratos ao dia*/
+type MealType = 'cafe_manha' | 'almoco' | 'cafe_tarde' | 'janta'
+
 type MenuDish = {
   id: number
   name: string
   description: string
-  meal_type: 'cafe_manha' | 'almoco' | 'cafe_tarde' | 'janta'
+  meal_type: MealType
 }
+
 export class MenuService {
+
+  @transactional
+  async create(enterpriseId: number, day: string, dishes: { dishId: number; mealType: string }[], client?: PoolClient) {
+    const menuResult = await client!.query(`
+      SELECT m.id
+      FROM menu m
+      JOIN menu_dish md ON m.id = md.id_menu
+      WHERE m.enterprise_id = $1
+        AND m.day = $2
+        AND md.meal_type = $3
+      LIMIT 1`, 
+      [enterpriseId, day, dishes[0].mealType]
+    );
+
+    if (menuResult.rowCount) {
+      throw new AppError('Cardápio para esse dia e tipo de refeição já existe', 'BadRequest', 400);
+    }
+
+    const insertMenuResult = await client!.query(
+      `INSERT INTO menu(enterprise_id, day) VALUES ($1, $2) RETURNING id`,
+      [enterpriseId, day]
+    );
+    
+    const menuId = insertMenuResult.rows[0].id;
+
+    await Promise.all(
+      dishes.map(({ dishId, mealType }) => {
+        return client!.query(`
+          INSERT INTO menu_dish(id_menu, id_dish, meal_type)
+          VALUES ($1, $2, $3)`,
+          [menuId, dishId, mealType]
+        );
+      })
+    );
+  }
 
   async getMenuByDate(enterpriseId: number, day: string) {
     try {
-      const client = await new Pool()
+      const client = new Pool()
+
       const menu = await client.query(`
-        SELECT d.id, d.name, d.description, md.meal_type
+        SELECT m.id, d.id, d.name, d.description, md.meal_type
         FROM menu m
           JOIN menu_dish md ON md.id_menu = m.id
           JOIN dish d ON md.id_dish = d.id
         WHERE m.enterprise_id = $1
           AND m.day = $2`, [enterpriseId, day])
 
-      const listOfDishes: MenuDish= { cafe_manha: [], almoco: [], cafe_tarde: [], janta: []  }
+      const listOfDishes: Record<MealType, MenuDish[]> = { cafe_manha: [], almoco: [], cafe_tarde: [], janta: []  }
 
-      for (const dish of menu.rows) {
+      for (const dish of menu.rows as MenuDish[]) {
         if (dish.meal_type && listOfDishes[dish.meal_type] !== undefined) {
           listOfDishes[dish.meal_type].push(dish)
         }
@@ -39,44 +76,40 @@ export class MenuService {
     }
   }
 
-  @transactional
-  async create(enterpriseId: number, days: string[], dishes: { dishId: number; mealType: string}[], client: Pool) {
-    const menuResult = await client.query(
-      `SELECT id
-      FROM menu
-        JOIN menu_dish md ON menu.id = md.id_menu
-      WHERE enterprise_id = $1
-        AND day = $2
-        AND md.meal_type = $3`, [enterpriseId, days, dishes[0].mealType]
-    )
+  async insertMenuDish(menuIds: number[], dishes: { dishId: number, mealType: string }[]) {
+    try {
+      const client = new Pool()
 
-    if (menuResult.rowCount)
-      throw new AppError('Cardápio para esse dia e tipo de refeição já existe',400)
+      await Promise.all(menuIds.map(menuId =>
+        Promise.all(dishes.map(({dishId, mealType}) =>
+        client.query(`
+          INSERT INTO menu_dish(id_menu, id_dish, meal_type)
+          VALUES ($1, $2, $3)`, [menuId, dishId, mealType]))
+      )))
 
-    await Promise.all(days.map(async day => {
-      let menuId = await client.query(`INSERT INTO menu(enterprise_id, day) VALUES ($1, $2) RETURNING id`, [enterpriseId, day])
-
-      await Promise.all(dishes.map(async ({ dishId, mealType}) => {
-          await client.query(`
-            INSERT INTO menu_dish(id_menu, id_dish, meal_type)
-            VALUES ($1, $2, $3)`, [menuId.rows[0].id, dishId, mealType])
-        }))
-    }))
+    }catch(error: AppError | any) {
+      throw new AppError(error.message, error, error.status)
+    }
   }
 
-  // Método para remover relacionamentos entre menu e pratos
-  async removeMenuDishes(enterpriseId: number, day: string[], dishesId: number[]) {
+  // Remover relacionamentos entre menu e pratos
+  async removeMenuDishes(removals: { menuId: number; dishes: {dishId: number, mealType: string}[] }[]) {
     try {
-      const client = await new Pool()
+      const client = new Pool()
 
-      await Promise.all(dishesId.map(id => {
-        client.query(
-        `DELETE FROM menu_dish md
-        USING dish
-        WHERE md.id_dish = $1
-          AND menu.enterprise_id = $2`,
-          [enterpriseId, id]
-      )}))
+      await Promise.all(removals.map(async ({menuId, dishes}) => {
+        await Promise.all(dishes.map(({dishId, mealType}) => {
+        return client.query(
+          `DELETE FROM menu_dish md
+          WHERE id_dish = $1
+            AND id_menu = $2
+            AND meal_type = $3`,
+            [dishId, menuId, mealType]
+          )
+        }))
+      }))
+    } catch(error: AppError | any) {
+      throw new AppError(error?.message || 'Falha ao remover pratos do cardápio', error, error.status || 500)
     }
   }
 
@@ -84,9 +117,9 @@ export class MenuService {
     const today = new Date()
     const targetDate = new Date(day)
     try {
-      const client = await new Pool()
+      const client = new Pool()
 
-      if (targetDate > today) return
+      if (targetDate > today) throw new AppError('A data deve ser anterior a atual', 'BadRequest', 400)
 
       const deleteResult = await client.query(
         `DELETE FROM menu

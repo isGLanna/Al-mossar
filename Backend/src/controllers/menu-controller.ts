@@ -1,12 +1,13 @@
 import { Request, Response } from 'express'
 import { MenuService } from '../services/menu-service'
 import { AppError } from '../utils/app-error'
+import { createMenuSchema, queryMenuSchema, modifyMenuSchema, deleteMenuSchema } from '../validations/menu.schemas'
 
 export class MenuController {
   constructor(private service: MenuService) {}
 
   async createMenu ( req: Request, res: Response ) {
-    const { enterpriseId, day, dishes } = req.body
+    const { enterpriseId, day, dishes } = createMenuSchema.parse(req.body)
 
     try {
       await this.service.create(enterpriseId, day, dishes)
@@ -18,55 +19,51 @@ export class MenuController {
   }
 
   async getMenu(req: Request, res: Response) {
-    const { token, day } = req.query
+    const { enterpriseId, day } = queryMenuSchema.parse(req.body)
 
     try {
-      const menu = await this.service.getMenuByDate(token as string, day as string)
+      const menu = await this.service.getMenuByDate(enterpriseId, day)
 
-      const allDishes = [
-        ...menu.cafe_manha,
-        ...menu.almoco,
-        ...menu.cafe_tarde,
-        ...menu.janta
-      ]
-
-      const formattedDishes = allDishes.map((dish:any) => ({
+      const formattedDishes = Object.values(menu).flat().map(dish => ({
         id: dish.id,
         name: dish.name,
         description: dish.description,
         meal_type: dish.meal_type
       }))
 
-      res.status(200).json({ dishes: formattedDishes, success: true })
+      res.status(200).json({ dishes: formattedDishes })
 
     } catch (error: AppError | unknown) {
       AppError.sendErrorResponse(res, error as AppError)
     }
   }
 
-  async updateMenu (req: Request, res: Response) {
-    const { date, dishes, meal_type } = req.body
+  async insert (req: Request, res: Response) {
+    const { menuIds, dishes } = modifyMenuSchema.parse(req.body)
 
     try {
+      await this.service.insertMenuDish(menuIds, dishes.map(d => ({ dishId: d.dishId, mealType: d.mealType })))
 
-      const updated = await this.service.update(date, dishes, meal_type)
-
-      res.status(200).json(updated)
+      res.status(204).json()
     } catch (error: AppError | unknown) {
       AppError.sendErrorResponse(res, error as AppError)
     }
   }
 
-  async deleteMenu (req: Request, res: Response ) {
-    const { token, name, date } = req.body
+  async delete (req: Request, res: Response ) {
+    const { removals: {menuId, dishes{dishId, mealType}[]}[]} = req.body
     try {
-      const result = await this.service.delete(token, name, date)
-      res.status(200).json(result)
+      await this.service.removeMenuDishes(removals)
+      res.status(204).json()
     } catch (error: AppError | unknown) {
       AppError.sendErrorResponse(res, error as AppError)
     }
   }
 
-  async deleteBeforeThat (req: Request, res: Response) { 
+  async deleteBeforeThat (req: Request, res: Response) {
+    const { enterpriseId, day } = deleteMenuSchema.parse(req.body)
+    try {
+      await this.service.deleteBeforeThat(enterpriseId, day)
+    }
   }
 }
