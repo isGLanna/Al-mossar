@@ -17,7 +17,7 @@ export const queryMenuSchema = z.object({
 })
 
 export const modifyMenuSchema = z.object({
-  menuIds: z.array(z.number()),
+  menuId: z.number(),
   dishes: z.object({
     dishId: z.number(),
     mealType: z.enum(['cafe_manha', 'almoco', 'cafe_tarde', 'janta'])

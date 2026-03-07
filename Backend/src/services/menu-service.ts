@@ -1,5 +1,6 @@
 import { Menu, Dish } from '../repositories/menu'
-import  { Pool, PoolClient } from 'pg'
+import client from '../database/database'
+import { PoolClient } from 'pg'
 import { transactional } from '../decorators/transactional'
 import { AppError } from '../utils/app-error'
 
@@ -23,7 +24,7 @@ export class MenuService {
       WHERE m.enterprise_id = $1
         AND m.day = $2
         AND md.meal_type = $3
-      LIMIT 1`, 
+      LIMIT 1`,
       [enterpriseId, day, dishes[0].mealType]
     );
 
@@ -51,8 +52,6 @@ export class MenuService {
 
   async getMenuByDate(enterpriseId: number, day: string) {
     try {
-      const client = new Pool()
-
       const menu = await client.query(`
         SELECT m.id, d.id, d.name, d.description, md.meal_type
         FROM menu m
@@ -76,16 +75,13 @@ export class MenuService {
     }
   }
 
-  async insertMenuDish(menuIds: number[], dishes: { dishId: number, mealType: string }[]) {
+  async insertMenuDish(menuId: number, dishes: { dishId: number, mealType: string }[]) {
     try {
-      const client = new Pool()
-
-      await Promise.all(menuIds.map(menuId =>
-        Promise.all(dishes.map(({dishId, mealType}) =>
+      await Promise.all(dishes.map(({dishId, mealType}) =>
         client.query(`
           INSERT INTO menu_dish(id_menu, id_dish, meal_type)
           VALUES ($1, $2, $3)`, [menuId, dishId, mealType]))
-      )))
+      )
 
     }catch(error: AppError | any) {
       throw new AppError(error.message, error, error.status)
@@ -93,20 +89,16 @@ export class MenuService {
   }
 
   // Remover relacionamentos entre menu e pratos
-  async removeMenuDishes(removals: { menuId: number; dishes: {dishId: number, mealType: string}[] }[]) {
+  async removeMenuDishes(menuId: number, dishes: {dishId: number, mealType: string}[]) {
     try {
-      const client = new Pool()
-
-      await Promise.all(removals.map(async ({menuId, dishes}) => {
-        await Promise.all(dishes.map(({dishId, mealType}) => {
-        return client.query(
-          `DELETE FROM menu_dish md
-          WHERE id_dish = $1
-            AND id_menu = $2
-            AND meal_type = $3`,
-            [dishId, menuId, mealType]
-          )
-        }))
+      await Promise.all(dishes.map(({dishId, mealType}) => {
+      return client.query(
+        `DELETE FROM menu_dish md
+        WHERE id_dish = $1
+          AND id_menu = $2
+          AND meal_type = $3`,
+          [dishId, menuId, mealType]
+        )
       }))
     } catch(error: AppError | any) {
       throw new AppError(error?.message || 'Falha ao remover pratos do cardápio', error, error.status || 500)
@@ -117,8 +109,6 @@ export class MenuService {
     const today = new Date()
     const targetDate = new Date(day)
     try {
-      const client = new Pool()
-
       if (targetDate > today) throw new AppError('A data deve ser anterior a atual', 'BadRequest', 400)
 
       const deleteResult = await client.query(

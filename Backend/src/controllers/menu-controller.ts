@@ -24,14 +24,13 @@ export class MenuController {
     try {
       const menu = await this.service.getMenuByDate(enterpriseId, day)
 
-      const formattedDishes = Object.values(menu).flat().map(dish => ({
-        id: dish.id,
-        name: dish.name,
-        description: dish.description,
-        meal_type: dish.meal_type
-      }))
+      const formattedMenu = {
+        cafe_manha: menu.cafe_manha,
+        almoço: menu.almoco,
+        cafe_tarde: menu.cafe_tarde,
+        janta: menu.janta}
 
-      res.status(200).json({ dishes: formattedDishes })
+      res.status(200).json(formattedMenu)
 
     } catch (error: AppError | unknown) {
       AppError.sendErrorResponse(res, error as AppError)
@@ -39,10 +38,10 @@ export class MenuController {
   }
 
   async insert (req: Request, res: Response) {
-    const { menuIds, dishes } = modifyMenuSchema.parse(req.body)
+    const { menuId, dishes } = modifyMenuSchema.parse(req.body)
 
     try {
-      await this.service.insertMenuDish(menuIds, dishes.map(d => ({ dishId: d.dishId, mealType: d.mealType })))
+      await this.service.insertMenuDish(menuId, dishes)
 
       res.status(204).json()
     } catch (error: AppError | unknown) {
@@ -51,9 +50,9 @@ export class MenuController {
   }
 
   async delete (req: Request, res: Response ) {
-    const { removals: {menuId, dishes{dishId, mealType}[]}[]} = req.body
+    const { menuId, dishes } = modifyMenuSchema.parse(req.body)
     try {
-      await this.service.removeMenuDishes(removals)
+      await this.service.removeMenuDishes(menuId, dishes)
       res.status(204).json()
     } catch (error: AppError | unknown) {
       AppError.sendErrorResponse(res, error as AppError)
@@ -64,6 +63,9 @@ export class MenuController {
     const { enterpriseId, day } = deleteMenuSchema.parse(req.body)
     try {
       await this.service.deleteBeforeThat(enterpriseId, day)
+      res.status(204).json()
+    } catch(error: AppError | unknown) {
+      AppError.sendErrorResponse(res, error as AppError)
     }
   }
 }

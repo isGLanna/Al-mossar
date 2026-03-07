@@ -1,15 +1,14 @@
 import pool from '../database/database'
 import { Response } from 'express'
 
-export class AppError {
-  public readonly message: string
+export class AppError extends Error {
   public readonly error: any
   public readonly statusCode: number
   
   constructor(message: string, error: any, statusCode = 500) {
-    this.message = message
-    this.error = error
+    super(message)
     this.statusCode = statusCode
+    this.error = error
     this.saveError()
   }
 
@@ -24,7 +23,7 @@ export class AppError {
 
         break
       } catch(error){
-        attempt++
+        setInterval(() => {attempt++}, 1000)
       }
     }
   }

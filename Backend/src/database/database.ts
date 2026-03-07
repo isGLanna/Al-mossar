@@ -1,8 +1,8 @@
 import { Pool } from 'pg'
 import 'dotenv/config'
 
-const pool = new Pool({
+const client = new Pool({
   connectionString: process.env.POSTGRES_URL
 });
 
-export default pool
+export default client

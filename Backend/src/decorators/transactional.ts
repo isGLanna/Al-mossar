@@ -16,11 +16,15 @@ export function transactional(target: any, propertyKey: string , descriptor: Pro
 
       return result
     } catch(error: Error | AppError | any) {
-      await client.query('ROLLBACK')
-      
+      try {
+        await client.query('ROLLBACK')
+      } catch(error) {
+        console.log('Critical failure: unsuccessfull rollback', error)
+      }
+        
       if (error instanceof AppError) throw error
 
-      throw new AppError(error.message, 500)
+      throw new AppError(error.message || "Erro interno do servidor", error, 500)
     } finally {
       client.release()
     }
