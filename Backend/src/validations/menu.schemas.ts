@@ -25,7 +25,15 @@ export const modifyMenuSchema = z.object({
 })
 
 export const deleteMenuSchema = z.object({
-  enterpriseId: z.number(),
-  day: z.string(),
-  dishesId: z.array(z.number())
+  menuId: z.number(),
+  dishes: z.array(
+    z.object({
+      dishId: z.number(),
+      mealType: z.enum(['cafe_manha', 'almoco', 'cafe_tarde', 'janta'])
+    })
+  )
+})
+
+export const deleteBeforeThat = z.object({
+  beforeDate: z.string()
 })

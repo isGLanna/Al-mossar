@@ -1,15 +1,18 @@
 import { Request, Response } from 'express'
 import { MenuService } from '../services/menu-service'
 import { AppError } from '../utils/app-error'
-import { createMenuSchema, queryMenuSchema, modifyMenuSchema, deleteMenuSchema } from '../validations/menu.schemas'
+import { createMenuSchema, queryMenuSchema, modifyMenuSchema, deleteMenuSchema, deleteBeforeThat } from '../validations/menu.schemas'
 
 export class MenuController {
   constructor(private service: MenuService) {}
 
-  async createMenu ( req: Request, res: Response ) {
-    const { enterpriseId, day, dishes } = createMenuSchema.parse(req.body)
-
+  async create ( req: Request, res: Response ) {
+    const { day, dishes } = createMenuSchema.parse(req.body)
     try {
+      if (!req.user)  throw new AppError('Usuário não autenticado', 401)
+
+      const enterpriseId = req.user.enterpriseId
+
       await this.service.create(enterpriseId, day, dishes)
 
       res.status(201).json()
@@ -18,10 +21,13 @@ export class MenuController {
     }
   }
 
-  async getMenu(req: Request, res: Response) {
-    const { enterpriseId, day } = queryMenuSchema.parse(req.body)
-
+  async getMenuByDate(req: Request, res: Response) {
+    const { day } = queryMenuSchema.parse(req.params)
     try {
+      if (!req.user)  throw new AppError('Usuário não autenticado', 401)
+
+      const enterpriseId = req.user.enterpriseId
+
       const menu = await this.service.getMenuByDate(enterpriseId, day)
 
       const formattedMenu = {
@@ -39,7 +45,6 @@ export class MenuController {
 
   async insert (req: Request, res: Response) {
     const { menuId, dishes } = modifyMenuSchema.parse(req.body)
-
     try {
       await this.service.insertMenuDish(menuId, dishes)
 
@@ -49,10 +54,8 @@ export class MenuController {
     }
   }
 
-
-
   async delete (req: Request, res: Response ) {
-    const { menuId, dishes } = modifyMenuSchema.parse(req.body)
+    const { menuId, dishes } = deleteMenuSchema.parse(req.params)
     try {
       await this.service.removeMenuDishes(menuId, dishes)
       res.sendStatus(204)
@@ -62,9 +65,13 @@ export class MenuController {
   }
 
   async deleteBeforeThat (req: Request, res: Response) {
-    const { enterpriseId, day } = deleteMenuSchema.parse(req.body)
+    const { beforeDate } = deleteBeforeThat.parse(req.query)
     try {
-      await this.service.deleteBeforeThat(enterpriseId, day)
+      if (!req.user)  throw new AppError('Usuário não autenticado', 401)
+
+      const enterpriseId = req.user.enterpriseId
+
+      await this.service.deleteBeforeThat(enterpriseId, beforeDate)
       res.sendStatus(204)
     } catch(error: AppError | unknown) {
       AppError.sendErrorResponse(res, error as AppError)
