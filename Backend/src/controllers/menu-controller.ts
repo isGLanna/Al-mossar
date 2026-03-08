@@ -43,17 +43,19 @@ export class MenuController {
     try {
       await this.service.insertMenuDish(menuId, dishes)
 
-      res.status(204).json()
+      res.sendStatus(204)
     } catch (error: AppError | unknown) {
       AppError.sendErrorResponse(res, error as AppError)
     }
   }
 
+
+
   async delete (req: Request, res: Response ) {
     const { menuId, dishes } = modifyMenuSchema.parse(req.body)
     try {
       await this.service.removeMenuDishes(menuId, dishes)
-      res.status(204).json()
+      res.sendStatus(204)
     } catch (error: AppError | unknown) {
       AppError.sendErrorResponse(res, error as AppError)
     }
@@ -63,7 +65,7 @@ export class MenuController {
     const { enterpriseId, day } = deleteMenuSchema.parse(req.body)
     try {
       await this.service.deleteBeforeThat(enterpriseId, day)
-      res.status(204).json()
+      res.sendStatus(204)
     } catch(error: AppError | unknown) {
       AppError.sendErrorResponse(res, error as AppError)
     }

@@ -1,13 +1,23 @@
 import { Pool } from 'pg'
 import { AppError } from '../utils/app-error'
-import { transactional } from '../decorators/transactional'
+import client from '../database/database'
+
+type MealType = 'cafe_manha' | 'almoco' | 'cafe_tarde' | 'janta'
+
+type MenuDish = {
+  id: number
+  name: string
+  description: string
+  meal_type: MealType
+}
+
 
 export class DishService {
-  async create(name: string, description: string) {
+  async create(enterpriseId: number, name: string, description: string) {
     const client = await new Pool()
     try {
       const result = await client.query(
-        `INSERT INTO dishes(name, description) VALUES ($1, $2) RETURNING id`, [name, description]
+        `INSERT INTO dish(enterprise_id, name, description) VALUES ($1, $2, $3) RETURNING id`, [enterpriseId, name, description]
       )
       return result.rows[0].id
     }catch (error) {
@@ -16,18 +26,53 @@ export class DishService {
   }
 
   // Retornar pratos da empresa por cada tipo de refeição, caso não exista relação relação prato/tipo de refeição, retornar como others
-  @transactional
-  async getAll(enterpriseId: number, client: Pool) {
+  async getAllByMealType(enterpriseId: number) {
     try {
-      const menuResult = await client.query(
+      const dishes = await client.query(
         `SELECT d.id, d.name, d.description, md.meal_type
-        FROM menu_dish md
-          JOIN dish d ON md.id_dish = d.id
-        WHERE d.enterprise_id = $1
-        GROUP BY d.id, d.name, d.description, md.meal_type`, [enterpriseId]
+        FROM dish d
+          JOIN menu_dish md ON d.id = md.id_dish
+        WHERE d.enterprise_id = $1`, [enterpriseId]
       )
-    } catch(error) {
 
+      const listOfDishes: Record<MealType, MenuDish[]> = {cafe_manha: [], almoco: [], cafe_tarde: [], janta: []}
+
+      for(const dish of dishes.rows as MenuDish[]) {
+        if(dish.meal_type && listOfDishes[dish.meal_type] !== undefined) {
+          listOfDishes[dish.meal_type].push(dish)
+        }
+      }
+
+      return listOfDishes
+    } catch(error: AppError | any) {
+      throw new AppError("Falha ao consultar pratos", error, error.status || 500)
+    }
+  }
+
+  async update(enterpriseId: number, id: number, name: string, description: string) {
+    try {
+      client.query(`
+        UPDATE dish(name, description)
+        SET name = $3 AND description = $4
+        WHERE enterprise_id= $1
+          AND id = $2`, [enterpriseId, id, name, description])
+    } catch(error: AppError | any) {
+      throw new AppError("Falha ao atualizar o prato", error, 500)
+    }
+  }
+
+  async getUnusedDishes(enterpriseId: number) {
+    try {
+      const unusedDishes = await client.query(`
+        SELECT d.id, d.name, d.description
+        FROM dish d
+          LEFT JOIN menu_dish md ON d.id = md.id_dish
+        WHERE md.id_dish IS NULL
+          AND d.enterprise_id = $1`, [enterpriseId])
+
+      return unusedDishes.rows
+    } catch(error: AppError | any) {
+      throw new AppError("Falha ao retornar pratos não utilizados", error, error.status || 500)
     }
   }
 
@@ -41,9 +86,9 @@ export class DishService {
           AND id = $2`, [enterpriseId, id])
 
       if(deleteRelation.rowCount === 0)
-        throw new AppError('Prato não encontrado', 404)
+        throw new AppError('Prato não encontrado', null, 404)
     } catch (error: AppError | any) {
-      throw new AppError(error?.message || 'Falha ao remover prato', error, error.status || 500 )
+      throw new AppError(error.message || 'Falha ao remover prato', error, error.status || 500 )
     }
   }
 }

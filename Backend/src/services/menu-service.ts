@@ -1,4 +1,3 @@
-import { Menu, Dish } from '../repositories/menu'
 import client from '../database/database'
 import { PoolClient } from 'pg'
 import { transactional } from '../decorators/transactional'
