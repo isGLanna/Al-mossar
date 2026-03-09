@@ -1,5 +1,5 @@
 import { NavActions } from '../../organisms/topbar/nav-actions.tsx'
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo, useCallback } from "react"
 import { MenuDish, Dish } from "../../../models/Menu"
 import { Calendar } from "./sub-template/calendar/calendar"
 import { NewDish } from "./sub-template/menu/new-dish"
@@ -39,9 +39,9 @@ export function Menu() {
   }, [currentMonth, currentYear])
 
   // Novo prato
-  const handleNewDishChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleNewDishChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     if (newDish) setNewDish({ ...newDish, [e.target.name]: e.target.value })
-  }
+  }, [newDish])
 
   const handleSaveNewDish = async () => {
     if (!newDish || !newDish.name.trim()) return
@@ -94,48 +94,45 @@ export function Menu() {
     <div>
       <NavActions />
       <div className='mt-[65px]'>
+        <section className="menuContainer">
 
-      <section className="menuContainer">
-
-        <Calendar
-          currentMonth={currentMonth}
-          currentYear={currentYear}
-          selectedDay={selectedDay}
-          onMonthChange={(year, month) => {
-            setCurrentYear(year)
-            setCurrentMonth(month)
-          }}
-          onDaySelect={handleDayClick}
-        />
-
-        <article className="menu">
-          <header className="menu-header">Cardápio</header>
-
-          <DishList
-            dishes={dishes}
-            deleted={deleted}
-            handleDeleteDish={handleDeleteDish}
+          <Calendar
+            currentMonth={currentMonth}
+            currentYear={currentYear}
+            selectedDay={selectedDay}
+            onMonthChange={(year, month) => {
+              setCurrentYear(year)
+              setCurrentMonth(month)
+            }}
+            onDaySelect={handleDayClick}
           />
 
-          {newDish && (
-            <NewDish 
-              newDish={newDish} 
-              handleNewDishChange={handleNewDishChange} 
-              handleSaveNewDish={handleSaveNewDish}
-              setNewDish={setNewDish}
+          <article className="menu">
+            <header className="menu-header">Cardápio</header>
+
+            <DishList
+              dishes={dishes}
+              deleted={deleted}
+              handleDeleteDish={handleDeleteDish}
             />
-          )}
 
-          <MenuFooter
-            newDish={newDish}
-            setNewDish={setNewDish}
-            deleted={deleted}
-            setDeleted={setDeleted}
-          />
+            {newDish && (
+              <NewDish 
+                newDish={newDish} 
+                handleNewDishChange={handleNewDishChange} 
+                handleSaveNewDish={handleSaveNewDish}
+                setNewDish={setNewDish}
+              />
+            )}
 
-
-        </article>
-      </section>
+            <MenuFooter
+              newDish={newDish}
+              setNewDish={setNewDish}
+              deleted={deleted}
+              setDeleted={setDeleted}
+            />
+          </article>
+        </section>
 
       </div>
     </div>
