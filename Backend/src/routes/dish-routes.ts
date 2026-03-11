@@ -19,7 +19,4 @@ dishRouter.use(authenticate)
 dishRouter.post("/dishes", authorizeRoles(...kitchenStaff), (req, res) => { controller.createDish })
 dishRouter.get("/dishes", authorizeRoles("*"), (req, res) => { controller.getAll })
 dishRouter.patch("/dishes", authorizeRoles(...kitchenStaff), (req, res) => { controller.updateDish })
-dishRouter.delete("/delete")
-
-
-dishRouter.get()
+dishRouter.delete("/delete", authorizeRoles(...kitchenStaff))

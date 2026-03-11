@@ -54,7 +54,8 @@ export class DishService {
       client.query(`
         UPDATE dish(name, description)
         SET name = $3 AND description = $4
-        WHERE id = $2`, [enterpriseId, id, name, description])
+        WHERE enterprise_id = $1
+          id = $2`, [enterpriseId, id, name, description])
     } catch(error: AppError | any) {
       throw new AppError("Falha ao atualizar o prato", error, 500)
     }

@@ -12,44 +12,58 @@ export class DishController {
       await this.service.create(enterpriseId, name, description)
 
       res.sendStatus(204)
-    } catch(error: AppError | any) {
+    } catch(error: unknown) {
       AppError.sendErrorResponse(res, error as AppError)
     }
   }
 
   async getAll(req: Request, res: Response) {
-    const { enterpriseId } = req.body
+    if(!req.user) throw new AppError('Usuário não autenticado', null, 401)
+    const enterpriseId = req.user.enterpriseId
     try {
       const listOfDishes = await this.service.getAllByMealType(enterpriseId)
 
       res.status(200).json(listOfDishes)
-    } catch(error: AppError | any) {
+    } catch(error: unknown) {
       AppError.sendErrorResponse(res, error as AppError)
     }
   }
 
   async updateDish (req: Request, res: Response) {
     const { id, name, description } = updateDishSchema.parse(req.body)
+    if (!req.user)  throw new AppError('Usuário não autenticado', null, 401)
+    const enterpriseId = req.user.enterpriseId
     try {
-      await this.service.update(id, name, description)
+      await this.service.update(enterpriseId, id, name, description)
 
       res.sendStatus(204)
-    }catch(error: AppError | any) {
+    }catch(error: unknown) {
       AppError.sendErrorResponse(res, error as AppError)
     }
   }
 
   async getUnusedDishes(req: Request, res: Response) {
-    const  { enterpriseId } = req.body
+    if(!req.user) throw new AppError('Usuário não autenticado', null, 401)
+    const enterpriseId = req.user.enterpriseId
     try {
       const unusedDishes = await this.service.getUnusedDishes(enterpriseId)
 
       res.status(200).json(unusedDishes)
-    } catch (error: AppError | unknown) {
+    } catch (error: unknown) {
       AppError.sendErrorResponse(res, error as AppError)
     }
   }
 
   async deleteDish (req: Request, res: Response) {
+    const { id } = deleteDishSchema.parse(req.body)
+    if(!req.user) throw new AppError('Usuário não autorizado', null, 401)
+    const enterpriseId = req.user.enterpriseId
+    try {
+      await this.service.delete(enterpriseId, id)
+
+      res.sendStatus(200)
+    } catch (error: unknown) {
+      AppError.sendErrorResponse(res,error as AppError)
+    }
   }
 }
