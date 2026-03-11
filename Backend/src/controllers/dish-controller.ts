@@ -29,9 +29,9 @@ export class DishController {
   }
 
   async updateDish (req: Request, res: Response) {
-    const { enterpriseId, id, name, description } = updateDishSchema.parse(req.body)
+    const { id, name, description } = updateDishSchema.parse(req.body)
     try {
-      await this.service.update(enterpriseId, id, name, description)
+      await this.service.update(id, name, description)
 
       res.sendStatus(204)
     }catch(error: AppError | any) {

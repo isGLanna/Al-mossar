@@ -1,6 +1,6 @@
 import { NavActions } from '../../organisms/topbar/nav-actions.tsx'
-import { useState, useEffect, useRef, useMemo, useCallback } from "react"
-import { MenuDish, Dish } from "../../../models/Menu"
+import { useState, useEffect, useRef, useCallback } from "react"
+import { MenuDish, Dish } from "../../../models/Menu.ts"
 import { Calendar } from "./sub-template/calendar/calendar"
 import { NewDish } from "./sub-template/menu/new-dish"
 import { MenuFooter } from "./sub-template/menu/menu-footer"
