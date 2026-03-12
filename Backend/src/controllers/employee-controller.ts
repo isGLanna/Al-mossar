@@ -9,51 +9,40 @@ export class EmployeeController {
 
   // Apenas registra o e-mail dos usuários que podem se cadastrar na empresa
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const { email, role, enterpriseId } = authorizeEmployee.parse(req.body)
-      await this.employeeService.create(email, role, enterpriseId)
-      res.status(201).json({ success: true })
-    } catch (error) {
-      next(error)
-    }
+
+    const { email, role, enterpriseId } = authorizeEmployee.parse(req.body)
+    await this.employeeService.create(email, role, enterpriseId)
+    res.status(201).json({ success: true })
+
   }
 
   async listEmployees(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const enterpriseId = Number(req.params.enterpriseId)
+    if (!req.user) throw new Error('Usuário não autenticado')
+    const enterpriseId = req.user.enterpriseId
 
-      const employees = await this.employeeService.getEmployees(enterpriseId)
+    const employees = await this.employeeService.getEmployees(enterpriseId)
 
-      res.status(200).json(employees)
-    } catch (error) {
-      next(error)
-    }
+    res.status(200).json(employees)
   }
 
   async deleteEmployee(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const id = Number(req.params.id)
-      const enterpriseId = Number(req.params.enterpriseId)
+    const id = Number(req.params.id)
 
-      await this.employeeService.deleteEmployee(id, enterpriseId)
-      res.status(204).send()
+    if (!req.user) throw new Error('Usuário não autenticado')
+    const enterpriseId = req.user.enterpriseId
 
-    } catch (error) {
-      next(error)
-    }
+    await this.employeeService.deleteEmployee(id, enterpriseId)
+    res.status(204).send()
   }
 
   async update(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const id = Number(req.params.id)
-      const enterpriseId = Number(req.params.enterpriseId)
-      const updates = editEmployeeSchema.parse(req.body)
+    const id = Number(req.params.id)
+    const updates = editEmployeeSchema.parse(req.body)
 
-      await this.employeeService.update(id, enterpriseId, updates)
-      res.status(200).send()
+    if (!req.user) throw new Error('Usuário não autenticado')
+    const enterpriseId = req.user.enterpriseId
 
-    } catch (error) {
-      next(error)
-    }
+    await this.employeeService.update(id, enterpriseId, updates)
+    res.status(200).send()
   }
 }
