@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import {it, expect, vi, describe  } from 'vitest'
 import '@testing-library/jest-dom'
-import { DailyMenu } from './daily-menu'
+import { Menu } from './menu'
 
 
 type Dish = { id: number; name: string; description: string }
@@ -75,7 +75,7 @@ describe('Adição de pratos', () => {
   ]
   
   it.each(positiveTestCases)('Adicionar prato e oculta formulário após salvar', async ({ name, description }) => {
-    render(<DailyMenu />)
+    render(<Menu />)
 
     fireEvent.click(screen.getByLabelText('Adicionar prato'))
 
@@ -98,7 +98,7 @@ describe('Adição de pratos', () => {
   })
 
   it.each(negativeTestCases)('Adicionar prato e oculta formulário após salvar', async ({ name, description }) => {
-    render(<DailyMenu />)
+    render(<Menu />)
 
     fireEvent.click(screen.getByLabelText('Adicionar prato'))
 

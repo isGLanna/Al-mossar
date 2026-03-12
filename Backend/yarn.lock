@@ -227,6 +227,11 @@
     "@eslint/core" "^0.17.0"
     levn "^0.4.1"
 
+"@express-rate-limit/tsconfig@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@express-rate-limit/tsconfig/-/tsconfig-1.0.2.tgz#66ffe19c5137cdbd2c848574f82e637019d9c7ef"
+  integrity sha512-BMSuJSe5fITRUZRLModNIXOTjVP4TcqOXO7ohW5OwtHNNGJ48HvaKH6zuqP8CjEEcbUmjheXk9rSYUF3tDu0tA==
+
 "@humanfs/core@^0.19.1":
   version "0.19.1"
   resolved "https://registry.npmjs.org/@humanfs/core/-/core-0.19.1.tgz"
