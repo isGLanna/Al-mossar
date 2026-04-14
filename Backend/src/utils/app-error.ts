@@ -27,8 +27,4 @@ export class AppError extends Error {
       }
     }
   }
-
-  static sendErrorResponse(res: Response, error: AppError) {
-    res.status(error.statusCode).json({ success: false, message: error.message})
-  }
 }

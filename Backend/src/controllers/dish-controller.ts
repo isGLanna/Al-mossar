@@ -7,7 +7,9 @@ export class DishController {
   constructor(private service: DishService) {}
 
   async createDish (req: Request, res: Response) {
-    const { enterpriseId, name, description } = createDishSchema.parse(req.body)
+    const { name, description } = createDishSchema.parse(req.body)
+    if (!req.user) throw new AppError('Usuário não autenticado', null, 401)
+    const enterpriseId = req.user.enterpriseId
 
     await this.service.create(enterpriseId, name, description)
 

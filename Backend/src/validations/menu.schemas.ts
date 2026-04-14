@@ -1,7 +1,6 @@
 import z from 'zod'
 
 export const createMenuSchema = z.object({
-  enterpriseId: z.number(),
   day: z.string(),
   dishes: z.array(
     z.object({
@@ -12,7 +11,6 @@ export const createMenuSchema = z.object({
 })
 
 export const queryMenuSchema = z.object({
-  enterpriseId: z.number(),
   day: z.string()
 })
 

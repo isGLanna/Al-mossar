@@ -3,6 +3,7 @@ import menuRouter from './menu-routes'
 import authRouter from './register-routes'
 import userRouter from './user-routes'
 import employeeRouter from './employee-routes'
+import dishRouter from './dish-routes'
 
 const router = Router()
 
@@ -11,6 +12,8 @@ router.use(menuRouter)
 router.use(authRouter)
 
 router.use(employeeRouter)
+
+router.use(dishRouter)
 
 router.use(userRouter)
 

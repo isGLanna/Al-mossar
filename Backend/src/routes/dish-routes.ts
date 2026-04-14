@@ -16,7 +16,10 @@ const kitchenStaff = [
 
 dishRouter.use(authenticate)
 
-dishRouter.post("/dishes", authorizeRoles(...kitchenStaff), (req, res) => { controller.createDish })
-dishRouter.get("/dishes", authorizeRoles("*"), (req, res) => { controller.getAll })
-dishRouter.patch("/dishes", authorizeRoles(...kitchenStaff), (req, res) => { controller.updateDish })
-dishRouter.delete("/delete", authorizeRoles(...kitchenStaff))
+dishRouter.post('/dishes', authorizeRoles(...kitchenStaff), (req, res) => { controller.createDish(req, res) })
+dishRouter.get('/dishes', authorizeRoles('*'), (req, res) => { controller.getAll(req, res) })
+dishRouter.get('/dishes/unused', authorizeRoles('*'), (req, res) => { controller.getUnusedDishes(req, res) })
+dishRouter.patch('/dishes', authorizeRoles(...kitchenStaff), (req, res) => { controller.updateDish(req, res) })
+dishRouter.delete('/dishes', authorizeRoles(...kitchenStaff), (req, res) => { controller.deleteDish(req, res) })
+
+export default dishRouter

@@ -16,6 +16,7 @@ const kitchenStaff = [
 menuRouter.use(authenticate)
 
 menuRouter.post('/menus', authorizeRoles(...kitchenStaff), (req, res) => { controller.create(req, res)})
+menuRouter.put('/menus', authorizeRoles(...kitchenStaff), (req, res) => { controller.replace(req, res)})
 menuRouter.post('/menus/:menuId/dishes', authorizeRoles(...kitchenStaff), (req, res) => { controller.insert(req, res)})
 menuRouter.get('/menus/:day', authorizeRoles('*'), (req, res) => { controller.getMenuByDate(req, res)})
 menuRouter.delete('/menus/:menuId/dishes/:id', authorizeRoles(...kitchenStaff), (req, res) => { controller.delete(req, res)})

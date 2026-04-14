@@ -49,6 +49,47 @@ export class MenuService {
     );
   }
 
+  @transactional
+  async replaceByDate(enterpriseId: number, day: string, dishes: { dishId: number; mealType: string }[], client?: PoolClient) {
+    const existingMenus = await client!.query(
+      `SELECT id FROM menu WHERE enterprise_id = $1 AND day = $2`,
+      [enterpriseId, day]
+    )
+
+    const menuIds = existingMenus.rows.map((row) => row.id)
+
+    if (menuIds.length > 0) {
+      await client!.query(
+        `DELETE FROM menu_dish WHERE id_menu = ANY($1::int[])`,
+        [menuIds]
+      )
+
+      await client!.query(
+        `DELETE FROM menu WHERE id = ANY($1::int[])`,
+        [menuIds]
+      )
+    }
+
+    if (!dishes.length) return
+
+    const insertMenuResult = await client!.query(
+      `INSERT INTO menu(enterprise_id, day) VALUES ($1, $2) RETURNING id`,
+      [enterpriseId, day]
+    )
+
+    const menuId = insertMenuResult.rows[0].id
+
+    await Promise.all(
+      dishes.map(({ dishId, mealType }) => {
+        return client!.query(
+          `INSERT INTO menu_dish(id_menu, id_dish, meal_type)
+          VALUES ($1, $2, $3)`,
+          [menuId, dishId, mealType]
+        )
+      })
+    )
+  }
+
   async getMenuByDate(enterpriseId: number, day: string) {
     try {
       const menu = await client.query(`

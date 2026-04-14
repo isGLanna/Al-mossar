@@ -27,11 +27,22 @@ export class MenuController {
 
     const formattedMenu = {
       cafe_manha: menu.cafe_manha,
-      almoço: menu.almoco,
+      almoco: menu.almoco,
       cafe_tarde: menu.cafe_tarde,
       janta: menu.janta}
 
     res.status(200).json(formattedMenu)
+  }
+
+  async replace(req: Request, res: Response) {
+    const { day, dishes } = createMenuSchema.parse(req.body)
+
+    if (!req.user) throw new AppError('Usuário não autenticado', 401)
+    const enterpriseId = req.user.enterpriseId
+
+    await this.service.replaceByDate(enterpriseId, day, dishes)
+
+    res.sendStatus(204)
   }
 
   async insert (req: Request, res: Response) {
